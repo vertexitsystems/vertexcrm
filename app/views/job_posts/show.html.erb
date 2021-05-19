@@ -1,0 +1,45 @@
+<p id="notice"><%= notice %></p>
+
+<div class="job_post_show_container">
+	<div class="job_post_main_container">
+		<div class="job_post_main_title"> <%= @job_post.title %> </div>
+		<div class="job_post_main_desc"> <%= @job_post.description %> </div>
+	</div>
+	<div  class="job_post_apply_container">
+		<%= form_with(model: @job_application, local: true) do |form| %>
+			<% if @job_application.errors.any? %>
+				<div id="error_explanation">
+					<h2><%= pluralize(job_application.errors.count, "error") %> prohibited this job_application from being saved:</h2>
+
+					<ul>
+						<% job_application.errors.full_messages.each do |message| %>
+							<li><%= message %></li>
+						<% end %>
+					</ul>
+				</div>
+			<% end %>
+
+			<div class="job_post_apply_heading"> Apply Now </div>
+			
+			<div class="job_post_apply_field"> 
+				<div class="job_post_title"> Email: </div>
+				<div lass="job_post_field"> <%= form.text_field :email %> </div>
+			</div>
+			
+			<div class="job_post_apply_field"> 
+				<div class="job_post_title"> Phone number: </div>
+				<div lass="job_post_field"> <%= form.text_field :ph_no %> </div>
+			</div>
+
+			<div class="job_post_apply_field"> 
+				<div class="job_post_title"> Cover Letter: </div>
+				<div lass="job_post_field"> <%= form.text_area :cover_letter %> </div>
+			</div>
+
+			<div class="job_post_apply_field">
+				<%= form.submit "Submit Application" %>
+			</div>
+		<% end %>
+	</div>
+</div>
+

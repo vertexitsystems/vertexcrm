@@ -1,0 +1,52 @@
+// Place all the styles related to the JobPosts controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: https://sass-lang.com/
+
+.job_post_container {
+	margin: 10px 50px;
+    box-shadow: 1px 1px #EEE;
+    padding: 10px;
+    border: 1px solid #EEE;
+}
+.job_title{
+	font-weight: bold;
+    font-size: 16px;
+}
+.job_description{
+	
+}
+.job_menu{
+	text-align: right;
+}
+
+// SHOW
+
+.job_post_show_container {
+	margin: 10px 50px;
+}
+.job_post_main_container {
+	padding:10px;
+	width: 60%;
+	float:left;
+}
+.job_post_main_title {
+	font-size: 24px;
+    font-weight: bold;
+    padding: 10px;
+}
+.job_post_main_desc {}
+
+.job_post_apply_container {
+	width: 35%;
+    float: left;
+}
+.job_post_apply_heading {
+	font-size: 24px;
+    font-weight: bold;
+
+    line-height : 40px;
+}
+.job_post_apply_field {
+	padding: 10px;
+}
+.job_post_field {}

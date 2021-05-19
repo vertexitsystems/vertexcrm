@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>RecruitmentPortal</title>
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+  </head>
+
+  <body>
+    <div class="nav_bar">
+      <div class="nav_bar_title"> <%= link_to "Recruitement Portal", root_path %></div>
+      <div class="nav_bar_menu">
+        <ul>
+
+          <% if user_signed_in? %>
+            <li> 
+              <a rel="nofollow" data-method="delete" href="/users/sign_out">
+                <i class="material-icons" style="font-size:20px;color:#FFF;">logout</i> 
+                <span> Logout </span>
+              </a> 
+            </li>
+          <% else %>
+            <li> 
+              <a href="/users/sign_in"> 
+                <i class="material-icons" style="font-size:20px;color:#FFF;">login</i> 
+                <span> Login</span>
+              </a> 
+            </li>
+          <% end %>
+        </ul>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <div class="ap_container">
+
+      <% if user_signed_in? %>
+  <div class="menu">
+    <%if current_user.profile.role == "Admin" %>
+      <ul>
+        <li class="heading"><a> Admin Options </a></li>
+        <li class="option"> <a href="/account_managers"> Manage Account Managers </a> </li>
+        <li class="option"> <a href="/employees"> Manage Employees </a> </li>
+        <li class="option"> <a href="/vendors"> Manage Vendors </a> </li>
+        <li class="option"> <a href="/employers"> Manage Employers </a> </li>
+
+        <li class="heading"><a> Personal Information </a></li>
+        <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
+      </ul>
+      <%elsif current_user.profile.role == "Employee" %>
+        <%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
+        <ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
+          <li class="heading"><a> Main Menu </a></li>
+          <li class="option"> <a href="/work_durations/new"> Weekly Time Entry </a> </li>
+          <li class="option"> <a href="/employees/<%=@employee.id%>">Weekly Time Report </a> </li>
+          <li class="option" id="previous_weeks" style="cursor:pointer;">  <a > Previous Weeks </a> </li>
+
+          <li class="heading"><a> Personal Information </a></li>
+          <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
+         <!--  <li class="option"> <a href=""> Edit Provided Documents </a> </li> -->
+        </ul>
+        <%if @employee.present?%>
+          <ul style="<%= params["prv"] == "true" ? "" : "display:none"%>">
+            <li id="back" style="cursor:pointer;"><a>Back</a></li>
+            <%keys = @employee.work_durations.group_by{|w| ["#{w.work_day.beginning_of_week.strftime("%B %d, %Y")}", w.time_sheet_status]}.keys.to_h%>
+            <%(3.month.ago.to_datetime..Date.today).select(&:monday?).map{|d| d.strftime("%B %d, %Y")}.each do |date|%>
+              <li style="margin: 0 0 10px 0;">
+               <%= link_to date,weekly_wise_data_work_durations_url(date:date,eid:@employee.id,prv: "true"),:class =>
+                keys["#{date}"].present? ? keys["#{date}"]+"-menu" : "pending-menu" %>
+               <!--  <a class="" href=""></a> -->
+            </li>
+            <%end%>
+          </ul>
+        <%end%>
+      <%elsif current_user.profile.role == "Account Manager"%>
+        <ul>
+          <li class="heading"><a> Main Menu </a></li>
+          <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
+          <li class="option"> <a href="/account_managers/vendor_wise_data"> Vendor Wise Reports </a> </li>
+          <li class="option"> <a href="/employees"> Manage Employees </a> </li>
+          <li class="option"> <a href="/vendors"> Manage Vendors </a> </li>
+          <li class="option"> <a href="/employers"> Manage Employers </a> </li>
+          <li class="option"> <a href="/assistants"> Manage Assistants </a> </li>
+          <!-- <li class="option"> <a href="/vendors"> Vendor Information </a> </li> -->
+
+          <li class="heading"><a> Personal Information </a></li>
+          <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
+        </ul>
+      <%elsif current_user.profile.role == "Assistant"%>
+        <ul>
+          <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
+          <li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
+        </ul>
+      <% end %>
+  </div>
+    <% end %>
+
+<% if user_signed_in? %>
+  <div class="main" >
+    <% else %>
+    <div class="main" style="width:100%">
+    <% end %>
+    <%= yield %>
+  </div>
+  <div style="clear:both"></div>
+
+</div>
+    
+  </body>
+</html>

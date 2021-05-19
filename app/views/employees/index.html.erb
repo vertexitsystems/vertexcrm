@@ -1,0 +1,109 @@
+<div class="heading"> Manage Employees </div>
+<div class="">
+  <%= link_to "New Employee", new_profile_url(role:"employee"), {:class => "button_link"} %>
+</div>
+<div class="section">
+
+  <div class="row top">
+    <div class="col">
+      #
+    </div>
+    <div class="col col25">
+      Name
+    </div>
+    <div class="col col25">
+      Assigned To
+    </div>
+    <div class="col">
+      Rate
+    </div>
+    <div class="col">
+      Hours Logged
+    </div>
+    <div style="clear:both"></div>
+  </div>
+
+  <% total_hours = 0 %>
+  <% @employees.each_with_index do |employee, index| %>
+    <div class="row">
+      <div class="col">
+        <%= index + 1 %>
+      </div>
+      <div class="col col25">
+        <%if employee.try(:profile).present?%>
+          <%=  link_to employee.try(:profile).try(:full_name),  edit_profile_path(employee.try(:profile).try(:id),role:employee.try(:profile).try(:role).try(:downcase)) %>
+        <%end%>
+      </div>
+      <div class="col col25">
+        <%if employee.vendors.count > 0 %>
+          <%= employee.vendors.map { |v| v.profile.full_name }.join(',') %>
+        <% else %>
+        UnAssigned
+        <% end %>
+      </div>
+      <div class="col">
+        <%if employee.vendors.count > 0 %>
+          <%= employee.projects.map { |p| p.rate }.join(',') %>
+        <% end %>
+      </div>
+      <div class="col">
+        <%if employee.vendors.count > 0 %>
+          <%= th = employee.projects.map { |p| p.total_weekly_hours_worked }.reject { |item| item.blank? }.reduce(&:+).to_i %>
+          <% total_hours += th %>
+        <% end %>
+      </div>
+      <div style="clear:both"></div>
+    </div>
+  <% end %>
+  
+
+  <div class="row bottom">
+    <div class="col">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col">
+      
+    </div>
+    <div class="col">
+      <%= total_hours %>
+    </div>
+    <div style="clear:both"></div>
+  </div>
+</div>
+
+<% if false %>
+<p id="notice"><%= notice %></p>
+
+<h1>Employees</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Rate</th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @employees.each do |employee| %>
+      <tr>
+        <td><%= employee.rate %></td>
+        <td><%= link_to 'Show', employee %></td>
+        <td><%= link_to 'Edit', edit_employee_path(employee) %></td>
+        <td><%= link_to 'Destroy', employee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<br>
+
+<%= link_to 'New Employee', new_employee_path %>
+
+<% end %>

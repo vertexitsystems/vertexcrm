@@ -1,0 +1,84 @@
+
+  <% today = Date.today # Today's date %>
+  <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
+
+  <div class="row top">
+    <div class="col col4">
+      #
+    </div>
+    <div class="col col20">
+      Employee
+    </div>
+    <div class="col col20">
+      Vendor
+    </div>
+
+    <% for day in (today.at_beginning_of_week..today.at_end_of_week).map.each { |day| day } do %>
+    <div class="col col8">
+      <%= day.strftime("%a %d") %>
+    </div>
+    <% end %>
+    <div class="col col6">
+      Total Hours
+    </div>
+    <div class="col col9">
+      Status
+    </div>       
+    <div style="clear:both"></div>
+  </div>
+  <%@work_durations.each_with_index do |work,index| %> 
+      <div class="row">
+        <%current_status = work.try(:second).try(:first).try(:time_sheet_status)%>
+        <div class="col col4">
+          <%= check_box_tag 'p_ids[]'+index.to_s+work.first.third.to_s,work.first.third if current_status == "pending"  %>
+        </div>
+        <div class="col col20">
+          <%= work.first.first %>
+        </div>
+        <div class="col col20">
+          <%= work.first.second %>
+        </div>
+
+        
+        <% (today.at_beginning_of_week..today.at_end_of_week).map.each { |day| day }.each_with_index do |day, index| %>
+          <% hw = work.second.select{|w| w if w.work_day.strftime("%A") == day.strftime("%A")} %>
+          <div class="col col8">
+            <%= label_tag ["a","b","c","d","e","f","g"][index]+work.first.third.to_s, hw.count > 0 ? hw.first.hours : 0 %>
+          </div>
+          <% if index == 6 %>
+            <div class="col col6">
+              <%= label_tag "#{work.second.collect(&:hours).compact.inject(:+)}" %>
+            </div>
+            <div class="col col9">
+              <%= label_tag "#{current_status}",nil,class:"#{current_status}" %>
+            </div>
+          <% end %>
+        <% end %>
+
+        <div style="clear:both"></div>
+      </div>
+  <% end %>
+  <% if @work_durations.empty?%>
+    <div class="row">
+      <div class="col col4">
+      </div>
+      <div class="col col20">
+      </div>
+      <div class="col col20">
+      </div>
+      <% (today.at_beginning_of_week..today.at_end_of_week).map.each { |day| day }.each_with_index do |day, index| %>
+        <div class="col col8">
+          <%= label_tag "" %>
+        </div>
+        <div class="col col6">
+          
+        </div>
+        <% if index == 6 %>
+          <div class="col col9">
+            <%= label_tag "" %>
+          </div>
+        <% end %>
+      <% end %>
+      <div style="clear:both"></div>
+    </div>
+  <%end%>

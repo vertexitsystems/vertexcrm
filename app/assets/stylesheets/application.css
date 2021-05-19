@@ -1,0 +1,532 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, or any plugin's
+ * vendor/assets/stylesheets directory can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any other CSS/SCSS
+ * files in this directory. Styles in this file should be added after the last require_* statement.
+ * It is generally better to create a new file per style scope.
+ *
+ *= ../../node_modules/bootstrap/scss/bootstrap
+ *= bootstrap.min
+ *= require_tree .
+ *= require_self
+ */
+body {
+	margin:0px;
+	padding:0px;
+    background: #E6EBEB;
+
+    color: #494C51;
+    font: 400 16px Open Sans,rubik,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: auto;
+    -webkit-text-size-adjust: 100%;
+    height: 100%;
+}
+html,
+body {
+  height: 100%;
+  margin: 0;
+}
+
+a:hover {
+    background:transparent;
+    color: rgb(73, 137, 207);
+}
+
+.clr { clear:both; }
+.button_link {
+    background: #4989cf;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    width: 260px;
+    text-align: center;
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #FFF !important;
+    margin:5px 10px;
+}
+.button_link:hover {
+    background: #4080cf;
+    border: none;
+    border-radius: 4px;
+    font-size: 18px;
+    font-weight: bold;
+    width: 260px;
+    text-align: center;
+    display: block;
+    padding: 8px 10px;
+    text-decoration: none;
+    color: #FFF !important;
+}
+.remember-me {
+  float: left;
+}
+.forgot-link{
+  margin-left: 72%;
+}
+.nav_bar{
+    padding-left:50px;
+
+    background-color: rgb(73, 137, 207);
+}
+.nav_bar_title {
+    height: 60px;
+    float: left;
+    line-height: 60px;
+}
+.nav_bar_title a {
+	font-size: 24px;
+	float:left;
+    color:#FFF;
+    text-decoration: none;
+    font-weight: bold;
+    font-family: 'Roboto', sans-serif;
+}
+.nav_bar_title a:hover {
+    background-color:none;
+    background-color: transparent;
+}
+.nav_bar_menu{
+	float:right;
+    margin-right:20px;
+    height:60px;
+}
+.nav_bar_menu ul {
+	list-style-type: none;
+	margin: 0;
+	padding: 0;
+}
+.nav_bar_menu li{
+	display: inline;
+	float: left;
+	margin-left:10px;
+
+    height:60px;
+}
+.nav_bar_menu a {
+	display: block;
+	text-decoration: none;
+    padding: 18px;
+}
+.nav_bar_menu a:hover {
+    background-color: rgb(30, 120, 207);
+}
+.nav_bar_menu a span {
+    float: right;
+    color: #FFF;
+    margin-left: 5px;
+}
+form {
+    padding: 20px;
+    width: 90%;
+    margin: 0 auto;
+}
+form .field {
+    padding: 5px;
+    text-align: center;
+}
+form .field input {
+    width: 80%;
+    height: 30px;
+    background: #FFF;
+    border: 1px solid #899;
+    border-radius: 5px;
+}
+form .field label {
+	    font-weight: bold;
+    text-align: left;
+}
+form .actions {
+    padding: 5px;
+    text-align: center;
+}
+form .actions input {
+        width: 60%;
+    font-weight: bold;
+    font-size: 16px;
+    color: #333;
+    background: #2c2;
+    height: 35px;
+    border: 0px solid #899;
+    border-radius: 5px;
+}
+
+.new_user {
+    padding: 2rem 2rem 2rem;
+    border: 1px solid #B8BDBF;
+    background: #fff;
+    padding: 30px 1rem;
+    border: 1px solid #B8BDBF;
+    border-radius: .375rem;
+    -webkit-box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    box-shadow: 0 1px 5px rgba(0,0,0,0.2);
+    width: 50%;
+    margin-top:30px;
+}
+.new_user .heading {
+    text-align: center;
+    font: 24px Arial;
+    padding: 0px 0px 10px 0px;
+}
+.new_user .field input {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 1px solid #D0D6D9;
+    border-radius: .188rem;
+    color: inherit;
+    display: block;
+    font-family: Open Sans,rubik,sans-serif;
+    font-size: 1rem;
+    line-height: 1.5em;
+    margin: 0;
+    padding: 0.5rem;
+    vertical-align: baseline;
+    width: 96.2%;
+    letter-spacing: 0.2px;
+    -webkit-box-shadow: inset 0px 1px 2px #E6EBEB;
+    box-shadow: inset 0px 1px 2px #E6EBEB;
+    background: #fff;
+}
+.new_user .actions input {
+    letter-spacing: 0.75px;
+    background-color: #FFBE30;
+    color: #171A1A;
+    border: 1px solid #FFBE30;
+    width:100%;
+
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    border: 0;
+    border-radius: .188rem;
+    cursor: pointer;
+    display: inline-block;
+    font-family: Open Sans,rubik,sans-serif;
+    font-size: .9rem;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 600;
+    line-height: 1.5em;
+    min-height: 1.5em;
+    
+    padding: 0.5rem 1rem 0.5rem 1rem;
+    text-decoration: none;
+    vertical-align: bottom;
+    position: relative;
+    text-transform: uppercase;
+    -webkit-transition: all .2s cubic-bezier(0.26, 0.29, 0.07, 1);
+    transition: all .2s cubic-bezier(0.26, 0.29, 0.07, 1);
+
+height:40px;
+    font: 400 13.3333px Arial;
+    
+}
+.ap_container .main .section .row .col input {
+   width: 66%; 
+}
+
+.ap_container {
+  height: 100%;
+}
+
+.ap_container .menu {
+    float:left;
+    height:100%;
+    padding:10px;
+    background-color: rgb(247, 247, 247);
+    width:250px;
+}
+.ap_container .menu ul {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+
+    font-family: 'Roboto', sans-serif;
+}
+.ap_container .menu li {
+    display: block;
+    height:30px;
+}
+.ap_container .menu li.heading {
+    font-weight: bold;
+    font-size: 16px;
+}
+.ap_container .menu li.heading a {
+    font-weight: bold;
+    margin: 14px 0px 0px 0px;
+}
+.ap_container .menu li.heading a:hover {
+    background: transparent;
+}
+
+.ap_container .menu a {
+    display: block;
+    text-decoration: none;
+    padding: 5px 30px;
+}
+.ap_container .menu a:hover {
+    color:#000;
+    background:#E6EBEB;
+}
+
+.ap_container .main {
+    float:left; 
+    width:70%;
+}
+
+.ap_container .main .heading {
+    margin-bottom: 6%;
+    width: 19%;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.ap_container .main .section {
+    margin:10px;
+    margin-left: 36px;
+}
+.forgot-h2 {
+  margin-top: 3%;
+  margin-left: 37%;
+}
+.ap_container .main .section .row { 
+    width: 100%;
+    font-size: 12px;
+    border-bottom: 1px solid #DDD;
+    flex-wrap: nowrap;
+    background: #FFF;
+    padding-right: 10px;
+}
+.ap_container .main .section .row.top { 
+    font-weight: bold;
+    color: #FFF;
+    background: rgb(73, 137, 207);
+    border-radius: 10px 10px 0px 0px;
+    padding-right: 28px;
+}
+
+.ap_container .main .section .row.bottom { 
+    font-weight: bold;
+    color: #FFF;
+    background: rgb(73, 137, 207);
+    border-radius: 0px 0px 10px 10px;
+    
+}
+.container {
+    padding: 0px;
+    width: 106%;
+}
+.approved {
+  color: #0a8802;
+  padding: 2px 2px 2px 2px;
+  /* background-color: green; */
+  /* border-radius: 0.8em; */
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "Monospace";
+}
+.approved-menu {
+  color: black;
+  padding: 2px 2px 2px 2px;
+  background-color: green;
+  border-radius: 0.8em;
+  font-size: 9px;
+  font-weight: bold;
+}
+.rejected {
+  color: #b10515;
+  /* background-color: red; */
+  padding: 2px 2px 2px 2px;
+  /* border-radius: 0.8em; */
+  font-size: 14px;
+  font-weight: bold; 
+  font-family: "Monospace";
+}
+.rejected-menu {
+  color: black;
+  background-color: red;
+  padding: 2px 2px 2px 2px;
+  border-radius: 0.8em;
+  font-size: 9px;
+  font-weight: bold; 
+}
+.pending {
+  color: #fdbf3d;
+  /* background-color: yellow; */
+  padding: 2px 2px 2px 2px;
+  /* border-radius: 0.8em; */
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "Monospace";
+}
+#total_hours {
+  margin-top:4px;
+  font-weight: bold; 
+}
+.pending-menu {
+  color: black;
+  background-color: yellow;
+  padding: 2px 2px 2px 2px;
+  border-radius: 0.8em;
+  font-size: 9px;
+  font-weight: bold;
+}
+.ap_container .main .section .row .col {
+    float: left;
+    padding: 10px 0px;
+    //min-width: 80px;
+    text-align: center;
+    width:15%;
+    flex-basis: auto;
+}
+
+.col2{
+    width:2% !important;
+}
+.col4{
+    width:4% !important;
+}
+.col45{
+    width:4.5% !important;
+}
+.col8 {
+    width:8% !important;
+}
+.col85 {
+    width:8.5% !important;
+}
+.col9 {
+    width:9% !important;   
+}
+.col10 {
+    width:10% !important;
+}
+.col105 {
+    width:10.5% !important;
+}
+
+.col11 {
+    width:11% !important;   
+}
+.col115 {
+    width:11.5% !important;   
+}
+.col12 {
+    width:12% !important;
+}
+.col125 {
+    width:12.5% !important;
+}
+.col15 {
+    width:15% !important;
+}
+
+.col20 {
+    width:20% !important;
+}
+.col25 {
+    width:25% !important;
+}
+
+.col100{
+    width:100% !important;
+}
+
+
+
+.section .row.form_row {
+    width: auto !important;
+    border-bottom: 0px !important;
+  }
+  .section .form_row.heading {
+    padding:10px;
+  }
+  .section .form_row.top_title {
+    background: #4989cf !important;
+    border-radius: 8px 8px 0px 0px;
+    color: white;
+    font-size: 18px !important;
+    font-weight: bold;
+
+    padding:10px;
+  }
+  .section .form_row .col.title {
+    width:20% !important;;
+    min-width:100px;
+
+    padding: 10px 0px 10px 10px !important;
+
+    text-align: right !important;
+    font-weight: bold;
+
+    line-height: 30px;
+  }
+  .section .form_row .col.field {
+    width: 73.82% !important;
+    min-width:100px;
+
+    padding: 10px 0px 10px 10px !important;
+
+    margin:0px;
+
+    text-align: left !important;
+  }
+  .section .form_row .col.field input {
+    width:80%;
+  }
+
+  .section .form_row.bottom_button {
+    background-color: #DDD !important;
+    text-align: center;
+    border-radius: 0px 0px 10px 10px;
+    background: #4989cf !important;
+    font-weight: bold;
+  }
+  .section .form_row.bottom_button a {
+    text-decoration: none !important;
+    color: #FFF;
+    display: block;
+    padding: 10px;
+    border-radius: 0px 0px 10px 10px;
+  }
+  .section .form_row.bottom_button a:hover {
+    background: #3872cf !important
+  }
+
+  .section .form_row.bottom_button input {
+    text-decoration: none !important;
+    color: #FFF;
+    display: block;
+    padding: 10px;
+    border-radius: 0px 0px 10px 10px;
+    background: transparent;
+    border: 0px;
+    width: 100%;
+    font-weight: bold;
+    font-size: 14px;
+  }
+  .section .form_row.bottom_button input:hover {
+    background: #3872cf !important
+  }
+
+.inner_menu {
+    padding:10px;
+}
+.inner_menu a{
+    padding: 10px;
+    color: #FFF;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: rgb(73, 137, 207);
+}
+

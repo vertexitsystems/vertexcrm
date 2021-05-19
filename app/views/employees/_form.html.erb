@@ -1,0 +1,67 @@
+<%= form_with(model: employee, local: true) do |form| %>
+
+  <div class="section" style="margin:0px">
+    <div class="row form_row top_title"> Create New Employee </div>
+    <div class="row form_row heading">
+      Personal Information
+    </div>
+    <div class="row form_row">
+      <div class="col title">Name: </div>
+      <div class="col field"> <%= form.text_field :name %></div>
+      <div class="clr"></div>
+    </div>
+
+    <div class="row form_row heading">
+      Login Information
+    </div>
+    <div class="row form_row">
+      <div class="col title">Email: </div>
+      <div class="col field"> <%= form.text_field :email %> </div>
+      <div class="clr"></div>
+    </div>
+    <div class="row form_row">
+      <div class="col title">Password: </div>
+      <div class="col field"> <%= form.text_field :password %> </div>
+      <div class="clr"></div>
+    </div>
+
+    <div class="row form_row bottom_button">
+      <%= form.submit %>
+    </div>
+  </div>
+<% end %>
+
+<%if false %>
+
+<%= form_with(model: employee, local: true) do |form| %>
+  <% if employee.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
+
+      <ul>
+        <% employee.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :rate %>
+    <%= form.number_field :rate %>
+  </div>
+
+  <div class="field">
+    
+    <%= form.select(:vendor_id, Vendor.all.collect {|p| [ p.profile.full_name, p.id ] }, { :include_blank => "None" }) %>
+    
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+    <%= link_to raw("<span class='button approve'><span><span>SAVE</span></span></span>"), "index_users", :onclick=>"document.forms['form1'].submit();"%>
+    <%= link_to raw("<span class='button approve'><span><span>SAVE</span></span></span>"), "index_users", :onclick=>"document.forms['form1'].submit();"%>
+  </div>
+<% end %>
+
+<% end %>

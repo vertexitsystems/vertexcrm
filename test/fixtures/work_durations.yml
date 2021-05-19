@@ -1,0 +1,11 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  hours: 1
+  work_day: 2021-01-27
+  employee_id: 1
+
+two:
+  hours: 1
+  work_day: 2021-01-27
+  employee_id: 1

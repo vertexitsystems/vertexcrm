@@ -1,0 +1,3 @@
+<%@employee = Employee.find(eid) if @employee.nil?%>
+<%= render 'form', work_duration: @work_duration.present? ? @work_duration : work_duration,
+	date: @date.present? ? @date : date %> 
