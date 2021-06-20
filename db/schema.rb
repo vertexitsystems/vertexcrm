@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_05_02_124316) do
+ActiveRecord::Schema.define(version: 2021_06_20_070403) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,6 +131,7 @@ ActiveRecord::Schema.define(version: 2021_05_02_124316) do
     t.boolean "time_card_certify", default: false
     t.boolean "company_certify", default: false
     t.boolean "save_for_later", default: false
+    t.string "timesheet_screenshot"
   end
 
 end

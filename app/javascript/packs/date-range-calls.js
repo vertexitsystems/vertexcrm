@@ -137,6 +137,14 @@ document.addEventListener("turbolinks:load", () => {
     }),
     $("#wizard-picture").change(function(){
         readURL(this);
+    }),
+    $(".parent-toggle").on("click",function(event){
+      if ($(event.target).is("div")){
+        var id = this.dataset.index;
+        $(".labeled-toggle-"+id).toggle(); 
+        $(".field-toggle-"+id).toggle();
+        $("#"+this.lastElementChild.attributes.id.nodeValue).slideToggle(500);
+      }
     })
 
 function readURL(input) {

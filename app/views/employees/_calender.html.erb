@@ -4,9 +4,6 @@
     <%= link_to "Print",employee_report_employees_url(eid:@employee.id,from_date:@from_date,to_date:@to_date,format: "pdf"),class: "btn"%>
 </div>
 <div class="row top">
-  <div class="col col20">
-    Employee
-  </div>
 <!--   <div class="col col20">
     Vendor
   </div> -->
@@ -21,41 +18,84 @@
   <div class="col col6">
     Total Hours
   </div>
+  <div class="col col6">
+    Timesheet / Screenshot
+  </div>
   <div class="col col9">
     Status
   </div>       
   <div style="clear:both"></div>
 </div>
 
- <%@work_durations.each_with_index do |work,index| %> 
-     <div class="row">
-       <div class="col col20">
-         <%= work.first.first %>
-       </div>
-  <!--      <div class="col col20">
-       </div> -->
+ <%@work_durations.each_with_index do |work,index| %>
+    <%
+      toggle_class = index <= 1 ? "parent-toggle" : ""
+      background_color = index <= 1 ? "" : "#efefef"
+      parent_index=index
+    %> 
+    <%= form_with(model: WorkDuration.new, local: true, html: {class: "calender-form"}) do |form| %>
+      <div class= "<%=toggle_class%>" data-index="<%=parent_index+1%>">
+        <div class="row" style="background-color:<%=background_color%>">
+          <div class="col col20 mt-3">
+            <%date = work.second.first.work_day.beginning_of_week.strftime("%B %d, %Y")%>
+            <%= date %>
+          </div>
+          
+          <% (today.at_beginning_of_week..today.at_end_of_week).to_a.take(5).map.each { |day| day }.each_with_index do |day, index| %>
+            <% hw = work.second.select{|w| w if w.work_day.strftime("%A") == day.strftime("%A")} %>
+            <div class="col col8 labeled-toggle-<%=parent_index + 1%>">
+              <%= form.label ["a","b","c","d","e","f","g"][index]+work.first.third.to_s, hw.count > 0 ? hw.first.hours : 0,class: "mt-3" %>
+            </div>
+            <div class="col col8 field-toggle field-toggle-<%=parent_index + 1%>">
+             <%= form.number_field ["a","b","c","d","e","f","g"][index]+work.first.third.to_s,in: 0..13,class: "value_duration",:value => hw.count > 0 ? hw.try(:first).try(:hours) : 0 %>
+            </div>
+            <% if index == 4 %>
+              <div class="col col6">
+                <%= form.label "#{work.second.last(5).collect(&:hours).compact.inject(:+)}",class: "mt-3" %>
+              </div>
+              <div class=" col col6">
+                <div class="calendar-picture">
+                  <img src="<%= work.try(:second).try(:last).try(:timesheet_screenshot).try(:url) %>" class="picture-src" id="wizardPicturePreview" title="">
+                </div>
+              </div>
+              <div class="col col9">
+                <%= form.label "#{work.try(:second).try(:first).try(:time_sheet_status)}",nil,class:"mt-3 #{work.try(:second).try(:first).try(:time_sheet_status)}" %>
+              </div>
+            <% end %>
+          <% end %>
 
-       <div class="col col20">
-         <%= work.second.first.work_day.beginning_of_week.strftime("%B %d, %Y") %>
-       </div>
-       
-       <% (today.at_beginning_of_week..today.at_end_of_week).to_a.take(5).map.each { |day| day }.each_with_index do |day, index| %>
-         <% hw = work.second.select{|w| w if w.work_day.strftime("%A") == day.strftime("%A")} %>
-         <div class="col col8">
-           <%= label_tag ["a","b","c","d","e","f","g"][index]+work.first.third.to_s, hw.count > 0 ? hw.first.hours : 0 %>
-         </div>
-         <% if index == 4 %>
-           <div class="col col6">
-            <%= label_tag "#{work.second.last(5).collect(&:hours).compact.inject(:+)}" %>
-           </div>
-           <div class="col col9">
-             <%= label_tag "#{work.try(:second).try(:first).try(:time_sheet_status)}",nil,class:"#{work.try(:second).try(:first).try(:time_sheet_status)}" %>
-           </div>
-         <% end %>
-       <% end %>
+          <div style="clear:both"></div>
+        </div>
+        <div class="row" id="toggle-row-<%=parent_index+1%>" style="display:none;">
 
-       <div style="clear:both"></div>
-     </div>
+          <div class="section">
+            <div>
+              <label for="file">
+                <b>Upload timesheet/screenshot</b>
+              </label> 
+              <br/>
+              <%= form.file_field :timesheet_screenshot,required: true %>
+            </div>
+            <b> Certification </b> 
+            <br/>
+            <ul>
+              <li> By submitting this, I agree that the information provided in the screen is accurate.I certify 
+                that the company has all the breaks as agreed upon.
+              </li>
+            </ul>
+          </div>
+            <% if @employee != nil %>
+              <%= form.hidden_field :eid, :value => @employee.id %>
+              <%= form.hidden_field :date,:value=> date %>
+            <% end %>
+            <div class="section actions">
+              <%= form.submit "Submit",class: "btn btn-primary",style: "width:35%;" %>
+              <%= form.submit "Save For Later",name: "save_for_later",class: "btn btn-primary",style:"width:61%;margin-right:4%;" %>
+            </div>
+            <div class="clr"></div>
+        </div>
+      </div>
+    <% end %>
  <% end %>
  <% if @work_durations.empty?%>
    <div class="row">

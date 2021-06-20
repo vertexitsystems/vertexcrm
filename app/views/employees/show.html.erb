@@ -12,13 +12,6 @@
 
 <p style="padding-left:20px">
   <strong>Name:</strong><%= @employee.profile.full_name %></br>
-  <strong>current Rate:</strong>
-  	<%if @employee.projects.count > 0 %>
-  		<%= @employee.projects.map{|p|p.rate}.reduce(&:+).to_i %> 
-  	<%else%>
-  		0
-  	<%end%>
-  	</br>
   <%if current_user.is_admin? %>
   	<strong>Role:</strong><%= @employee.profile.role %> </br>
   <% end %>

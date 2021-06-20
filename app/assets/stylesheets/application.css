@@ -369,6 +369,15 @@ height:40px;
   font-weight: bold;
   font-family: "Monospace";
 }
+.saved {
+    color: rgb(73, 137, 207);
+    /* background-color: yellow; */
+  padding: 2px 2px 2px 2px;
+  /* border-radius: 0.8em; */
+  font-size: 14px;
+  font-weight: bold;
+  font-family: "Monospace";
+}
 #total_hours {
   margin-top:4px;
   font-weight: bold; 
@@ -384,7 +393,7 @@ height:40px;
 .ap_container .main .section .row .col {
     float: left;
     padding: 10px 0px;
-    //min-width: 80px;
+    /* min-width: 80px; */
     text-align: center;
     width:15%;
     flex-basis: auto;
