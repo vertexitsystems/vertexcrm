@@ -58,9 +58,9 @@
         <%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
         <ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
           <li class="heading"><a> Main Menu </a></li>
-          <li class="option"> <a href="/work_durations/new"> Weekly Time Entry </a> </li>
+          <%# <li class="option"> <a href="/work_durations/new"> Weekly Time Entry </a> </li> %>
           <li class="option"> <a href="/employees/<%=@employee.id%>">Weekly Time Report </a> </li>
-          <li class="option" id="previous_weeks" style="cursor:pointer;">  <a > Previous Weeks </a> </li>
+          <%# <li class="option" id="previous_weeks" style="cursor:pointer;">  <a > Previous Weeks </a> </li> %>
 
           <li class="heading"><a> Personal Information </a></li>
           <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
