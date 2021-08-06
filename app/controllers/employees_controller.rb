@@ -10,12 +10,10 @@ class EmployeesController < ApplicationController
   # GET /employees/1
   # GET /employees/1.json
   def show
-    if !WorkDuration.where(work_day: Date.today.beginning_of_week).present?
-      @employee.vendors.each do |vendor|
-        project = @employee.projects.where(vendor_id: vendor.id).first
-        (Date.today.at_beginning_of_week..Date.today.at_end_of_week).to_a.take(5).map.each_with_index do |day, _index|
-          project.work_durations.create(hours: 0, work_day: day)
-        end
+    @employee.vendors.each do |vendor|
+      project = @employee.projects.where(vendor_id: vendor.id).first
+      (Date.today.at_beginning_of_week..Date.today.at_end_of_week).to_a.take(5).map.each_with_index do |day, _index|
+        project.work_durations.create(hours: 0, work_day: day)
       end
     end
     unless params[:from_date].present?
