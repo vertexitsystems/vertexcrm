@@ -12,8 +12,10 @@ class EmployeesController < ApplicationController
   def show
     @employee.vendors.each do |vendor|
       project = @employee.projects.where(vendor_id: vendor.id).first
-      (Date.today.at_beginning_of_week..Date.today.at_end_of_week).to_a.take(5).map.each_with_index do |day, _index|
-        project.work_durations.create(hours: 0, work_day: day)
+      last_week_date = Date.today - Date.today.wday
+      (last_week_date.at_beginning_of_week..Date.today.at_end_of_week).to_a.map.each_with_index do |day, _index|
+        day_entry = project.work_durations.where(work_day: day)
+        project.work_durations.create(hours: 0, work_day: day) unless day_entry.present?
       end
     end
     unless params[:from_date].present?

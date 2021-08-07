@@ -92,12 +92,11 @@ class WorkDurationsController < ApplicationController
       # Next iterate over all the hours each day has
       (date.at_beginning_of_week..date.at_end_of_week).to_a.take(5).map.each_with_index do |day, index|
         # extract the number of hours for each
-        hours_worked = params['work_duration'][%w[a b c d e][index] + vendor.id.to_s]
+        hours_worked = params['work_duration'][%w[a b c d e][index] + project.id.to_s]
         # Try to fetch the work duration object for the day that we are iterating over
         @work_duration = project.work_durations.where(work_day: day).first
 
         # if we did not find a pre existing work duration create new one else update oldone
-
         if @work_duration.nil?
           @work_duration = project.work_durations.new(hours: hours_worked, work_day: day,
                                                       time_card_certify: time_card_certify, company_certify: company_certify, save_for_later: save_for_later)
@@ -123,7 +122,7 @@ class WorkDurationsController < ApplicationController
         format.json { render :show, status: :created, location: @work_duration }
       else
         format.html do
-          redirect_to weekly_wise_data_work_durations_path(eid: employee.id, date: date.strftime('%B %d, %Y'))
+          redirect_to { redirect_to @work_duration.employee}
         end
         format.json { render json: @work_duration.errors, status: :unprocessable_entity }
       end
