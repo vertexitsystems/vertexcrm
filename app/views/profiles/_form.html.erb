@@ -78,7 +78,7 @@
       <div class="col field"> <%= form.text_field :password %> </div>
       <div class="clr"></div>
     </div>
-    <% if (params[:role] == "employee" || profile.try(:role).try(:downcase) == "employee") && current_user.is_admin? %>
+    <% if current_user.is_admin? || current_user.is_account_manager? %>
       <div class="row form_row">
         <div class="col title">Vendor: </div>
         <div class="col field">
