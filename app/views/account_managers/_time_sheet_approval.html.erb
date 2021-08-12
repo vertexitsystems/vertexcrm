@@ -30,7 +30,7 @@
       <div class="row">
         <%current_status = work.try(:second).try(:first).try(:time_sheet_status)%>
         <div class="col col4">
-          <%= check_box_tag 'p_ids[]'+index.to_s+work.first.third.to_s,work.first.third if current_status == "pending"  %>
+          <%= check_box_tag 'p_ids[]',work.first.third => "#{work.second.first.work_day}" if current_status == "pending"  %>
         </div>
         <div class="col col20">
           <%= work.first.first %>
