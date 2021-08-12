@@ -41,7 +41,7 @@
         <div style="clear:both"></div>
       </div>
       <%@work_durations.each_with_index do |work,index| %> 
-          <%current_status = work.try(:second).try(:second_to_last).try(:time_sheet_status)%>
+          <%current_status = work.try(:second).try(:first).try(:time_sheet_status)%>
           <div class="row">
             <div class="col col4">
               <%= check_box_tag 'p_ids[]',work.first.third => "#{work.second.first.work_day}" if current_status == "pending"%>
