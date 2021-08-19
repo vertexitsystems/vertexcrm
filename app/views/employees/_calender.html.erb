@@ -29,8 +29,9 @@
 
  <%@work_durations.each_with_index do |work,index| %>
     <%
-      toggle_class = index <= 1 ? "parent-toggle" : ""
-      background_color = index <= 1 ? "" : "#efefef"
+      
+      toggle_class = index <= 1 || work.second.first.time_sheet_status == "rejected" ? "parent-toggle" : ""
+      background_color = index <= 1 || work.second.first.time_sheet_status == "rejected" ? "" : "#efefef"
       parent_index=index
     %> 
     <%= form_with(model: WorkDuration.new, local: true, html: {class: "calender-form"}) do |form| %>
@@ -45,8 +46,8 @@
             <% hw = work.second.select{|w| w if w.work_day.strftime("%A") == day.strftime("%A")} %>
             <%
               current_status = hw.first.time_sheet_status
-              toggle_label_class = current_status == "unsubmitted" || current_status == "saved" ? "labeled-toggle-#{parent_index + 1}": ""
-              toggle_field_class = current_status == "unsubmitted" || current_status == "saved" ? "field-toggle-#{parent_index + 1}" : ""
+              toggle_label_class = current_status == "unsubmitted" || current_status == "saved" || current_status == "rejected" ? "labeled-toggle-#{parent_index + 1}": ""
+              toggle_field_class = current_status == "unsubmitted" || current_status == "saved" || current_status == "rejected" ? "field-toggle-#{parent_index + 1}" : ""
             %>
             <div class="col col8 <%=toggle_label_class%>">
               <%= form.label ["a","b","c","d","e","f","g"][index]+work.first.third.to_s, hw.count > 0 ? hw.first.hours : 0,class: "mt-3" %>
