@@ -50,14 +50,14 @@
               toggle_field_class = current_status == "unsubmitted" || current_status == "saved" || current_status == "rejected" ? "field-toggle-#{parent_index + 1}" : ""
             %>
             <div class="col col8 <%=toggle_label_class%>">
-              <%= form.label ["a","b","c","d","e","f","g"][index]+work.first.third.to_s, hw.count > 0 ? hw.first.hours : 0,class: "mt-3" %>
+              <%= form.label ["a","b","c","d","e","f","g"][index]+work.first.third.to_s, hw.count > 0 ? hw.first.hours : 0,class: "mt-3 label-duration-#{parent_index+1}" %>
             </div>
             <div class="col col8 field-toggle <%=toggle_field_class%>">
-             <%= form.number_field ["a","b","c","d","e","f","g"][index]+work.first.third.to_s,in: 0..12,class: "value_duration",:value => hw.count > 0 ? hw.try(:first).try(:hours) : 0 %>
+             <%= form.number_field ["a","b","c","d","e","f","g"][index]+work.first.third.to_s,in: 0..12,class: "value_duration emp-duration-#{parent_index+1}",:value => hw.count > 0 ? hw.try(:first).try(:hours) : 0, :data => {index: parent_index+1} %>
             </div>
             <% if index == 4 %>
               <div class="col col6">
-                <%= form.label "#{work.second.last(5).collect(&:hours).compact.inject(:+)}",class: "mt-3" %>
+                <%= form.label "#{work.second.last(5).collect(&:hours).compact.inject(:+)}",class: "mt-3", id: "total-hours-#{parent_index+1}" %>
               </div>
               <div class=" col col6">
                 <div class="calendar-picture">

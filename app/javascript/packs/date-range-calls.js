@@ -1,5 +1,5 @@
 document.addEventListener("turbolinks:load", () => {
-
+    var flag = true;
     $('[data-tooltip-display="true"]').tooltip(),
 
     flatpickr("#date-range-work,#date-range-work-report", {
@@ -89,15 +89,20 @@ document.addEventListener("turbolinks:load", () => {
       });
     }),
     $('.value_duration').keyup(function(event) {
+      var index = event.currentTarget.dataset.index;
       var current_val = parseInt(event.currentTarget.value || '0');
       var max_limit = parseInt(event.currentTarget.max)
       var min_limit = parseInt(event.currentTarget.min)
       if(current_val < min_limit || current_val > max_limit){
         $(this).val($(this).val().split('')[0]);
-        console.log(this);
       }
-      var ret = parseInt($("#work_duration_a1").val() || '0') + parseInt($("#work_duration_b1").val() || '0') + parseInt($("#work_duration_c1").val() || '0') + parseInt($("#work_duration_d1").val() || '0') + parseInt($("#work_duration_e1").val() || '0')
-      $("#total_hours").html(ret);
+      // var ret = parseInt($("#work_duration_a1").val() || '0') + parseInt($("#work_duration_b1").val() || '0') + parseInt($("#work_duration_c1").val() || '0') + parseInt($("#work_duration_d1").val() || '0') + parseInt($("#work_duration_e1").val() || '0')
+      // $("#total_hours").html(ret);
+      var total_hours = 0;
+      $(".emp-duration-"+index).each(function(index,input){
+        total_hours += parseInt(input.value || '0');
+      });
+      $("#total-hours-"+index).html(total_hours);
     }),
     $('#tab1').on("click",function(event) {
       $.ajax({
@@ -143,6 +148,22 @@ document.addEventListener("turbolinks:load", () => {
         var id = this.dataset.index;
         $(".labeled-toggle-"+id).toggle(); 
         $(".field-toggle-"+id).toggle();
+        var total_hours = 0;
+        if(flag){
+          $(".emp-duration-"+id).each(function(index,input){
+            total_hours += parseInt(input.value || '0');
+          });
+          flag = false;
+        }
+        else{
+          $(".label-duration-"+id).each(function(index,input){
+            total_hours += parseInt(input.text || '0');
+          });
+          flag = true;
+        }
+
+        $("#total-hours-"+id).html(total_hours);
+        
         $("#"+this.lastElementChild.attributes.id.nodeValue).slideToggle(500);
       }
     })
@@ -157,5 +178,7 @@ function readURL(input) {
         reader.readAsDataURL(input.files[0]);
     }
 }
+
+
 
 })
