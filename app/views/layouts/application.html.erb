@@ -109,11 +109,15 @@
           <li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
         </ul>
 	<% else %>
-	
+	<% current_user.profile.role = "Employee" %>
+	<% saved = current_user.save %>
+	SAVED: <%= saved %> <br /> <br />
 	<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
-	ROLE: <%= current_user.profile.role %>
-	EMP: <%= @employee %>
-	IS TRUE: <%= current_user.profile.role == "Employee" %>
+	DEBUG INFO
+	ROLE: <%= current_user.profile.role %> <br />
+	EMP: <%= @employee %> <br />
+	IS TRUE: <%= current_user.profile.role == "Employee" %> <br />
+	(If you are seeing this message please report to the developers)
     <% end %>
   </div>
     <% end %>
