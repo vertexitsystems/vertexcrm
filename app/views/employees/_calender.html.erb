@@ -125,7 +125,7 @@
   <div style="clear:both"></div>
 </div>
 
-
+<% employees.each do |employee| %>
 <% employee.projects.each do |p| %>
 	<% start_date = params["from_date"] ? DateTime.parse(params["from_date"]) : DateTime.new(2000, 1, 1) %>
 	<% end_date = params["to_date"] ? DateTime.parse(params["to_date"]) : DateTime.now %>
@@ -383,6 +383,8 @@
 		<% loop_date = loop_date.at_beginning_of_week - 1 %>
 		<% break if loop_date < work_days.last.work_day %>
 	<% end %>
+
+<% end %>
 
 <% end %>
  
