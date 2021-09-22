@@ -107,14 +107,7 @@
           <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
           <li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
         </ul>
-	<% else %>
-	<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
-	DEBUG INFO
-	ROLE: <%= current_user.profile.role %> <br />
-	EMP: <%= @employee %> <br />
-	IS TRUE: <%= current_user.profile.role == "Employee" %> <br />
-	(If you are seeing this message please report to the developers)
-    <% end %>
+	<% end %>
   </div>
     <% end %>
 

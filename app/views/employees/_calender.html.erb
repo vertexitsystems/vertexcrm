@@ -154,7 +154,7 @@
 		
 		<%# "Start: " + loop_start.strftime("%B %d, %Y, %A") + "End:" + loop_end.strftime("%B %d, %Y, %A") %> 
 		
-		<% if !can_update || week_wds.first.is_pending? || week_wds.first.is_approved? %>
+		<% if week_wds.first.is_pending? || week_wds.first.is_approved? %>
 		
 			<div class="parent" data-index="1">
 				<div class="row">
@@ -271,7 +271,7 @@
 				</div>
 			</div>
 	
-		<% else %> 
+		<% elsif can_update %> 
 
 			<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
 			<div class="parent-toggle" data-index="<%=loop_index%>">
