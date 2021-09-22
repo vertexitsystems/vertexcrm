@@ -10,6 +10,7 @@ class EmployeesController < ApplicationController
   # GET /employees/1
   # GET /employees/1.json
   def show
+    # Make sure when employee accesses this page they have work_durations for current and previous week
     @employee.vendors.each do |vendor|
       project = @employee.projects.where(vendor_id: vendor.id).first
       last_week_date = Date.today - Date.today.wday
@@ -18,25 +19,26 @@ class EmployeesController < ApplicationController
         project.work_durations.create(hours: 0, work_day: day) unless day_entry.present?
       end
     end
-    unless params[:from_date].present?
-      @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(work_day: 3.month.ago.beginning_of_week..Date.today.end_of_week).where(
-        'projects.employee_id =?', @employee.id
-      ).references(:project)
-    end
-    if params[:from_date].present?
-      @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week).where(
-        'projects.employee_id =?', @employee.id
-      ).references(:project)
-    end
-    if @work_durations.present?
-      @work_durations = @work_durations.order(work_day: :desc).group_by do |w|
-        [w.project.employee.name, w.project.vendor.name, w.project.id,
-         w.work_day.beginning_of_week]
-      end
-    end
-    @from_date = params[:from_date] if params[:from_date].present?
-    @to_date = params[:to_date] if params[:to_date].present?
-    @date = @from_date.present? ? "#{@from_date} to #{@to_date}" : 'Date Range'
+    
+    # unless params[:from_date].present?
+#       @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(work_day: 3.month.ago.beginning_of_week..Date.today.end_of_week).where(
+#         'projects.employee_id =?', @employee.id
+#       ).references(:project)
+#     end
+#     if params[:from_date].present?
+#       @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week).where(
+#         'projects.employee_id =?', @employee.id
+#       ).references(:project)
+#     end
+#     if @work_durations.present?
+#       @work_durations = @work_durations.order(work_day: :desc).group_by do |w|
+#         [w.project.employee.name, w.project.vendor.name, w.project.id,
+#          w.work_day.beginning_of_week]
+#       end
+#     end
+#     @from_date = params[:from_date] if params[:from_date].present?
+#     @to_date = params[:to_date] if params[:to_date].present?
+#     @date = @from_date.present? ? "#{@from_date} to #{@to_date}" : 'Date Range'
     respond_to do |format|
       format.html
       format.js

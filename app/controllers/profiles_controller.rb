@@ -28,8 +28,6 @@ class ProfilesController < ApplicationController
       when 2623 # Vendor
         redirect_to vendor_url(@profile.vendor.id)
       else
-      	current_user.profile.user_type = 445
-      	current_user.profile.save
         puts 'Wrong type'
       end
 
