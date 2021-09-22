@@ -11,22 +11,24 @@
 </div>
 
 <p style="padding-left:20px">
-  <strong>Name:</strong><%= @employee.profile.full_name %></br>
+  <strong>Name:</strong> <%= @employee.profile.full_name %></br>
+  <strong>Date:</strong> <%= Date.today.strftime("%b %d, %Y") %></br>
   <%if current_user.is_admin? %>
   	<strong>Role:</strong><%= @employee.profile.role %> </br>
   <% end %>
 </p>
 <div class="section">
 	<div class="info_right_daterange">
-	    <%= text_field_tag "employee_date_range_#{@employee.id}", "#{@date}",class: 'form-control date-range-picker',id:"date-range-work" %>
+	    <%# text_field_tag "employee_date_range_#{@employee.id}", "#{@date}",class: 'form-control date-range-picker',id:"date-range-work" %>
 	</div>
 	<div class="heading"> Weekly Report </div>
 </div>
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 <div class="section" id="calender">
-  <%= render "calender"%>
+  <%= render "calender", employee:@employee, can_update:true, can_act:false, show_employee_info:false %>
 </div>
+
 <% if false %>
 <div class="">
 <b> Assigned To: </b> <%# @employee.vendor == nil ? "None" : @employee.vendor.profile.full_name %>

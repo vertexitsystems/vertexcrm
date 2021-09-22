@@ -83,6 +83,9 @@ a:hover {
     float: left;
     line-height: 60px;
 }
+.nav_bar_title img{
+    height: 60px;
+}
 .nav_bar_title a {
 	font-size: 24px;
 	float:left;

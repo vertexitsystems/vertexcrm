@@ -30,6 +30,11 @@ class AccountManagersController < ApplicationController
          w.created_at.beginning_of_week]
       end
     end
+    
+    @from_date = params[:from_date] if params[:from_date].present?
+    @to_date = params[:to_date] if params[:to_date].present?
+    @date = @from_date.present? ? "#{@from_date} to #{@to_date}" : 'Date Range'
+    
     respond_to do |format|
       format.html
       format.js
@@ -189,7 +194,24 @@ class AccountManagersController < ApplicationController
       end
     end
   end
-
+  
+  def timesheet_report
+    #acc_mgr = current_user.profile.account_manager
+    @employees = Employee.all
+#     @work_durations = @employee.work_durations
+#     @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
+#     @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|
+#  [w.project.employee.name, w.work_day.beginning_of_week]
+#     end
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: 'Weekly TimeSheet', page_size: 'A4',
+               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, encoding: 'UTF-8', show_as_html: params.key?('debug')
+      end
+    end
+  end
+  
   # GET /account_managers/new
   def new
     @account_manager = AccountManager.new

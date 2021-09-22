@@ -77,6 +77,55 @@ class WorkDurationsController < ApplicationController
   # POST /work_durations
   # POST /work_durations.json
   def create
+    all_saved = true
+    save_for_later = params[:save_for_later].present?
+    
+    #params["wds"].first.keys.map{|m| params["wds"].first[m]}
+    employee = Employee.where(id: params['eid']).first
+    project = Project.where(id: params['pid']).first
+    
+    #iterate over all dates sent via params convert
+    params["wds"].first.keys.each do |date_key|
+      ## convert key into date and fetch work duration from project for the converted date
+      date = DateTime.parse(date_key)
+      
+      work_duration = project.work_durations.where(work_day: date).first
+      
+      ## if work duration not nil
+      if !work_duration.blank?
+        ### change hours to value
+        work_duration.hours = params["wds"].first[date.strftime("%b,%d,%Y")].to_i
+        ### change status to pending if save_for_later else saved
+        work_duration.time_sheet_status = save_for_later ? 'saved' : 'pending'
+        ### we also change the created_at date because this date is used to signify when the timesheet was submitted
+        work_duration.created_at = DateTime.now
+        
+        if params[:timesheet_screenshot] != nil
+          work_duration.timesheet_screenshot = params[:timesheet_screenshot] if date.strftime('%A') == 'Monday'
+        end
+      else
+        ## else
+        ### create new work duration with date, hours from param value, and status according to save_for_later
+        ## end if
+      end
+      # save work duration
+      if !work_duration.save
+        all_saved = false
+      end
+      #end iteration
+    end
+    respond_to do |format|
+      if all_saved 
+        format.html { redirect_to employee, notice: 'Work duration was successfully created.' }
+        format.json { render :show, status: :created, location: @work_duration }
+      else
+        format.html { redirect_to employee, flash: { error: "Some Values not saved. Please try again." } }
+      end
+    end
+    
+    return
+    byebug
+    
     # Today's date %>
     date = Date.today
     date = params['work_duration']['date'].to_datetime if params['work_duration']['date'].present?
@@ -95,7 +144,7 @@ class WorkDurationsController < ApplicationController
         hours_worked = params['work_duration'][%w[a b c d e][index] + project.id.to_s]
         # Try to fetch the work duration object for the day that we are iterating over
         @work_duration = project.work_durations.where(work_day: day).first
-
+        
         # if we did not find a pre existing work duration create new one else update oldone
         if @work_duration.nil?
           @work_duration = project.work_durations.new(hours: hours_worked, work_day: day,
@@ -155,6 +204,17 @@ class WorkDurationsController < ApplicationController
     end
   end
 
+  def update_duration_status
+    
+    wd = WorkDuration.find(params["action_id"])
+    wd.time_sheet_status = params["status"]
+    if wd.save
+      render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
+    else
+      render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}
+    end
+  end
+  
   private
 
   # Use callbacks to share common setup or constraints between actions.

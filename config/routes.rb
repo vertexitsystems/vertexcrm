@@ -8,6 +8,8 @@ Rails.application.routes.draw do
       get :filtered_vendor_report
       get :vendor_wise_data
       get :send_vendor_email
+      
+      get :timesheet_report
     end
   end
   resources :employees do
@@ -29,11 +31,14 @@ Rails.application.routes.draw do
     collection do 
       get :weekly_wise_data
       put :weekly_update
+      put :update_duration_status
     end
   end
   resources :projects
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-
+  
+  
+  
   root to: 'profiles#show'
 end
 

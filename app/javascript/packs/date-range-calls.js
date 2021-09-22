@@ -1,3 +1,4 @@
+var prev_value = "";
 document.addEventListener("turbolinks:load", () => {
     var flag = true;
     $('[data-tooltip-display="true"]').tooltip(),
@@ -15,26 +16,45 @@ document.addEventListener("turbolinks:load", () => {
       $("#previous_weeks").parents('ul').show();
     }),
     $('#date-range-work').change(function(d) {
-        var val = d.target.value
-        if (d.target.name.includes("time_sheet")){
-          var url = "/account_managers/time_sheet_approval.js"
-        }else if(d.target.name.includes("employee")){
-          var id = d.target.name.split("_")
-          var url = "/employees/"+id[id.length-1]+".js"
-        }
-        if(val.includes("to")){  
-          var data = val.split(" to ")
-          $.ajax({
-            type: "GET",
-            url: url,
-            data:{"from_date":data[0],"to_date":data[1]},
-            success: function(data) {
-
-            },
-            error: function(data) {
-            }
-          });
-        }
+		//alert("Something: " + d.target.value + " prev_value " + prev_value);
+		
+		if (prev_value == "") {
+			prev_value = d.target.value
+			return
+		} else {
+			//alert("load data with dates: " + d.target.value);
+			var split_dates = d.target.value.split(" to ");
+			var current_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+			if (split_dates.length > 1) {
+				
+				window.location.replace(current_url+"?from_date="+split_dates[0]+"&to_date="+split_dates[1]);
+			} else {
+				//alert("Date: start:" + split_dates[0] + ", End: " + split_dates[0]);
+				window.location.replace(current_url+"?from_date="+split_dates[0]+"&to_date="+split_dates[0]);
+			}
+			prev_value= ""
+			
+		}
+//         var val = d.target.value
+//         if (d.target.name.includes("time_sheet")){
+//           var url = "/account_managers/time_sheet_approval.js"
+//         }else if(d.target.name.includes("employee")){
+//           var id = d.target.name.split("_")
+//           var url = "/employees/"+id[id.length-1]+".js"
+//         }
+//         if(val.includes("to")){
+//           var data = val.split(" to ")
+//           $.ajax({
+//             type: "GET",
+//             url: url,
+//             data:{"from_date":data[0],"to_date":data[1]},
+//             success: function(data) {
+//
+//             },
+//             error: function(data) {
+//             }
+//           });
+//         }
     }),
     $('#date-range-work-report').change(function(d) {
         var val = d.target.value

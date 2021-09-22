@@ -1,3 +1,5 @@
+<% if false %>
+
 <%= form_tag("/account_managers/approve_or_reject",method:"put",remote:true,html: {class: "col80"},id:"approve-or-reject") do  %>
   <div class="container" style="margin:0 auto;width: 116%;">
     <div class="section">
@@ -107,3 +109,24 @@
     </div>
   </div>
 <%end%>
+
+<% end %>
+
+<div class="section">
+	<div class="heading"> Weekly Report </div>
+    <div class="info_right_daterange">
+        <%# text_field_tag 'time_sheet_date_range', "Date Range",class: 'form-control date-range-picker',id:"date-range-work" %> 
+		<%= text_field_tag 'time_sheet_date_range',  @date, class: 'form-control daterange',id:"date-range-work"  %>
+        <!-- <span class="material-icons calender-icon">calendar_today</span> -->
+    </div>
+</div>
+
+<div class="section" id="calender">
+	<div class="info_print_employee">
+	    <%# link_to "Print",employee_report_employees_url(eid:@employee.id,from_date:@from_date,to_date:@to_date,format: "pdf"),class: "btn"%>
+		<%= link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],format:"pdf"), class: "btn" %>
+	</div>
+<% Employee.all.each do |emp| %>
+  <%= render "employees/calender", employee:emp, can_update:false, can_act:true, show_unsubmitted:false %>
+<% end %>
+</div>

@@ -48,13 +48,15 @@ class EmployeesController < ApplicationController
     @work_durations = @employee.work_durations
     @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
     @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|
-      [w.project.employee.name, w.work_day.beginning_of_week]
+       [w.project.employee.name, w.work_day.beginning_of_week]
     end
     respond_to do |format|
       format.html
       format.pdf do
         render pdf: 'Employee Wise Report', page_size: 'A4',
-               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, encoding: 'UTF-8', show_as_html: params.key?('debug')
+               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
+               encoding: 'UTF-8', 
+               show_as_html: params.key?('debug')
       end
     end
   end
