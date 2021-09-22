@@ -26,7 +26,7 @@
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 <div class="section" id="calender">
-  <%= render "calender", employee:@employee, can_update:true, can_act:false, show_employee_info:false %>
+  <%= render "calender", employees:[@employee], can_update:true, can_act:false, show_employee_info:false %>
 </div>
 
 <% if false %>
