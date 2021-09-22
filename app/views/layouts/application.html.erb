@@ -109,7 +109,7 @@
           <li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
         </ul>
 	<% else %>
-	<% current_user.profile.role = "Employee" %>
+	<% current_user.profile.user_type = 445 %>
 	<% saved = current_user.save %>
 	SAVED: <%= saved %> <br /> <br />
 	<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
