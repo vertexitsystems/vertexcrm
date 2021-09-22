@@ -24,4 +24,8 @@ class WorkDuration < ApplicationRecord
     time_sheet_status == "rejected"
   end
   
+  def is_past_due_date?
+    (DateTime.now - work_day.at_beginning_of_week).to_i >= 14
+  end
+  
 end

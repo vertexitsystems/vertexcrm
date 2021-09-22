@@ -127,7 +127,7 @@
 
 <% employees.each do |employee| %>
 <% employee.projects.each do |p| %>
-	<% start_date = params["from_date"] ? DateTime.parse(params["from_date"]) : DateTime.new(2000, 1, 1) %>
+	<% start_date = params["from_date"] ? DateTime.parse(params["from_date"]) : DateTime.now - 5 %>
 	<% end_date = params["to_date"] ? DateTime.parse(params["to_date"]) : DateTime.now %>
 	<% work_days =  p.work_durations.where(work_day: start_date..end_date) %>
 	<% if !show_unsubmitted %>
@@ -144,9 +144,9 @@
 		<% loop_start  = loop_date.at_beginning_of_week %>
 		<% loop_end    = loop_date.at_end_of_week - 2 %>
 		<% if p.work_durations.where(:work_day => loop_start).count > 0 %>
-			<% week_status = p.work_durations.where(:work_day => loop_start).first.time_sheet_status %>
+			<%# week_status = p.work_durations.where(:work_day => loop_start).first.time_sheet_status %>
 			<% week_wds    = p.work_durations.where(:work_day => loop_start..loop_end).order(:work_day) %>
-			<% passed_due_date = (DateTime.now - week_wds.first.work_day).to_i >= 14  %>
+			<%# passed_due_date = (DateTime.now - week_wds.first.work_day).to_i >= 14  %>
 		<% else %>
 			<% loop_date = loop_date.at_beginning_of_week - 1 %>
 			<% next  %>
@@ -154,7 +154,7 @@
 		
 		<%# "Start: " + loop_start.strftime("%B %d, %Y, %A") + "End:" + loop_end.strftime("%B %d, %Y, %A") %> 
 		
-		<% if !can_update || week_status.downcase == "pending" || passed_due_date %>
+		<% if !can_update || week_wds.first.is_pending? || week_wds.first.is_approved? %>
 		
 			<div class="parent" data-index="1">
 				<div class="row">
@@ -162,7 +162,7 @@
 			        <div class="col col-5 mt-3">
 			          <%= (loop_start - 1).strftime("%b %d, %Y") %> - <%= (loop_end + 1).strftime("%b %d, %Y") %>
 					  <br />
-					  <% if week_status.downcase == "pending" || week_status.downcase == "approved" || week_status.downcase == "rejected" %>
+					  <% if week_wds.first.is_pending? || week_wds.first.is_approved? || week_wds.first.is_rejected? %>
 					  <span style="font-size:10px;color:#6E6E66">(<b>Submitted:</b> <%= week_wds.first.created_at.strftime("%b %d, %Y") %>)</span>
 					  <% end %>
 			        </div>
@@ -210,8 +210,8 @@
 					</div>
 					
 					<% if week_wds.count > 0 %>
-		            <div class="col col8 mt-3 <%= week_wds.first.time_sheet_status %>" id="status-div-<%=week_wds.first.id%>" style="<%= passed_due_date ? "margin-top: 0.3rem !important;" : "" %>">
-					  <% if passed_due_date %>
+		            <div class="col col8 mt-3 <%= week_wds.first.time_sheet_status %>" id="status-div-<%=week_wds.first.id%>" style="<%= week_wds.first.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
+					  <% if week_wds.first.is_past_due_date? %>
 						<label style="color:red">
 							PASSED DUE DATE
 						</label>
@@ -227,7 +227,7 @@
 					<% if can_act %>
 					<% if week_wds.count > 0 %>
 				    <div class="col col12">
-							<% if !passed_due_date && week_wds.first.time_sheet_status == "pending" %>
+							<% if !week_wds.first.is_past_due_date? && week_wds.first.time_sheet_status == "pending" %>
 					  <div class="action_buttons_parent" id="action_buttons_container_<%=week_wds.first.id%>">
 					      <div class="action_button_container approve">
 							  <div class="action_button_div">
