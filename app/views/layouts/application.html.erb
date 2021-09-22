@@ -49,6 +49,7 @@
 
       <% if user_signed_in? %>
   <div class="menu">
+	  Role: <%= current_user.profile.role %>
     <%if current_user.profile.role == "Admin" %>
       <ul>
         <li class="heading"><a> Admin Options </a></li>
@@ -60,7 +61,7 @@
         <li class="heading"><a> Personal Information </a></li>
         <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
       </ul>
-      <%elsif current_user.profile.role == "Employee" %>
+    <%elsif current_user.profile.role == "Employee" %>
         <%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
         <ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
           <li class="heading"><a> Main Menu </a></li>
@@ -90,7 +91,7 @@
             <%end%>
           </ul>
         <%end%>
-      <%elsif current_user.profile.role == "Account Manager"%>
+    <%elsif current_user.profile.role == "Account Manager"%>
         <ul>
           <li class="heading"><a> Main Menu </a></li>
           <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
@@ -102,12 +103,18 @@
           <li class="heading"><a> Personal Information </a></li>
           <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
         </ul>
-      <%elsif current_user.profile.role == "Assistant"%>
+    <%elsif current_user.profile.role == "Assistant"%>
         <ul>
           <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
           <li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
         </ul>
-      <% end %>
+	<% else %>
+	
+	<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
+	ROLE: <%= current_user.profile.role %>
+	EMP: <%= @employee %>
+	IS TRUE: <%= current_user.profile.role == "Employee" %>
+    <% end %>
   </div>
     <% end %>
 
