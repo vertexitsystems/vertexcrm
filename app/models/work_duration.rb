@@ -6,7 +6,8 @@ class WorkDuration < ApplicationRecord
 
   validates :hours, inclusion: { in: 0..13,
                                  message: '%<value>s is not in between 0 to 13' }
-  mount_uploader :timesheet_screenshot, AttachmentsUploader
+  #mount_uploader :timesheet_screenshot, AttachmentsUploader
+  has_one_attached :timesheet_screenshot
   
   def is_unsubmitted?
     time_sheet_status == "unsubmitted"

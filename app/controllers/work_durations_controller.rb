@@ -100,8 +100,9 @@ class WorkDurationsController < ApplicationController
         ### we also change the created_at date because this date is used to signify when the timesheet was submitted
         work_duration.created_at = DateTime.now
         
-        if params[:timesheet_screenshot] != nil
-          work_duration.timesheet_screenshot = params[:timesheet_screenshot] if date.strftime('%A') == 'Monday'
+        if params[:timesheet_screenshot] != nil && date.strftime('%A') == 'Monday'
+#          work_duration.timesheet_screenshot = params[:timesheet_screenshot] if date.strftime('%A') == 'Monday'
+          work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot])
         end
       else
         ## else
@@ -124,7 +125,7 @@ class WorkDurationsController < ApplicationController
     end
     
     return
-    byebug
+    #byebug
     
     # Today's date %>
     date = Date.today

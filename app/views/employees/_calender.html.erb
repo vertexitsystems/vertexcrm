@@ -192,7 +192,7 @@
 					<div class=" col col8">
 						<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
 							<% if week_wds.count > 0 %>
-							<img src="<%= week_wds.first.timesheet_screenshot.url %>" class="picture-src" id="wizardPicturePreview" title="Timesheet">
+							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? week_wds.first.timesheet_screenshot.url : "" %>" class="picture-src" id="wizardPicturePreview" title="Timesheet">
 							<% else %>
 							<img src="" class="picture-src" id="wizardPicturePreview" title="Unavailable">
 							<% end %>
@@ -202,7 +202,7 @@
 					<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
 						<div class="full-image">
 							<% if week_wds.count > 0 %>
-							<img src="<%= week_wds.first.timesheet_screenshot.url %>" class="picture-src" id="wizardPicturePreview" title="Timesheet">
+							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? week_wds.first.timesheet_screenshot.url : ""  %>" class="picture-src" id="wizardPicturePreview" title="Timesheet">
 							<% else %>
 							<img src="" class="picture-src" id="wizardPicturePreview" title="Unavailable">
 							<% end %>
@@ -312,13 +312,13 @@
 					
 					<div class=" col col8">
 						<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
-							<img src="<%= week_wds.first.timesheet_screenshot.url %>" class="picture-src" id="wizardPicturePreview" title="">
+							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? week_wds.first.timesheet_screenshot : ""  %>" class="picture-src" id="wizardPicturePreview" title="">
 						</div>
 					</div>
 					
 					<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
 						<div class="full-image">
-							<img src="<%= week_wds.first.timesheet_screenshot.url %>" class="picture-src" id="wizardPicturePreview" title="">
+							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? week_wds.first.timesheet_screenshot : ""  %>" class="picture-src" id="wizardPicturePreview" title="">
 						</div>
 					</div>
 			
@@ -338,13 +338,7 @@
 		                  <b>Upload timesheet/screenshot</b>
 		                </label> 
 		                <br/>
-						<% if week_wds.first.timesheet_screenshot.url != nil %>
-						<b>Selected File:</b>
-						<%= week_wds.first.timesheet_screenshot.url.split('/')[-1] %>
-						<% end %>
-		                <%= file_field_tag :timesheet_screenshot,required: week_wds.first.timesheet_screenshot.url == nil, 
-							value: week_wds.first.timesheet_screenshot.url, :style=>"width:100%" %>
-
+						<%= file_field_tag :timesheet_screenshot, :style=>"width:100%" %>
 		              </div>
 		              <b> Certification </b> 
 		              <br/>
