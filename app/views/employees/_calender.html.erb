@@ -312,7 +312,8 @@
 					
 					<div class=" col col8">
 						<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
-							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? week_wds.first.timesheet_screenshot : ""  %>" class="picture-src" id="wizardPicturePreview" title="">
+							
+							<img src="<%=  week_wds.first.timesheet_screenshot.attached? ? url_for(week_wds.first.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="">
 						</div>
 					</div>
 					
@@ -323,6 +324,9 @@
 					</div>
 			
 		            <div class="col col8 mt-3 <%= week_wds.first.time_sheet_status %>">
+						<% if params["debug"] %>
+						<%= week_wds.first.timesheet_screenshot.attached? ? url_for(week_wds.first.timesheet_screenshot) : "Not" %>
+						<% end %>
 		              <%= week_wds.first.time_sheet_status.upcase %>
 		            </div>
 					<% if can_act %>
