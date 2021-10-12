@@ -84,6 +84,18 @@ class WorkDurationsController < ApplicationController
     employee = Employee.where(id: params['eid']).first
     project = Project.where(id: params['pid']).first
     
+    
+    # IMPLEMENT: Server side authentication
+    # Make sure time sheet is attached to any work duration that is submitted for monday.. if not then we return with error measage
+    # monday_string = params["wds"].first.select{|ds| project.work_durations.where(work_day: DateTime.parse(ds)).first.work_day.monday? }.keys.first
+    # monday = project.work_durations.where(work_day:DateTime.parse(monday_string))
+    #
+    # FIX THIS CHECK # if !monday.timesheet_screenshot.attached?
+    #   format.html { redirect_to employee, flash: { error: "Timesheet Image must be provided." } }
+    #   reutrn
+    # end
+      
+    
     #iterate over all dates sent via params convert
     params["wds"].first.keys.each do |date_key|
       ## convert key into date and fetch work duration from project for the converted date
@@ -115,6 +127,7 @@ class WorkDurationsController < ApplicationController
       end
       #end iteration
     end
+    
     respond_to do |format|
       if all_saved 
         format.html { redirect_to employee, notice: 'Work duration was successfully created.' }

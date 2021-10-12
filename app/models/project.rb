@@ -27,7 +27,7 @@ class Project < ApplicationRecord
   end
 
   def weekly_earnings
-    !total_weekly_hours_worked.nil? ? total_weekly_hours_worked * rate : 0
+    !total_weekly_hours_worked.nil? ? total_weekly_hours_worked.to_i * rate.to_i : 0
   end
 
   def total_weekly_hours_worked

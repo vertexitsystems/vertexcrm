@@ -39,6 +39,20 @@
 		});
 		
 		/*
+			This event enables/disables submit buttons based on file is selected or not
+		*/
+		$(".timesheet_field").change(function (){
+	       var fileName = $(this).val();
+		   if (fileName != null || fileName != ""){
+			   $("#submit_options_" + $(this).attr("index") ).show();
+			   $("#submit_message_" + $(this).attr("index") ).hide();
+		   } else {
+			   $("#submit_options_" + $(this).attr("index") ).hide();
+			   $("#submit_message_" + $(this).attr("index") ).show();
+		   }
+	       
+	     });
+		/*
 			This is the ajax call that dynamically submits and updated the aprroved or rejected status
 		*/
 		$('.time_sheet_action_link').click(function(e) {
@@ -352,13 +366,13 @@
 					<div class=" col col8">
 						<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
 							
-							<img src="<%=  week_wds.first.timesheet_screenshot.attached? ? url_for(week_wds.first.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="">
+							<img src="<%=  week_wds.first.timesheet_screenshot.attached? ? url_for(week_wds.first.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
 						</div>
 					</div>
 					
 					<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
 						<div class="full-image">
-							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? url_for(week_wds.first.timesheet_screenshot) : "" %>" class="picture-src" id="wizardPicturePreview" title="">
+							<img src="<%= week_wds.first.timesheet_screenshot.attached? ? url_for(week_wds.first.timesheet_screenshot) : "" %>" class="picture-src" id="wizardPicturePreview" title=""  style="background:white">
 						</div>
 					</div>
 			
@@ -378,7 +392,7 @@
 		                  <b>Upload timesheet/screenshot</b>
 		                </label> 
 		                <br/>
-						<%= file_field_tag :timesheet_screenshot, :style=>"width:100%" %>
+						<%= file_field_tag :timesheet_screenshot, required: true, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
 		              </div>
 		              <b> Certification </b> 
 		              <br/>
@@ -397,10 +411,13 @@
 						<%# hidden_field_tag :date,:value=> date %>
 		              <% end %>
 					  
-					  
-		              <%= submit_tag "Submit", class: "btn btn-primary", style: "width:35%;" %> 
-					  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn btn-primary", style:"width:61%;margin-right:4%;" %>
-			 		  
+					  <div id="submit_options_<%=loop_index%>" style="display:<%= week_wds.first.timesheet_screenshot.attached? ? "block" : "none" %>" %>
+						  <%= submit_tag "Submit", class: "btn btn-primary", style: "width:35%;" %> 
+						  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn btn-primary", style:"width:61%;margin-right:4%;" %>
+					  </div>
+					  <div id="submit_message_<%=loop_index%>" style="display:<%= week_wds.first.timesheet_screenshot.attached? ? "none" : "block" %>" >
+						  Select Timesheet Image
+					  </div>
 					  <%# submit_tag "Submit", :style=>"min-width:100px" %>
 		            </div>
 		            <div class="clr"></div>
@@ -478,7 +495,7 @@
                 <b>Upload timesheet/screenshot</b>
               </label> 
               <br/>
-              <%= form.file_field :timesheet_screenshot,required: true %>
+              <%= form.file_field :timesheet_screenshot, required: true %>
             </div>
             <b> Certification </b> 
             <br/>
