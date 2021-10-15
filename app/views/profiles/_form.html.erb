@@ -86,15 +86,29 @@
         </div>
         <div class="clr"></div>
       </div>
-      <div class="row form_row">
+	  
+	  	<div class="row form_row" >
+		      <% if current_user.is_admin? || current_user.is_account_manager? %>
+		      <div class="col title">Role: </div>
+			  <div class="col field">
+			  <%# form.select :user_type, options_for_select({"Account Manager"=>"7392","Employee"=>445,"Assistant"=>"6523","Employer"=>"3396","Vendor"=>"2623"}.map{ |c| c }, 4) %>
+			  <%= form.select :user_type, options_for_select([['Account Manager','7392'],['Employee','445'],['Vendor','2623'],["Assistant","6523"],["Employer","3396"]], :selected => profile.user_type),
+			      {}, { :class => 'span3 controls controls-row' } %>
+			  <%# , { 'data-currency-code' => c.currency_code} ,%>
+			  </div>
+			  <div class="clr"></div>
+		      <% else %>
+		      <%= form.hidden_field :user_type, { :value => Profile.role_id(params[:role]) } %>
+		      <% end %>
+		</div>
+      
+	  <div class="row form_row">
         <div class="col title">Rate: </div>
         <div class="col field"> <%= form.text_field :rate %> </div>
         <div class="clr"></div>
       </div>
     <%end%>
-    <div class="row form_row" >
-      <%= form.hidden_field :user_type, { :value => Profile.role_id(params[:role]) } %>
-    </div>
+    
     <div class="row form_row bottom_button">
       <%= form.submit %>
     </div>
@@ -124,10 +138,15 @@
   <div class="field">
     <label> Password: </label> <%= form.text_field :password %>
   </div>
+  
   <div class="field" >
-    <%= form.hidden_field :user_type, { :value => Profile.role_id(params[:role]) } %>
-  </div>
-
+  <% if current_user.is_admin? || current_user?.is_account_manager? %>g
+  <%= form.select :user_type, { :value => {"hello":"123"} } %>
+  <% else %>
+  <%= form.hidden_field :user_type, { :value => Profile.role_id(params[:role]) } %>
+  <% end %>
+	</div>
+	
   <div class="actions">
     <%= form.submit %>
   </div>

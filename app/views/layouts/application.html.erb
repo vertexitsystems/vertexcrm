@@ -48,15 +48,33 @@
     <div class="ap_container">
 
       <% if user_signed_in? %>
-  <div class="menu">
-    <%if current_user.profile.role == "Admin" %>
+	  
+	  <div class="menu">
+	  
+	  <%if current_user.is_admin? %>
+	  <ul>
+		  <li class="heading"><a> Admin Options </a></li>
+	  	<li class="option"> <a href="/account_managers"> Manage Account Managers </a> </li>
+	  </ul>
+	  <% end %>
+	  <%if current_user.is_account_manager? %>
+	  <ul>
+		  <li class="heading"><a> Manager Options </a></li>
+	  	<li class="option"> <a href="/account_managers/time_sheet_approval?order=status"> Time Sheet Approval </a> </li>
+	  </ul>
+	  <% end %>
+	  
+    <%if current_user.is_admin? || current_user.is_account_manager? %>
       <ul>
-        <li class="heading"><a> Admin Options </a></li>
-        <li class="option"> <a href="/account_managers"> Manage Account Managers </a> </li>
+        <li class="heading"><a> Role Management </a></li>
         <li class="option"> <a href="/employees"> Manage Employees </a> </li>
         <li class="option"> <a href="/vendors"> Manage Vendors </a> </li>
+		<li class="option"> <a href="/projects"> Manage Projects </a> </li>
+		<% if false%>
         <li class="option"> <a href="/employers"> Manage Employers </a> </li>
-
+		<li class="option"> <a href="/assistants"> Manage Assistants </a> </li>
+		<% end %>
+		
         <li class="heading"><a> Personal Information </a></li>
         <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
       </ul>
@@ -90,21 +108,9 @@
             <%end%>
           </ul>
         <%end%>
-    <%elsif current_user.profile.role == "Account Manager"%>
-        <ul>
-          <li class="heading"><a> Main Menu </a></li>
-          <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
-          <li class="option"> <a href="/account_managers/vendor_wise_data"> Vendor Wise Reports </a> </li>
-          <li class="option"> <a href="/employees"> Manage Employees </a> </li>
-          <li class="option"> <a href="/assistants"> Manage Assistants </a> </li>
-          <!-- <li class="option"> <a href="/vendors"> Vendor Information </a> </li> -->
-
-          <li class="heading"><a> Personal Information </a></li>
-          <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
-        </ul>
     <%elsif current_user.profile.role == "Assistant"%>
         <ul>
-          <li class="option"> <a href="/account_managers/time_sheet_approval"> Time Sheet Approval </a> </li>
+          <li class="option"> <a href="/account_managers/time_sheet_approval?order=status"> Time Sheet Approval </a> </li>
           <li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
         </ul>
 	<% end %>

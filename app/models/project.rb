@@ -1,4 +1,6 @@
 class Project < ApplicationRecord
+  after_destroy :destroy_associations
+  
   belongs_to :employee
   belongs_to :vendor
 
@@ -32,5 +34,11 @@ class Project < ApplicationRecord
 
   def total_weekly_hours_worked
     weekly_hours_worked.reject { |item| item.blank? }.reduce(&:+)
+  end
+  
+  private
+
+  def destroy_associations
+    self.work_durations.destroy_all
   end
 end

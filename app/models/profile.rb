@@ -1,4 +1,6 @@
 class Profile < ApplicationRecord
+  after_destroy :destroy_associations
+  
   belongs_to :user
   has_one :employee, dependent: :destroy
   has_one :vendor, dependent: :destroy
@@ -55,5 +57,10 @@ class Profile < ApplicationRecord
 
   def email
     user.try(:email)
+  end
+  
+  private
+  def destroy_associations
+    self.user.destroy
   end
 end

@@ -106,11 +106,36 @@
 			});
 		});
 	});
+	
+	$(document).ready(function() {
+		$('#employee_filter').on('change', function () {
+			var emp_id = $(this).val();
+			loadURL("emp=" + emp_id);
+	        return false;
+		});
+		
+		$('#vendor_filter').on('change', function () {
+			var vend_id = $(this).val();
+			loadURL("vend=" + vend_id);
+			return false;
+		});
+		
+		function loadURL(with_param){
+			window.location = location.protocol + '//' + location.host + location.pathname + "?" + with_param;
+	        return false;
+		}
+	});
+
 </script>
 	
 	<%= csrf_meta_tag %>
+	
 	<% if !defined?(can_update) %>
 	<% can_update = false %>
+	<% end %>
+	
+	<% if !defined?(can_update_all) %>
+	<% can_update_all = false %>
 	<% end %>
 	
 	<% if !defined?(can_act) %>
@@ -125,29 +150,75 @@
 	<% show_employee_info = true %>
 	<% end %>
 	
+	<% if !defined?(show_filters) %>
+	<% show_filters = false %>
+	<% end %>
+	
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
-<div class="info_print_employee">
-    <%# link_to "Print",employee_report_employees_url(eid:@employee.id,from_date:@from_date,to_date:@to_date,format: "pdf"),class: "btn"%>
+
+<% if show_filters %>
+<div class="info_print_employee flex_row">
+	<div class="flex_col">
+		<%= link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],format:"pdf"), class: "button_link" %>
+	</div>
+	<div class="flex_col"></div>
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'vendor_filter',  options_from_collection_for_select(Vendor.all, "id", "name", params["vend"]), class: 'form-control', id: "vendor_filter", :prompt => "Vendor Filter" %>
+	</div>
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'employee_filter',  options_from_collection_for_select(Employee.all, "id", "name", params["emp"]), class: 'form-control', id: "employee_filter", :prompt => "Employee Filter" %>
+	</div>
+	<div class="flex_col" style="padding:0px 10px">
+		<%= text_field_tag 'time_sheet_date_range',  @date, class: 'form-control daterange',id:"date-range-work" %>
+	</div>
 </div>
+<% end %>
+
+<% def sortable_header_old(title, sort_value) %>
+  <div class="flex_row">
+	  <div class="flex_col"></div>
+	  
+	  <% if params["order"].present? && params["order"] == sort_value %>
+	  <div class="flex_col" style="flex-grow:0">
+		  <i class="material-icons">arrow_drop_down</i>
+	  </div>
+	  <% end %>
+	  
+	  <div class="flex_col" style="flex-grow:2;line-height:25px">
+		  <%= link_to title, url_for( :order => sort_value ) %>
+	  </div>
+	  <div class="flex_col"></div>
+  </div>
+<% end %>
+
+<% def sortable_header(title, sort_value) %>
+	<% if params["order"].present? && params["order"] == sort_value %>
+  	<i class="material-icons" style="display: inline-flex;vertical-align: top;line-height:16px;">arrow_drop_down</i>
+	<%= title %>
+	<% else %>
+	<span style="font-size:12px;line-height:14px;"><%= link_to title, url_for( :order => sort_value ) %></span>
+	<% end %>
+<% end %>
+
 <div class="row top">
-<!--   <div class="col col20">
-    Vendor
-  </div> -->
   <div class="col col-5">
-    Time Period
+	  <% sortable_header("Time Period", "period") %>
   </div>
   <% if show_employee_info %>
   <div class="col col8">
-    Employee
+	  <% sortable_header("Employee", "employee") %>
   </div>
   <div class="col col8">
-    Vendor
+	  <% sortable_header("Vendor", "vendor") %>
   </div>
   <% end %>
+  <div class="col col8">
+	  <% sortable_header("Project", "project") %>
+  </div>
+  
   <% for day in (today.at_beginning_of_week..today.at_end_of_week).to_a.take(5).map.each { |day| day } do %>
     <div class="col col8">
-      <%# day.strftime("%a %d") %>
 	  <%= day.strftime("%a") %>
     </div>
   <% end %>
@@ -158,7 +229,7 @@
     Timesheet / Screenshot
   </div>
   <div class="col col8">
-    Status
+	<% sortable_header("Status", "status") %>
   </div>
   
   <% if can_act %>
@@ -170,39 +241,224 @@
   <div style="clear:both"></div>
 </div>
 
-<% employees.each do |employee| %>
-<% employee.projects.each do |p| %>
-	<% start_date = params["from_date"] ? DateTime.parse(params["from_date"]) : DateTime.now - 7 %>
+<% wds = work_durations.where("extract(dow from work_day) = ?", 1).select{|wd|wd.employee != nil} %>
+<% if params["emp"].present? %>
+<% wds = wds.select {|wd| wd.employee.id == params["emp"].to_i }%>
+<% end %>
+<% if params["vend"].present? %>
+<% wds = wds.select {|wd| wd.employee.id == params["vend"].to_i }%>
+<% end %>
+<% if params["from_date"].present? %>
+<% wds = wds.select {|wd| wd.work_day >= params["from_date"].to_date.beginning_of_week }%>
+<% end %>
+<% if params["to_date"].present? %>
+<% wds = wds.select {|wd| wd.work_day <= params["to_date"].to_date.beginning_of_week }%>
+<% end %>
+
+<% if params["order"] == "employee" %>
+<% wds = wds.sort_by { |wd| wd.employee } %>
+<% elsif params["order"] == "project" %>
+<% wds = wds.sort_by { |wd| wd.project_id } %>
+<% elsif params["order"] == "status" %>
+<% wds = wds.sort_by { |wd| wd.is_past_due_date? ? 100 : ["pending", "rejectd", "approved", "unsubmitted", "saved"].index(wd.time_sheet_status.downcase).to_i } %>
+<% else %>
+<% wds = wds.sort_by { |wd| wd.work_day }.reverse %>
+<% end %>
+
+<% wds.each_with_index do |wd, loop_index|%>
+
+<% if !show_unsubmitted && wd.time_sheet_status.downcase == "unsubmitted" %>
+	<% next %>
+<% end %>
+
+<% allow_update = can_update_all ||  (can_update && !wd.is_past_due_date? && wd.should_update?) %>
+
+<div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
+	<div class="row">
+	    <div class="col col-5 mt-3">
+	      <%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
+		  <%=  %> <br />
+	    </div>
+	
+		<% if show_employee_info %>
+	    <div class="col col8 mt-3">
+	      <%= wd.employee.profile.full_name %>
+	    </div>
+	    <div class="col col8 mt-3">
+	      <%= wd.vendor.profile.full_name %>
+	    </div>
+	    <% end %>
+	    <div class="col col8 mt-3">
+	      Proj<%= wd.project.id %>
+	    </div>
+		<% wd.all_days.each do |day| %>
+			<div class="col col8 labeled-toggle-<%=loop_index%>">
+	          <label class="mt-3 " for="work_duration_a1">
+				  <%= day.hours %>
+	          </label>
+	        </div>
+			<div class="col col8 field-toggle-<%=loop_index%>" style="display:none">
+	          <label class="mt-3 label-duration-1" for="work_duration_a1">
+	          	<%= number_field_tag :thought_author, "", :name => "wds[][#{day.work_day.strftime("%b,%d,%Y")}]", :value => day.hours, :min=>"0", :max=>"12", :class=>"hours_value hours_value_#{loop_index}", :result_id=>"total_#{loop_index}", :siblings=>"hours_value_#{loop_index}", :style=>"min-width:60px" %> <br />
+	          </label>
+	        </div>
+		<% end %>
+	
+		<div class="col col8 labeled-toggle-<%=loop_index%>">
+	      <label class="mt-3 label-duration-1" for="work_duration_a1">
+	      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+	      </label>
+	    </div>
+		<div class="col col8 field-toggle-<%=loop_index%>" style="display:none">
+	      <label class="mt-3 label-duration-1" for="work_duration_a1", id="total_<%=loop_index%>">
+	      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+	      </label>
+		</div>
+		<div class=" col col8">
+			<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
+			
+				<img src="<%=  wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+			</div>
+		</div>
+	
+		<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
+			<div class="full-image">
+				<img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : "" %>" class="picture-src" id="wizardPicturePreview" title=""  style="background:white">
+			</div>
+		</div>
+
+		<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
+		  <% if !can_update_all && wd.is_past_due_date? %>
+			<label style="color:red">
+				PASSED DUE DATE
+			</label>
+		  <% else %>
+		  	<%= wd.time_sheet_status.upcase %>
+		  <% end %>
+	    </div>
+	
+		<% if can_act %>
+		<div class="col col12">
+		<% if !wd.is_past_due_date? && wd.time_sheet_status == "pending" %>
+			<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
+			  <div class="action_button_container approve">
+				  <div class="action_button_div">
+					  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="approved" action_id="<%=  wd.id %>"> 
+						  <i class="material-icons time_sheet_action">check_circle</i> 
+					  </a>
+				  </div>
+				  <div class="action_button_title">
+					  Approve
+				  </div>
+			  </div>
+
+			  <div class="action_button_container reject">
+				  <div class="action_button_div">
+					  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="rejected" action_id="<%=  wd.id %>">
+						  <i class="material-icons time_sheet_action">cancel</i>
+					  </a>
+				  </div>
+				  <div class="action_button_title">
+					  Reject
+				  </div>
+			  </div>
+			</div>
+  
+			<div class="action_button_container" id="action_loader_container_<%= wd.id%>" style="display:none">
+				<div class="action_button_div">
+				  <div class="loader"></div>
+				</div>
+				<div class="action_button_title">
+				  Updating Status. Please wait.
+				</div>
+			</div>
+		
+		<% end %>
+	
+		</div>
+		<% end %>
+	</div>
+	<div class="row" id="toggle-row-<%=loop_index%>" style="display:none;">
+        <div class="section">
+          <div>
+            <label for="file">
+              <b>Upload timesheet/screenshot</b>
+            </label> 
+            <br/>
+			<%= file_field_tag :timesheet_screenshot, required: true, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
+          </div>
+          <b> Certification </b> 
+          <br/>
+          <ul>
+            <li> By submitting this, I agree that the information provided in the screen is accurate.I certify 
+              that the company has all the breaks as agreed upon.
+            </li>
+          </ul>
+        </div>
+
+        <div class="section actions">
+          <%# form.submit "Submit",class: "btn btn-primary",style: "width:35%;" %>
+          <% if @employee != nil %>
+            <%= hidden_field_tag :eid, @employee.id %>
+            <%= hidden_field_tag :pid, wd.project.id %>
+			<%# hidden_field_tag :date,:value=> date %>
+          <% end %>
+		  
+		  <div id="submit_options_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "block" : "none" %>" %>
+			  <%= submit_tag "Submit", class: "btn btn-primary", style: "width:35%;" %> 
+			  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn btn-primary", style:"width:61%;margin-right:4%;" %>
+		  </div>
+		  <div id="submit_message_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "none" : "block" %>" >
+			  Select Timesheet Image
+		  </div>
+		  <%# submit_tag "Submit", :style=>"min-width:100px" %>
+        </div>
+        <div class="clr"></div>
+
+	</div>
+</div>
+<% end %>
+
+<% if false %>
+<%# projs = projects.sort_by{|p|p.work_durations} %>
+<% projects.each do |p| %>
+	<% durations = p.work_durations %>
+	<% start_date = params["from_date"] ? DateTime.parse(params["from_date"]) : DateTime.new(2000, 1, 1,  0,  0,  0) %>
 	<% end_date = params["to_date"] ? DateTime.parse(params["to_date"]) : DateTime.now %>
-	<% work_days =  p.work_durations.where(work_day: start_date..end_date) %>
+	<% work_days =  durations.where(work_day: start_date..end_date) %>
+
 	<% if !show_unsubmitted %>
-		<% work_days = work_days.where.not(time_sheet_status: "saved").where.not(time_sheet_status: "unsubmitted") %>
+		<%# work_days = work_days.where.not(time_sheet_status: "saved").where.not(time_sheet_status: "unsubmitted") %>
+		<% work_days = work_days.where.not(time_sheet_status: "unsubmitted") %>
 	<% end %>
 	<% work_days = work_days.order(:work_day).reverse %>
 
 	<% loop_date = end_date %>
 
 	<% loop_index = 1 %>
-
-
-	<%#byebug%>
 	
+
 	<% loop do %>
 		<% break if work_days.count <= 0 %>
 		<% loop_start  = loop_date.at_beginning_of_week %>
 		<% loop_end    = loop_date.at_end_of_week - 2 %>
+		
 		<% if p.work_durations.where(:work_day => loop_start).count > 0 %>
 			<%# week_status = p.work_durations.where(:work_day => loop_start).first.time_sheet_status %>
-			<% week_wds    = p.work_durations.where(:work_day => loop_start..loop_end).order(:work_day) %>
+			<% week_wds    = durations.where(:work_day => loop_start..loop_end).order(:work_day) %>
 			<%# passed_due_date = (DateTime.now - week_wds.first.work_day).to_i >= 14  %>
 		<% else %>
 			<% loop_date = loop_date.at_beginning_of_week - 1 %>
 			<% next  %>
 		<% end %>
 		
+		<% if !show_unsubmitted && week_wds.first.time_sheet_status.downcase == "unsubmitted" %>
+			<% loop_date = loop_date.at_beginning_of_week - 1 %>
+			<% next %>
+		<% end %>
 		<%# "Start: " + loop_start.strftime("%B %d, %Y, %A") + "End:" + loop_end.strftime("%B %d, %Y, %A") %> 
 		
-		<% if week_wds.first.is_pending? || week_wds.first.is_approved? %>
+		<% if false#!can_update#week_wds.first.is_pending? || week_wds.first.is_approved? %>
 		
 			<div class="parent" data-index="1">
 				<div class="row">
@@ -275,41 +531,41 @@
 					<% if can_act %>
 					<% if week_wds.count > 0 %>
 				    <div class="col col12">
-							<% if !week_wds.first.is_past_due_date? && week_wds.first.time_sheet_status == "pending" %>
-					  <div class="action_buttons_parent" id="action_buttons_container_<%=week_wds.first.id%>">
-					      <div class="action_button_container approve">
-							  <div class="action_button_div">
-								  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="approved" action_id="<%=  week_wds.first.id %>"> 
-									  <i class="material-icons time_sheet_action">check_circle</i> 
-								  </a>
+						<% if !week_wds.first.is_past_due_date? && week_wds.first.time_sheet_status == "pending" %>
+							<div class="action_buttons_parent" id="action_buttons_container_<%=week_wds.first.id%>">
+							  <div class="action_button_container approve">
+								  <div class="action_button_div">
+									  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="approved" action_id="<%=  week_wds.first.id %>"> 
+										  <i class="material-icons time_sheet_action">check_circle</i> 
+									  </a>
+								  </div>
+								  <div class="action_button_title">
+									  Approve
+								  </div>
 							  </div>
-							  <div class="action_button_title">
-								  Approve
+
+							  <div class="action_button_container reject">
+								  <div class="action_button_div">
+									  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="rejected" action_id="<%=  week_wds.first.id %>">
+										  <i class="material-icons time_sheet_action">cancel</i>
+									  </a>
+								  </div>
+								  <div class="action_button_title">
+									  Reject
+								  </div>
 							  </div>
-						  </div>
+							</div>
 					  
-					      <div class="action_button_container reject">
-							  <div class="action_button_div">
-								  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="rejected" action_id="<%=  week_wds.first.id %>">
-									  <i class="material-icons time_sheet_action">cancel</i>
-								  </a>
-							  </div>
-							  <div class="action_button_title">
-								  Reject
-							  </div>
-						  </div>
-					  </div>
-					  
-				      <div class="action_button_container" id="action_loader_container_<%=week_wds.first.id%>" style="display:none">
-						  <div class="action_button_div">
-							  <div class="loader"></div>
-						  </div>
-						  <div class="action_button_title">
-							  Updating Status. Please wait.
-						  </div>
-					  </div>
-					  	<% end %>
-					  <div class="clr"></div>
+							<div class="action_button_container" id="action_loader_container_<%=week_wds.first.id%>" style="display:none">
+								<div class="action_button_div">
+								  <div class="loader"></div>
+								</div>
+								<div class="action_button_title">
+								  Updating Status. Please wait.
+								</div>
+							</div>
+						<% end %>
+						<div class="clr"></div>
 				    </div>
 					<% else %>
 					<div class="col col12 ">unsubmitted</div>
@@ -319,10 +575,12 @@
 				</div>
 			</div>
 	
-		<% elsif can_update %> 
-
+		<% else#elsif can_update_all || (can_update && !week_wds.first.is_past_due_date?) %> 	
+		
+		<div style="order:<%= loop_index == 3 ? "0" : "1" %>">
+			<% allow_update = can_update_all ||  (can_update && !week_wds.first.is_past_due_date? && week_wds.first.should_update?) %>
 			<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
-			<div class="parent-toggle" data-index="<%=loop_index%>">
+			<div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
 		
 				<div class="row">
 					
@@ -351,6 +609,7 @@
 				          	<%= number_field_tag :thought_author, "", :name => "wds[][#{wd.work_day.strftime("%b,%d,%Y")}]", :value => wd.hours, :min=>"0", :max=>"12", :class=>"hours_value hours_value_#{loop_index}", :result_id=>"total_#{loop_index}", :siblings=>"hours_value_#{loop_index}", :style=>"min-width:60px" %> <br />
 				          </label>
 				        </div>
+						
 					<% end %>
 					
 					<div class="col col8 labeled-toggle-<%=loop_index%>">
@@ -376,12 +635,56 @@
 						</div>
 					</div>
 			
-		            <div class="col col8 mt-3 <%= week_wds.first.time_sheet_status %>">
-		              <%= week_wds.first.time_sheet_status.upcase %>
+					<div class="col col8 mt-3 <%= week_wds.first.time_sheet_status %>" id="status-div-<%=week_wds.first.id%>" style="<%= week_wds.first.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
+					  <% if !can_update_all && week_wds.first.is_past_due_date? %>
+						<label style="color:red">
+							PASSED DUE DATE
+						</label>
+					  <% else %>
+					  	<%= week_wds.first.time_sheet_status.upcase %>
+					  <% end %>
 		            </div>
+					
 					<% if can_act %>
 					<div class="col col12">
+					<% if !week_wds.first.is_past_due_date? && week_wds.first.time_sheet_status == "pending" %>
+						<div class="action_buttons_parent" id="action_buttons_container_<%=week_wds.first.id%>">
+						  <div class="action_button_container approve">
+							  <div class="action_button_div">
+								  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="approved" action_id="<%=  week_wds.first.id %>"> 
+									  <i class="material-icons time_sheet_action">check_circle</i> 
+								  </a>
+							  </div>
+							  <div class="action_button_title">
+								  Approve
+							  </div>
+						  </div>
+
+						  <div class="action_button_container reject">
+							  <div class="action_button_div">
+								  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="rejected" action_id="<%=  week_wds.first.id %>">
+									  <i class="material-icons time_sheet_action">cancel</i>
+								  </a>
+							  </div>
+							  <div class="action_button_title">
+								  Reject
+							  </div>
+						  </div>
+						</div>
+				  
+						<div class="action_button_container" id="action_loader_container_<%=week_wds.first.id%>" style="display:none">
+							<div class="action_button_div">
+							  <div class="loader"></div>
+							</div>
+							<div class="action_button_title">
+							  Updating Status. Please wait.
+							</div>
+						</div>
+						
+					<% end %>
+					
 					</div>
+					
 					<% end %>
 			
 				</div>
@@ -426,8 +729,8 @@
 		
 			</div>
 			<% end %>
-	
-			
+		</div>
+		
 		<% end %>
 		
 		<% loop_index += 1 %>
@@ -437,7 +740,6 @@
 
 <% end %>
 
-<% end %>
  
  
  <% if false %>
@@ -544,4 +846,5 @@
    </div>
  <%end%>
 
+<% end %>
 <% end %>

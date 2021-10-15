@@ -1,3 +1,19 @@
+<div class="section">
+	<div class="row top">
+		<div class="col">#</div>
+		<div class="col">Name</div>
+		<div class="col">Number of Employees</div>
+	</div>
+	<% Vendor.all.each_with_index do |vendor, index| %>
+	<div class="row">
+		<div class="col"><%= index %></div>
+		<div class="col"><%= vendor.name %></div>
+		<div class="col"><%= vendor.employees.count %></div>
+	</div>
+	<% end %>
+</div>
+<% if false %>
+
 <div class="container" style="margin:0 auto;width: 116%;">
   <div class="section">
     <div class="info_right_daterange">
@@ -117,3 +133,5 @@
   </div>
 
 </div>
+
+<% end %>

@@ -1,6 +1,12 @@
 class AccountManagersController < ApplicationController
   before_action :set_account_manager, only: %i[show edit update destroy]
-
+  before_action :check_access, only: [:show, :edit, :update, :destroy, :index]
+  
+  def check_access
+    if !(current_user.is_admin? || current_user.is_account_manager?)
+      redirect_to root_path
+    end
+  end
   # GET /account_managers
   # GET /account_managers.json
   def index
@@ -12,25 +18,25 @@ class AccountManagersController < ApplicationController
   def show; end
 
   def time_sheet_approval
-    status = { '1' => 'pending', '2' => 'approved', '3' => 'rejected' }
-    unless params[:from_date].present?
-      @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(
-        created_at: 3.month.ago.beginning_of_week..Date.today.end_of_day, save_for_later: false
-      )
-    end
-    if params[:from_date].present?
-      @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(
-        created_at: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week, save_for_later: false
-      )
-    end
-    @work_durations = @work_durations.where(time_sheet_status: status[params[:status_filter]]) if params[:status_filter].present? && @work_durations.present?
-    if @work_durations.present?
-      @work_durations = @work_durations.group_by do |w|
-        [w.project.employee.name, w.project.vendor.name, w.project.id,
-         w.created_at.beginning_of_week]
-      end
-    end
-    
+    # status = { '1' => 'pending', '2' => 'approved', '3' => 'rejected' }
+    # unless params[:from_date].present?
+    #   @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(
+    #     created_at: 3.month.ago.beginning_of_week..Date.today.end_of_day, save_for_later: false
+    #   )
+    # end
+    # if params[:from_date].present?
+    #   @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(
+    #     created_at: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week, save_for_later: false
+    #   )
+    # end
+    # @work_durations = @work_durations.where(time_sheet_status: status[params[:status_filter]]) if params[:status_filter].present? && @work_durations.present?
+    # if @work_durations.present?
+    #   @work_durations = @work_durations.group_by do |w|
+    #     [w.project.employee.name, w.project.vendor.name, w.project.id,
+    #      w.created_at.beginning_of_week]
+    #   end
+    # end
+    #
     @from_date = params[:from_date] if params[:from_date].present?
     @to_date = params[:to_date] if params[:to_date].present?
     @date = @from_date.present? ? "#{@from_date} to #{@to_date}" : 'Date Range'
@@ -42,49 +48,49 @@ class AccountManagersController < ApplicationController
   end
 
   def vendor_wise_data
-    status = { '1' => 'pending', '2' => 'approved', '3' => 'rejected' }
-    @from_date = params[:from_date]
-    @to_date = params[:to_date]
-    @status = params[:status_filter]
-    @biweekly = true if params[:biweekly].present?
-    @monthly =  true if params[:monthly].present?
-    @quartarly = true if params[:quartarly].present?
-    @profile_id = Profile.where(full_name: params[:vendor_name]).try(:last).try(:id) if params[:vendor_name].present?
-    if !@from_date.present? && !@biweekly && !@monthly && !@quartarly
-      @work_durations = WorkDuration.includes(project: %i[employee
-                                                          vendor]).where(created_at: 3.month.ago.beginning_of_week..Date.today.end_of_day)
-    end
-    if !@from_date.present? && @biweekly.present?
-      @work_durations = WorkDuration.includes(project: %i[employee
-                                                          vendor]).where(created_at: 2.week.ago.beginning_of_week..Date.today.end_of_day)
-    end
-    if !@from_date.present? && @monthly.present?
-      @work_durations = WorkDuration.includes(project: %i[employee
-                                                          vendor]).where(created_at: 1.month.ago.beginning_of_week..Date.today.end_of_day)
-    end
-    if !@from_date.present? && @quartarly.present?
-      @work_durations = WorkDuration.includes(project: %i[employee
-                                                          vendor]).where(created_at: DateTime.now.beginning_of_year.beginning_of_week..(DateTime.now.beginning_of_year.beginning_of_week + 16.week).beginning_of_week)
-    end
-    if @from_date.present?
-      @work_durations = WorkDuration.includes(project: %i[employee
-                                                          vendor]).where(created_at: DateTime.parse(@from_date).beginning_of_week..DateTime.parse(@to_date).end_of_week)
-    end
-    if @profile_id.present? && @work_durations.present?
-      @work_durations = @work_durations.where('vendors.profile_id =?',
-                                              @profile_id).references(:vendor)
-    end
-    @work_durations = @work_durations.where(time_sheet_status: status[@status]) if @status.present? && @work_durations.present?
-    if @work_durations.present?
-      @work_durations = @work_durations.group_by do |w|
-        [w.project.employee.name, w.project.vendor.name, w.project.id,
-         w.created_at.beginning_of_week]
-      end
-    end
-    respond_to do |format|
-      format.html
-      format.js
-    end
+    # status = { '1' => 'pending', '2' => 'approved', '3' => 'rejected' }
+#     @from_date = params[:from_date]
+#     @to_date = params[:to_date]
+#     @status = params[:status_filter]
+#     @biweekly = true if params[:biweekly].present?
+#     @monthly =  true if params[:monthly].present?
+#     @quartarly = true if params[:quartarly].present?
+#     @profile_id = Profile.where(full_name: params[:vendor_name]).try(:last).try(:id) if params[:vendor_name].present?
+#     if !@from_date.present? && !@biweekly && !@monthly && !@quartarly
+#       @work_durations = WorkDuration.includes(project: %i[employee
+#                                                           vendor]).where(created_at: 3.month.ago.beginning_of_week..Date.today.end_of_day)
+#     end
+#     if !@from_date.present? && @biweekly.present?
+#       @work_durations = WorkDuration.includes(project: %i[employee
+#                                                           vendor]).where(created_at: 2.week.ago.beginning_of_week..Date.today.end_of_day)
+#     end
+#     if !@from_date.present? && @monthly.present?
+#       @work_durations = WorkDuration.includes(project: %i[employee
+#                                                           vendor]).where(created_at: 1.month.ago.beginning_of_week..Date.today.end_of_day)
+#     end
+#     if !@from_date.present? && @quartarly.present?
+#       @work_durations = WorkDuration.includes(project: %i[employee
+#                                                           vendor]).where(created_at: DateTime.now.beginning_of_year.beginning_of_week..(DateTime.now.beginning_of_year.beginning_of_week + 16.week).beginning_of_week)
+#     end
+#     if @from_date.present?
+#       @work_durations = WorkDuration.includes(project: %i[employee
+#                                                           vendor]).where(created_at: DateTime.parse(@from_date).beginning_of_week..DateTime.parse(@to_date).end_of_week)
+#     end
+#     if @profile_id.present? && @work_durations.present?
+#       @work_durations = @work_durations.where('vendors.profile_id =?',
+#                                               @profile_id).references(:vendor)
+#     end
+#     @work_durations = @work_durations.where(time_sheet_status: status[@status]) if @status.present? && @work_durations.present?
+#     if @work_durations.present?
+#       @work_durations = @work_durations.group_by do |w|
+#         [w.project.employee.name, w.project.vendor.name, w.project.id,
+#          w.created_at.beginning_of_week]
+#       end
+#     end
+#     respond_to do |format|
+#       format.html
+#       format.js
+#     end
   end
 
   def filtered_vendor_report

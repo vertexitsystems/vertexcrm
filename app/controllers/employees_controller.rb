@@ -11,6 +11,7 @@ class EmployeesController < ApplicationController
   # GET /employees/1.json
   def show
     # Make sure when employee accesses this page they have work_durations for current and previous week
+
     @employee.vendors.each do |vendor|
       project = @employee.projects.where(vendor_id: vendor.id).first
       last_week_date = Date.today - Date.today.wday

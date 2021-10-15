@@ -15,6 +15,10 @@
  *= require_tree .
  *= require_self
  */
+:root {
+	--main-color:rgb(222, 3, 7);
+	--main-hover-color:rgb(188, 3, 7);;
+}
 body {
 	margin:0px;
 	padding:0px;
@@ -36,12 +40,12 @@ body {
 
 a:hover {
     background:transparent;
-    color: rgb(73, 137, 207);
+    color: var(--main-color);
 }
 
 .clr { clear:both; }
 .button_link {
-    background: #4989cf;
+    background: var(--main-color);
     border: none;
     border-radius: 4px;
     font-size: 18px;
@@ -55,7 +59,7 @@ a:hover {
     margin:5px 10px;
 }
 .button_link:hover {
-    background: #4080cf;
+    background: var(--main-color);//#4080cf;
     border: none;
     border-radius: 4px;
     font-size: 18px;
@@ -75,8 +79,7 @@ a:hover {
 }
 .nav_bar{
     padding-left:50px;
-
-    background-color: rgb(73, 137, 207);
+	background-color: var(--main-color);
 }
 .nav_bar_title {
     height: 60px;
@@ -85,6 +88,9 @@ a:hover {
 }
 .nav_bar_title img{
     height: 60px;
+	
+	-webkit-filter: brightness(0) invert(1);
+	filter: brightness(0) invert(1);
 }
 .nav_bar_title a {
 	font-size: 24px;
@@ -95,7 +101,7 @@ a:hover {
     font-family: 'Roboto', sans-serif;
 }
 .nav_bar_title a:hover {
-    background-color:none;
+    background-color:var(--main-hover-color);
     background-color: transparent;
 }
 .nav_bar_menu{
@@ -121,7 +127,7 @@ a:hover {
     padding: 18px;
 }
 .nav_bar_menu a:hover {
-    background-color: rgb(30, 120, 207);
+    background-color: var(--main-hover-color);
 }
 .nav_bar_menu a span {
     float: right;
@@ -200,10 +206,13 @@ form .actions input {
     box-shadow: inset 0px 1px 2px #E6EBEB;
     background: #fff;
 }
+.new_user .actions input:hover {
+	background-color: var(--main-hover-color);
+}
 .new_user .actions input {
     letter-spacing: 0.75px;
-    background-color: #FFBE30;
-    color: #171A1A;
+    background-color: var(--main-color);
+    color: #FFF;
     border: 1px solid #FFBE30;
     width:100%;
 
@@ -284,7 +293,7 @@ height:40px;
 
 .ap_container .main {
     float:left; 
-    width:70%;
+    width:80%;
 }
 
 .ap_container .main .heading {
@@ -313,7 +322,7 @@ height:40px;
 .ap_container .main .section .row.top { 
     font-weight: bold;
     color: #FFF;
-    background: rgb(73, 137, 207);
+    background: var(--main-color);//rgb(73, 137, 207);
     border-radius: 10px 10px 0px 0px;
     padding-right: 28px;
 }
@@ -321,7 +330,7 @@ height:40px;
 .ap_container .main .section .row.bottom { 
     font-weight: bold;
     color: #FFF;
-    background: rgb(73, 137, 207);
+    background: var(--main-color);//rgb(73, 137, 207);
     border-radius: 0px 0px 10px 10px;
     
 }
@@ -401,6 +410,9 @@ height:40px;
     width:15%;
     flex-basis: auto;
 }
+.ap_container .main .section .top a {
+	color:#FFF;
+}
 
 .col2{
     width:2% !important;
@@ -455,7 +467,21 @@ height:40px;
 }
 
 
-
+.flex_container{
+	display:flex;
+	flex-direction:column;
+}
+.flex_row{
+	display:flex;
+	flex-direction:row;
+	flex-grow:1;
+	text-align:center;
+}
+.flex_col{
+	flex-grow:1;
+	width:10%;
+}
+	
 .section .row.form_row {
     width: auto !important;
     border-bottom: 0px !important;
@@ -464,7 +490,7 @@ height:40px;
     padding:10px;
   }
   .section .form_row.top_title {
-    background: #4989cf !important;
+    background: var(--main-color) !important;
     border-radius: 8px 8px 0px 0px;
     color: white;
     font-size: 18px !important;
@@ -501,7 +527,7 @@ height:40px;
     background-color: #DDD !important;
     text-align: center;
     border-radius: 0px 0px 10px 10px;
-    background: #4989cf !important;
+	background: var(--main-color) !important;
     font-weight: bold;
   }
   .section .form_row.bottom_button a {
@@ -521,14 +547,14 @@ height:40px;
     display: block;
     padding: 10px;
     border-radius: 0px 0px 10px 10px;
-    background: transparent;
+    background: var(--main-color) !important;
     border: 0px;
     width: 100%;
     font-weight: bold;
     font-size: 14px;
   }
   .section .form_row.bottom_button input:hover {
-    background: #3872cf !important
+    background: var(--main-color) !important;
   }
 
 .inner_menu {

@@ -17,7 +17,10 @@ Rails.application.routes.draw do
       get :employee_report
     end
   end
+  
   devise_for :users
+  match 'users/:id' => 'users#destroy', :via => :delete, :as => :destroy_user
+  
   resources :vendors do 
     collection do 
       get :vendor_wise_report

@@ -1,35 +1,34 @@
-
 <p id="notice"><%= notice %></p>
-
-<div class="inner_menu">
-	<%if current_user.is_admin? or current_user.is_account_manager? %>
-	<%= link_to "Assign New Vendor", new_project_path(:eid=>@employee.id) %>
-	<%if @employee.vendors.count > 0 %>
-		<%= link_to "Edit Details", new_work_duration_path(:pid=>@employee.profile.id) %>
-	<%end%>
-	<%end %>
-</div>
 
 <p style="padding-left:20px">
   <strong>Name:</strong> <%= @employee.profile.full_name %></br>
-  <strong>Date:</strong> <%= Date.today.strftime("%b %d, %Y") %></br>
-  <%if current_user.is_admin? %>
+  <%if current_user.is_admin? || current_user.is_account_manager? %>
   	<strong>Role:</strong><%= @employee.profile.role %> </br>
   <% end %>
 </p>
+
 <div class="section">
 	<div class="info_right_daterange">
 	    <%# text_field_tag "employee_date_range_#{@employee.id}", "#{@date}",class: 'form-control date-range-picker',id:"date-range-work" %>
 	</div>
 	<div class="heading"> Weekly Report </div>
 </div>
+
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 <div class="section" id="calender">
-  <%= render "calender", employees:[@employee], can_update:true, can_act:false, show_employee_info:false %>
+  <%= render "calender", 
+  	work_durations:@employee.work_durations, 
+  	can_update_all:current_user.is_admin?, 
+  	can_update:current_user.profile.id == @employee.profile.id, 
+  	can_act:false, 
+  	show_employee_info:current_user.is_admin? || current_user.is_account_manager?,
+	show_filters:false
+	%>
 </div>
 
 <% if false %>
+
 <div class="">
 <b> Assigned To: </b> <%# @employee.vendor == nil ? "None" : @employee.vendor.profile.full_name %>
 </div>

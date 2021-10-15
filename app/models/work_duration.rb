@@ -29,4 +29,17 @@ class WorkDuration < ApplicationRecord
     (DateTime.now - work_day.at_beginning_of_week).to_i >= 14
   end
   
+  def should_update?
+    return !(is_pending? || is_approved? || is_past_due_date?)
+  end
+  
+  def all_days
+    days = []
+    start_day = work_day.beginning_of_week
+  	(0...5).each do |diff|
+      days << WorkDuration.select {|dur| dur.work_day == (start_day + diff) && dur.project_id == project_id }.first
+    end
+    return days
+  end
+  
 end
