@@ -125,7 +125,6 @@
 	        return false;
 		}
 	});
-
 </script>
 	
 	<%= csrf_meta_tag %>
@@ -267,12 +266,14 @@
 
 <% wds.each_with_index do |wd, loop_index|%>
 
-<% if !show_unsubmitted && wd.time_sheet_status.downcase == "unsubmitted" %>
+
+<% if !show_unsubmitted && (wd.is_saved? || wd.is_unsubmitted?) %>
 	<% next %>
 <% end %>
 
 <% allow_update = can_update_all ||  (can_update && !wd.is_past_due_date? && wd.should_update?) %>
 
+<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
 <div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
 	<div class="row">
 	    <div class="col col-5 mt-3">
@@ -328,11 +329,12 @@
 		</div>
 
 		<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
-		  <% if !can_update_all && wd.is_past_due_date? %>
+		  <% if wd.is_past_due_date? %>
 			<label style="color:red">
 				PASSED DUE DATE
 			</label>
 		  <% else %>
+		  	
 		  	<%= wd.time_sheet_status.upcase %>
 		  <% end %>
 	    </div>
@@ -385,7 +387,7 @@
               <b>Upload timesheet/screenshot</b>
             </label> 
             <br/>
-			<%= file_field_tag :timesheet_screenshot, required: true, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
+			<%= file_field_tag :timesheet_screenshot, required: !wd.timesheet_screenshot.attached?, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
           </div>
           <b> Certification </b> 
           <br/>
@@ -405,8 +407,13 @@
           <% end %>
 		  
 		  <div id="submit_options_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "block" : "none" %>" %>
-			  <%= submit_tag "Submit", class: "btn btn-primary", style: "width:35%;" %> 
-			  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn btn-primary", style:"width:61%;margin-right:4%;" %>
+			  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"width:61%;margin-right:4%;" %>
+			  
+			  <% if wd.work_day.end_of_week - 2 > Date.today %>
+			  Cannot submit until weeks end.
+			  <% else %>
+			  <%= submit_tag "Submit", class: "btn", style: "width:35%;" %>
+			  <% end %>
 		  </div>
 		  <div id="submit_message_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "none" : "block" %>" >
 			  Select Timesheet Image
@@ -416,9 +423,13 @@
         <div class="clr"></div>
 
 	</div>
+	
 </div>
 <% end %>
+<% end %>
 
+ <!-- DELETE BELOW
+	 
 <% if false %>
 <%# projs = projects.sort_by{|p|p.work_durations} %>
 <% projects.each do |p| %>
@@ -740,7 +751,7 @@
 
 <% end %>
 
- 
+
  
  <% if false %>
  
@@ -848,3 +859,5 @@
 
 <% end %>
 <% end %>
+	 
+	 -->

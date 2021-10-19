@@ -25,8 +25,11 @@ class WorkDuration < ApplicationRecord
     time_sheet_status == "rejected"
   end
   
-  def is_past_due_date?
+  def is_two_weeks_old?
     (DateTime.now - work_day.at_beginning_of_week).to_i >= 14
+  end
+  def is_past_due_date?
+    !is_approved? && is_two_weeks_old?
   end
   
   def should_update?
