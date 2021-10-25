@@ -1,17 +1,36 @@
 <p id="notice"><%= notice %></p>
 
-<p style="padding-left:20px">
-  <strong>Name:</strong> <%= @employee.profile.full_name %></br>
-  <%if current_user.is_admin? || current_user.is_account_manager? %>
-  	<strong>Role:</strong><%= @employee.profile.role %> </br>
-  <% end %>
-</p>
+<% def show_document(title, document) %>
+<div class="employee_info_item">
+	<b><%= title %>: </b> 
+	<% if document.present? %>
+	<%= link_to "Show", document.url %> | <%= link_to "Change", edit_employee_path(@employee) %>
+	<% else %>
+	(Not Provided)
+	<% end %>
+</div>
+<% end %>
 
-<div class="section">
-	<div class="info_right_daterange">
-	    <%# text_field_tag "employee_date_range_#{@employee.id}", "#{@date}",class: 'form-control date-range-picker',id:"date-range-work" %>
+<div class="flex_row">
+	<div class="flex_col" style="text-align:left">
+		<p style="padding-left:20px">
+		  <strong>Name:</strong> <%= @employee.profile.full_name %> | (<%= link_to "Edit", edit_employee_path(@employee) %>)</br>
+		  <%if current_user.is_admin? || current_user.is_account_manager? %>
+		  	<strong>Role:</strong><%= @employee.profile.role %> </br>
+		  <% end %>
+		</p>
 	</div>
-	<div class="heading"> Weekly Report </div>
+	<div class="flex_col" style="text-align:right">
+		<% show_document("Passport", @employee.passport) %>
+		<% show_document("Visa", @employee.visa) %>
+		<% show_document("State ID", @employee.state_id) %>
+		<% show_document("i9", @employee.i9) %>
+		<% show_document("E-Verify", @employee.e_verify) %>
+		<% show_document("W9", @employee.w9) %>
+		<% show_document("PSA", @employee.psa) %>
+		<% show_document("Void Check", @employee.voided_check_copy) %>
+		
+	</div>
 </div>
 
 <% today = Date.today # Today's date %>

@@ -1,6 +1,7 @@
 class WorkDurationsController < ApplicationController
   # before_action :set_work_duration, only: [:show,:destroy]
-
+  before_action :authenticate_user!
+  
   # GET /work_durations
   # GET /work_durations.json
   def index

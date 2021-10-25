@@ -1,5 +1,6 @@
 class ProfilesController < ApplicationController
   before_action :set_profile, only: %i[show edit update destroy]
+  before_action :authenticate_user!
 
   # GET /profiles
   # GET /profiles.json
@@ -47,8 +48,7 @@ class ProfilesController < ApplicationController
   # POST /profiles
   # POST /profiles.json
   def create
-    @profile = Profile.new(profile_params)
-
+    @profile = Profile.create(profile_params)
     @user = User.new(email: params[:profile][:email], password: params[:profile][:password],
                      password_confirmation: params[:profile][:password])
     if @user.save
@@ -59,6 +59,7 @@ class ProfilesController < ApplicationController
       #  return format.html { render :new }
       # end
     end
+    
     @profile.user = @user if @user.errors.messages.blank?
     respond_to do |format|
       if @user.errors.messages.blank? && @profile.save
@@ -76,6 +77,9 @@ class ProfilesController < ApplicationController
                              employee_id: @employee.id)
             end
             puts 'Employee Created'
+            format.html { redirect_to employee_edit_path(@profile.employee), notice: 'Profile was successfully created.' }
+            format.json { render :show, status: :created, location: @profile }
+            return
           else
             puts 'Employee NOT created' + @employee.errors.messages.to_s
           end
@@ -164,7 +168,6 @@ class ProfilesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def profile_params
-    params.require(:profile).permit(:full_name, :user_type, :email, :password, :phone1, :phone2, :address, :photo, :resume,
-                                    :degree)
+    params.require(:profile).permit(:full_name, :user_type, :email, :password, :phone1, :phone2, :address, :photo, :resume, :degree, :country, :state, :city, :zip_code, :first_name, :middle_name, :last_name)
   end
 end

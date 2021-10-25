@@ -1,67 +1,77 @@
-<%= form_with(model: employee, local: true) do |form| %>
+<%= employee.passport.present? %>
+<% def show_file_field(form, field, title, file) %>
+<b><%= title %>:</b>
+<span style="font-size:12px">
+<% if file.present? %>
+(<%= link_to "Show Previous", file.url %>)
+<% else %>
+(Not Provided)
+<% end %>
+</span>
 
-  <div class="section" style="margin:0px">
-    <div class="row form_row top_title"> Create New Employee </div>
-    <div class="row form_row heading">
-      Personal Information
-    </div>
-    <div class="row form_row">
-      <div class="col title">Name: </div>
-      <div class="col field"> <%= form.text_field :name %></div>
-      <div class="clr"></div>
-    </div>
-
-    <div class="row form_row heading">
-      Login Information
-    </div>
-    <div class="row form_row">
-      <div class="col title">Email: </div>
-      <div class="col field"> <%= form.text_field :email %> </div>
-      <div class="clr"></div>
-    </div>
-    <div class="row form_row">
-      <div class="col title">Password: </div>
-      <div class="col field"> <%= form.text_field :password %> </div>
-      <div class="clr"></div>
-    </div>
-
-    <div class="row form_row bottom_button">
-      <%= form.submit %>
-    </div>
-  </div>
+<%= form.file_field field, accept: 'image/*', :class => "timesheet_field", :style=>"width:100%" %>
 <% end %>
 
-<%if false %>
-
 <%= form_with(model: employee, local: true) do |form| %>
-  <% if employee.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(employee.errors.count, "error") %> prohibited this employee from being saved:</h2>
 
-      <ul>
-        <% employee.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+<%= render "profiles/embedable_form", profile:employee.profile, allow_submit:false, form:form %>
 
-  <div class="field">
-    <%= form.label :rate %>
-    <%= form.number_field :rate %>
-  </div>
-
-  <div class="field">
-    
-    <%= form.select(:vendor_id, Vendor.all.collect {|p| [ p.profile.full_name, p.id ] }, { :include_blank => "None" }) %>
-    
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-    <%= link_to raw("<span class='button approve'><span><span>SAVE</span></span></span>"), "index_users", :onclick=>"document.forms['form1'].submit();"%>
-    <%= link_to raw("<span class='button approve'><span><span>SAVE</span></span></span>"), "index_users", :onclick=>"document.forms['form1'].submit();"%>
-  </div>
-<% end %>
+<div class="page_title"> Work Details </div>
+<div class="flex_col">
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Vendor:</b>
+			<%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox' %>
+		</div>
+		<div class="flex_col">
+			<b>Vendor Rate:</b>
+			<%= form.text_field :vendor_rate %>
+		</div>
+		<div class="flex_col">
+			<b>Employee Rate:</b>
+			<%= form.text_field :employee_rate %>
+		</div>
+	</div>
+</div>
+<div class="page_title"> Documents </div>
+<div class="flex_col">
+	<div class="flex_row">
+		<div class="flex_col">
+			<% show_file_field(form, :passport, "Passport", employee.passport) %>
+		</div>
+		<div class="flex_col">
+			<% show_file_field(form, :visa, "Visa", employee.visa) %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<% show_file_field(form, :state_id, "State ID", employee.state_id) %>
+		</div>
+		<div class="flex_col">
+			<% show_file_field(form, :i9, "i9", employee.i9) %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<% show_file_field(form, :e_verify, "E-Verify", employee.e_verify) %>
+		</div>
+		<div class="flex_col">
+			<% show_file_field(form, :w9, "W9", employee.w9) %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<% show_file_field(form, :psa, "PSA", employee.psa) %>
+		</div>
+		<div class="flex_col">
+			<% show_file_field(form, :voided_check_copy, "Voided Check", employee.voided_check_copy) %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col" style="text-align:right">
+			<%= form.submit "Submit", :class=>"submit_button" %>
+		</div>
+	</div>
+</div>
 
 <% end %>

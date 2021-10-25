@@ -38,9 +38,21 @@ body {
   margin: 0;
 }
 
+a {
+    color: var(--main-color) !important;
+}
 a:hover {
-    background:transparent;
-    color: var(--main-color);
+	background:transparent;
+	text-decoration:underline;
+    color: var(--main-color) !important;
+}
+
+.page_title{
+	font-weight:bold;
+	font-size:24px;
+	color:var(--main-color);
+	padding:20px 30px 5px 30px;
+	border-bottom:1px solid var(--main-color);
 }
 
 .clr { clear:both; }
@@ -136,7 +148,7 @@ a:hover {
 }
 form {
     padding: 20px;
-    width: 90%;
+    //width: 90%;
     margin: 0 auto;
 }
 form .field {
@@ -274,6 +286,7 @@ height:40px;
     font-size: 16px;
 }
 .ap_container .menu li.heading a {
+	color:#000 !important;
     font-weight: bold;
     margin: 14px 0px 0px 0px;
 }
@@ -282,10 +295,12 @@ height:40px;
 }
 
 .ap_container .menu a {
+	color:#556 !important;
     display: block;
     text-decoration: none;
     padding: 5px 30px;
 }
+
 .ap_container .menu a:hover {
     color:#000;
     background:#E6EBEB;
@@ -479,7 +494,6 @@ height:40px;
 }
 .flex_col{
 	flex-grow:1;
-	width:10%;
 }
 	
 .section .row.form_row {

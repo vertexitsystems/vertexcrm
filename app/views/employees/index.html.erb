@@ -1,6 +1,6 @@
 <div class="heading"> Manage Employees </div>
 <div class="">
-  <%= link_to "New Employee", new_profile_url(role:"employee"), {:class => "button_link"} %>
+  <%= link_to "New Employee", new_employee_url, {:class => "button_link"} %>
 </div>
 <div class="section">
 
@@ -54,7 +54,8 @@
         <% end %>
       </div>
       <div class="col">
-		  <%= link_to "Edit", edit_profile_path(employee.profile)%> |
+		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
+		  <%= link_to "Edit", edit_employee_path(employee)%> |
 		  <%= link_to 'Destroy', employee_path(employee), data: {:confirm => 'Are you sure?'}, :method => :delete %>
 					  
       </div>

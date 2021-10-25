@@ -59,6 +59,14 @@ class Profile < ApplicationRecord
     user.try(:email)
   end
   
+  def name 
+    if self.first_name.blank?
+      self.full_name.blank? ? "(Not Provided)" : self.full_name
+    else
+      "#{self.first_name} #{self.middle_name} #{self.last_name}"
+    end
+  end
+  
   private
   def destroy_associations
     self.user.destroy

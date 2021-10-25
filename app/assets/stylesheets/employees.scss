@@ -52,3 +52,47 @@
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
 }
+
+.employee_info_item{
+	font-size:14px;
+}
+
+
+.flex_row{
+	margin:20px 0px;
+	font-size:14px;
+}
+.flex_col{
+	width:100%;
+	text-align:left;
+	padding:0px 20px;
+}
+.flex_col input[type=text],input[type=file], input[type=tel],input[type=number], select {
+	display: block;
+	width: 100%;
+	padding: .375rem .75rem;
+	font-size: 1rem;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #212529;
+	background-color: #fff;
+	background-clip: padding-box;
+	border: 1px solid #ced4da;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	appearance: none;
+	border-radius: .25rem;
+	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+}
+
+.flex_col select {
+	
+}
+.submit_button{
+	background:var(--main-color);
+	border:0px;
+	padding:5px 20px;
+	color:#FFF;
+	border-radius:5px;
+	max-width:250px;
+}

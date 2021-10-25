@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_09_27_135640) do
+ActiveRecord::Schema.define(version: 2021_10_23_073101) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,6 +65,14 @@ ActiveRecord::Schema.define(version: 2021_09_27_135640) do
     t.integer "vendor_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "passport"
+    t.string "visa"
+    t.string "state_id"
+    t.string "i9"
+    t.string "e_verify"
+    t.string "w9"
+    t.string "psa"
+    t.string "voided_check_copy"
   end
 
   create_table "employers", force: :cascade do |t|
@@ -107,6 +115,13 @@ ActiveRecord::Schema.define(version: 2021_09_27_135640) do
     t.string "degree"
     t.string "photo"
     t.string "cnic"
+    t.string "country"
+    t.string "state"
+    t.string "city"
+    t.string "zip_code"
+    t.string "first_name"
+    t.string "middle_name"
+    t.string "last_name"
   end
 
   create_table "projects", force: :cascade do |t|
@@ -115,6 +130,7 @@ ActiveRecord::Schema.define(version: 2021_09_27_135640) do
     t.integer "rate"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "vendor_rate"
   end
 
   create_table "user_types", force: :cascade do |t|

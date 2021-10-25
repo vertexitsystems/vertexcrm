@@ -1,5 +1,6 @@
 class EmployeesController < ApplicationController
   before_action :set_employee, only: %i[show edit update destroy]
+  before_action :authenticate_user!
 
   # GET /employees
   # GET /employees.json
@@ -48,6 +49,7 @@ class EmployeesController < ApplicationController
 
   def employee_report
     @employee = Employee.find(params[:eid])
+                     
     @work_durations = @employee.work_durations
     @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
     @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|
@@ -67,10 +69,12 @@ class EmployeesController < ApplicationController
   # GET /employees/new
   def new
     @employee = Employee.new
+    @employee.build_profile
   end
 
   # GET /employees/1/edit
-  def edit; end
+  def edit
+  end
 
   def add_vendor; end
 
@@ -78,8 +82,21 @@ class EmployeesController < ApplicationController
   # POST /employees.json
   def create
     @employee = Employee.new(employee_params)
+    @employee.profile.user = User.new(email: user_params[:email], password: user_params[:password], password_confirmation: user_params[:password])
+    
+    if !@employee.profile.user.save
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: @employee.profile.user, status: :unprocessable_entity }
+      end
+      return
+    end
+    
     respond_to do |format|
       if @employee.save
+        
+        @employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
+        
         format.html { redirect_to @employee, notice: 'Employee was successfully created.' }
         format.json { render :show, status: :created, location: @employee }
       else
@@ -122,6 +139,9 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).permit(:rate, :vendor_id, :name, :email, :password)
+    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+  end
+  def user_params
+    params[:employee][:profile_attributes]
   end
 end
