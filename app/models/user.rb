@@ -11,7 +11,7 @@ class User < ApplicationRecord
   end
 
   def is_employee?
-    profile.role == 'Employee'
+    !profile.employee.blank?#profile.role == 'Employee'
   end
 
   def is_account_manager?

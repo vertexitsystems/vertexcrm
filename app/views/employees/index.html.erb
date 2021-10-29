@@ -32,7 +32,7 @@
       <div class="col col25">
         <%if employee.try(:profile).present?%>
           <%#  link_to employee.try(:profile).try(:full_name),  edit_profile_path(employee.try(:profile).try(:id),role:employee.try(:profile).try(:role).try(:downcase)) %>
-		  <%=  link_to employee.profile.full_name, employee_path(employee), role:employee.try(:profile).try(:role).try(:downcase) %>
+		  <%=  link_to employee.profile.name, employee_path(employee), role:employee.try(:profile).try(:role).try(:downcase) %>
         <%end%>
       </div>
       <div class="col col25">

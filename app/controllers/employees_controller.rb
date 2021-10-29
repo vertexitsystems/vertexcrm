@@ -81,7 +81,10 @@ class EmployeesController < ApplicationController
   # POST /employees
   # POST /employees.json
   def create
+    
     @employee = Employee.new(employee_params)
+    @employee.profile.user_type = '445'
+    
     @employee.profile.user = User.new(email: user_params[:email], password: user_params[:password], password_confirmation: user_params[:password])
     
     if !@employee.profile.user.save
