@@ -147,10 +147,11 @@
 		<% if false%>
         <li class="option"> <a href="/employers"> Manage Employers </a> </li>
 		<li class="option"> <a href="/assistants"> Manage Assistants </a> </li>
-		<% end %>
+		
 		
         <li class="heading"><a> Personal Information </a></li>
         <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
+		<% end %>
       </ul>
     <%elsif current_user.profile.role == "Employee" %>
         <%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
