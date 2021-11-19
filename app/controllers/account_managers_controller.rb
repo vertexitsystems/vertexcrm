@@ -203,7 +203,18 @@ class AccountManagersController < ApplicationController
   
   def timesheet_report
     #acc_mgr = current_user.profile.account_manager
-    @employees = Employee.all
+    if params["eid"].blank?
+      @employees = Employee.all
+    else
+      @employees = [Employee.find(params["eid"])]
+      
+      
+      end_date = params["to_date"].nil? ? DateTime.now : DateTime.parse(params["to_date"])
+      end_date = end_date.at_beginning_of_week
+      @work_durations = @employees.first.work_durations.where(:work_day => end_date..(end_date+6)).order(:work_day)
+    end
+    
+    
 #     @work_durations = @employee.work_durations
 #     @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
 #     @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|

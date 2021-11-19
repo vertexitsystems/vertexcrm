@@ -70,6 +70,6 @@ class EmployersController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def employer_params
-      params.require(:employer).permit(:company_name, :profile_id)
+      params.require(:employer).permit(:company_name, :company_address, :phone_number, :fax_number, :company_email, :company_website, :contact_name, :contact_designation, :contact_number, :contact_email)#.permit(:company_name, :profile_id)
     end
 end

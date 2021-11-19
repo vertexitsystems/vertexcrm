@@ -13,8 +13,7 @@ class ProfilesController < ApplicationController
   def show
     if user_signed_in?
       if current_user.profile.nil?
-        current_user.profile = Profile.create(full_name: '',
-                                              user_type: current_user.email == 'admin@rp.com' ? 357_168 : 0)
+        current_user.profile = Profile.create(full_name: '', user_type: current_user.email == 'admin@rp.com' ? 357_168 : 0)
         current_user.save
       end
       @profile = current_user.profile

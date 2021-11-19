@@ -9,7 +9,11 @@ class Project < ApplicationRecord
   def today
     Date.today
   end
-
+  
+  def display_id
+    id
+  end
+  
   def days_from_this_week
     (today.at_beginning_of_week..today.at_end_of_week).map
   end

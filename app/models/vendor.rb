@@ -1,13 +1,14 @@
 class Vendor < ApplicationRecord
-	belongs_to :profile
+	#belongs_to :profile, optional: true
 	has_many :work_durations, through: :projects
-	#has_many :employees
+	
 
 	has_many :projects
 	has_many :employees, through: :projects
 
-
-  	def name
-  		self.profile.full_name
-  	end
+  #has_and_belongs_to_many :employees
+  def name
+    company_name.blank? ? "(Not Provided)" : company_name
+  end
+  
 end

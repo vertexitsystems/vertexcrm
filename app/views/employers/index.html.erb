@@ -1,0 +1,68 @@
+<%= link_to "New Employer", new_employer_url, {:class => "button_link"} %>
+<div class="section">
+
+  <div class="row top">
+    <div class="col">
+      #
+    </div>
+    <div class="col col25">
+      Name
+    </div>
+    <div class="col col25">
+      Email
+    </div>
+    <div class="col">
+      Phone Number
+    </div>
+    <div class="col">
+      Address
+    </div>
+    <div class="col">Actions</div>
+  </div>
+
+  <% total_hours = 0 %>
+  <% @employers.each_with_index do |employer, index| %>
+    <div class="row">
+      <div class="col">
+        <%= index + 1 %>
+      </div>
+      <div class="col col25">
+        <%=  link_to employer.company_name, employer_path(employer) %>
+      </div>
+      <div class="col col25">
+        <%= employer.company_email %>
+      </div>
+      <div class="col">
+        <%= employer.phone_number %>
+      </div>
+      <div class="col">
+        <%= employer.company_address %>
+      </div>
+      <div class="col">
+		  <%= link_to "Edit", edit_employer_path(employer)%> |
+		  <%= link_to 'Destroy', employer_path(employer), data: {:confirm => 'Are you sure?'}, :method => :delete %>
+					  
+      </div>
+    </div>
+  <% end %>
+  
+
+  <div class="row bottom">
+    <div class="col">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col">
+      
+    </div>
+    <div class="col">
+		
+    </div>
+    <div class="col"></div>
+  </div>
+</div>

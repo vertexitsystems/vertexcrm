@@ -1,9 +1,9 @@
-<% if @vendor.present? and @vendor.try(:errors).any? %>
+<% if @employer.present? and @employer.try(:errors).any? %>
 <div id="error_explanation">
-  <h2><%= pluralize(@vendor.errors.count, "error") %> prohibited this profile from being saved:</h2>
+  <h2><%= pluralize(@employer.errors.count, "error") %> prohibited this profile from being saved:</h2>
 
   <ul>
-    <% @vendor.errors.full_messages.each do |message| %>
+    <% @employer.errors.full_messages.each do |message| %>
       <li><%= message %></li>
     <% end %>
   </ul>
@@ -15,7 +15,7 @@
 	<%= form.text_field field, :required => required %>
 <% end %>
 
-<%= form_with(model: @vendor, local: true) do |form| %>
+<%= form_with(model: @employer, local: true) do |form| %>
 
 <div class="page_title"> Profile Details </div>
 <div class="flex_col">
@@ -75,33 +75,5 @@
 </div>
 	
 
-
-<% end %>
-
-
-
-<% if false %>
-<%= form_with(model: vendor, local: true) do |form| %>
-  <% if vendor.errors.any? %>
-    <div id="error_explanation">
-      <h2><%= pluralize(vendor.errors.count, "error") %> prohibited this vendor from being saved:</h2>
-
-      <ul>
-        <% vendor.errors.full_messages.each do |message| %>
-          <li><%= message %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
-
-  <div class="field">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-
-  <div class="actions">
-    <%= form.submit %>
-  </div>
-<% end %>
 
 <% end %>

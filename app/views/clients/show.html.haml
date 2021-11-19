@@ -1,40 +1,40 @@
 %p#notice= notice
 .button
-	= link_to "Edit Details", edit_employer_path(@employer)
+	= link_to "Edit Details", edit_client_path(@client)
 .page_title
 	Company Details
 .flex_col
 	.flex_col
 		%b Name:
-		= @employer.company_name
+		= @client.company_name
 	.flex_col
 		%b Email: 
-		= @employer.company_website
+		= @client.company_website
 	.flex_col
 		%b Website: 
-		= @employer.company_email
+		= @client.company_email
 	.flex_col
 		%b Phone Number: 
-		= @employer.phone_number
+		= @client.phone_number
 	.flex_col
 		%b Fax Number: 
-		= @employer.fax_number
+		= @client.fax_number
 	.flex_col
 		%b Address: 
-		= @employer.company_address
+		= @client.company_address
 		
 .page_title
 	Contact Details
 .flex_col
 	.flex_col
 		%b Name:
-		= @employer.contact_name
+		= @client.contact_name
 	.flex_col
 		%b Designation: 
-		= @employer.contact_designation
+		= @client.contact_designation
 	.flex_col
 		%b Phone Number: 
-		= @employer.contact_number
+		= @client.contact_number
 	.flex_col
 		%b Email: 
-		= @employer.contact_email
+		= @client.contact_email

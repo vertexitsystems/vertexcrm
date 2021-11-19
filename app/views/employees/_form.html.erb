@@ -1,4 +1,15 @@
-<%= employee.passport.present? %>
+<% if employee.present? and employee.try(:errors).any? %>
+<div id="error_explanation">
+  <h2><%= pluralize(employee.errors.count, "error") %> prohibited this profile from being saved:</h2>
+
+  <ul>
+    <% employee.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
 <% def show_file_field(form, field, title, file) %>
 <b><%= title %>:</b>
 <span style="font-size:12px">
@@ -21,7 +32,7 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Vendor:</b>
-			<%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox' %>
+			<%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendors.blank? ? false : employee.vendors.first.id) %>
 		</div>
 		<div class="flex_col">
 			<b>Vendor Rate:</b>
@@ -30,6 +41,18 @@
 		<div class="flex_col">
 			<b>Employee Rate:</b>
 			<%= form.text_field :employee_rate %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Client:</b>
+			<%= form.collection_select(:client_id, Client.all, :id, :company_name) %>
+			<%# form.select :client, Client.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.client.blank? ? false : employee.client.id %>
+		</div>
+		<div class="flex_col">
+			<b>Employer:</b>
+			<%# form.select :employer, Employer.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.employer.blank? ? false : employee.employer.id %>
+			<%= form.collection_select(:employer_id, Employer.all, :id, :company_name) %>
 		</div>
 	</div>
 </div>

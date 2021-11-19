@@ -1,5 +1,46 @@
 <p id="notice"><%= notice %></p>
 
+<div class="" style="font-size:24px;margin-top:50px">Consultant Information</div>
+<div class="flex_row">
+	<div class="flex_col">
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Client: </div>
+			<div class="flex_col"> <%= @employee.client.blank? ? "(Not Assigned)" : @employee.client.company_name %> </div>
+		</div>
+	
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Client Address: </div>
+			<div class="flex_col"> <%= @employee.client.blank? ? "(Not Assigned)" : @employee.client.company_address %> </div>
+		</div>
+		
+		<div class="" style="height:10px"></div>
+		
+		<% vendor = @employee.vendors.first %>
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Vendor: </div>
+			<div class="flex_col"> <%= vendor.blank? ? "(Not Assigned)" : vendor.company_name %> </div>
+		</div>
+	
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Vendor Address: </div>
+			<div class="flex_col"> <%= vendor.blank? ? "(Not Assigned)" : vendor.company_address %> </div>
+		</div>
+		
+		
+	</div>
+	<div class="flex_col">
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading" style="width:30%"> Employer: </div>
+			<div class="flex_col"> <%= @employee.employer.blank? ? "(Not Assigned)" : @employee.employer.company_name %> </div>
+		</div>
+	
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Employer Address: </div>
+			<div class="flex_col"> <%= @employee.employer.blank? ? "(Not Assigned)" : @employee.employer.company_address %> </div>
+		</div>
+	</div>
+</div>
+
 <% def show_document(title, document) %>
 <div class="employee_info_item">
 	<b><%= title %>: </b> 
@@ -11,6 +52,7 @@
 </div>
 <% end %>
 
+<% if false %>
 <div class="flex_row">
 	<div class="flex_col" style="text-align:left">
 		<p style="padding-left:20px">
@@ -32,15 +74,17 @@
 		
 	</div>
 </div>
+<% end %>
 
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 <div class="section" id="calender">
   <%= render "calender", 
+    show_unsubmitted:(@employee.profile.id == current_user.profile.id),
   	work_durations:@employee.work_durations, 
   	can_update_all:current_user.is_admin?, 
   	can_update:current_user.profile.id == @employee.profile.id, 
-  	can_act:false, 
+  	can_act:current_user.is_admin? || current_user.is_account_manager?, 
   	show_employee_info:current_user.is_admin? || current_user.is_account_manager?,
 	show_filters:false
 	%>

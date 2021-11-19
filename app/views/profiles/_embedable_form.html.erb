@@ -14,6 +14,11 @@
 <div class="flex_col">
 	<div class="flex_row">
 		<div class="flex_col">
+			<%= f.file_field :photo, accept: 'image/*', :class => "timesheet_field", :style=>"width:100%" %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
 			<% show_field(f, :first_name, "First Name", true) %>
 		</div>
 		<div class="flex_col">
@@ -50,10 +55,13 @@
 	</div>
 	<div class="flex_row">
 		<div class="flex_col">
-			<% show_field(f, :country, "Country") %>
+			<b>Country:</b>
+			<%= f.text_field :country, :required => false, :value => "USA", :disabled=>true %>
 		</div>
 		<div class="flex_col">
-			<% show_field(f, :state, "State") %>
+			<%# show_field(f, :state, "State") %>
+			<b>State:</b>
+			<%= select_tag :state, options_for_select(us_states) %>
 		</div>
 		<div class="flex_col">
 			<% show_field(f, :city, "City") %>

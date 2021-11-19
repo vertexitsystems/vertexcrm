@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_10_23_073101) do
+ActiveRecord::Schema.define(version: 2021_11_10_111720) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -51,6 +51,21 @@ ActiveRecord::Schema.define(version: 2021_10_23_073101) do
     t.datetime "updated_at", precision: 6, null: false
   end
 
+  create_table "clients", force: :cascade do |t|
+    t.string "company_name"
+    t.string "company_address"
+    t.string "phone_number"
+    t.string "fax_number"
+    t.string "company_email"
+    t.string "company_website"
+    t.string "contact_name"
+    t.string "contact_designation"
+    t.string "contact_number"
+    t.string "contact_email"
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
+  end
+
   create_table "contract_types", force: :cascade do |t|
     t.integer "employer_id"
     t.integer "employee_id"
@@ -73,6 +88,8 @@ ActiveRecord::Schema.define(version: 2021_10_23_073101) do
     t.string "w9"
     t.string "psa"
     t.string "voided_check_copy"
+    t.integer "employer_id"
+    t.integer "client_id"
   end
 
   create_table "employers", force: :cascade do |t|
@@ -80,6 +97,15 @@ ActiveRecord::Schema.define(version: 2021_10_23_073101) do
     t.integer "profile_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "company_address"
+    t.string "phone_number"
+    t.string "fax_number"
+    t.string "company_email"
+    t.string "company_website"
+    t.string "contact_name"
+    t.string "contact_designation"
+    t.string "contact_number"
+    t.string "contact_email"
   end
 
   create_table "job_application_users", force: :cascade do |t|
@@ -156,6 +182,16 @@ ActiveRecord::Schema.define(version: 2021_10_23_073101) do
     t.integer "profile_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.string "company_name"
+    t.string "company_address"
+    t.string "phone_number"
+    t.string "fax_number"
+    t.string "company_email"
+    t.string "company_website"
+    t.string "contact_name"
+    t.string "contact_designation"
+    t.string "contact_number"
+    t.string "contact_email"
   end
 
   create_table "work_durations", force: :cascade do |t|

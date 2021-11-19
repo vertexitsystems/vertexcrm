@@ -1,19 +1,139 @@
+
 <p id="notice"><%= notice %></p>
 
-<p>
-  <strong>Hours:</strong>
-  <%= @work_duration.hours %>
-</p>
+<h1><%= @work_duration.employee.profile.name %></h1>
+<b>Weekly Timesheet</b>
+<div class="flex_row">
+	<div class="flex_col">
+		<div class="flex_row info_header">
+		STATUS
+		</div>
+		<div class="flex_row info_details">
+		<%= @work_duration.time_sheet_status %>
+		</div>
+	</div>
+	<div class="flex_col">
+		<div class="flex_row info_header">
+		TIMESHEET ID
+		</div>
+		<div class="flex_row info_details">
+		<%= @work_duration.display_id %>
+		</div>
+	</div>
 
-<p>
-  <strong>Work day:</strong>
-  <%= @work_duration.work_day %>
-</p>
+	<div class="flex_col">
+		<div class="flex_row info_header">
+		PERIOD
+		</div>
+		<div class="flex_row info_details">
+			<%= @work_duration.work_day.strftime("%b %d, %Y") %> - <%= (@work_duration.work_day + 4).strftime("%b %d, %Y") %>
+		</div>
+	</div>
 
-<p>
-  <strong>Employee:</strong>
-  <%= @work_duration.employee_id %>
-</p>
+	<div class="flex_col">
+		<div class="flex_row info_header">
+		VENDOR
+		</div>
+		<div class="flex_row info_details">
+		<%= @work_duration.vendor.name %>
+		</div>
+	</div>
 
-<%= link_to 'Edit', edit_work_duration_path(@work_duration) %> |
-<%= link_to 'Back', work_durations_path %>
+	<div class="flex_col">
+		<div class="flex_row info_header">
+		PROJECT ID
+		</div>
+		<div class="flex_row info_details">
+		<%= @work_duration.project.display_id %>
+		</div>
+	</div>
+</div>
+
+<div class="flex_col">
+	<div class="flex_row info_row" style="border-top:2px solid #DDD">
+		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF">
+			DAY
+		</div>
+		<% @work_duration.all_days.each do |day| %>
+		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF;text-align:right">
+			<%= day.work_day.strftime("%b %d") %>
+			<br /><%= day.work_day.strftime("%a") %>
+		</div>
+		<% end %>
+		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF">
+			Total
+		</div>
+	</div>
+	<div class="flex_row info_row">
+		<div class="flex_col info_col" style="padding:5px; text-align:left">
+			<b>Billable</b>
+		</div>
+	</div>
+	<div class="flex_row info_row">
+		<div class="flex_col info_col" style="padding:5px; text-align:left">
+			<b>Project: <%= @work_duration.project %></b>
+		</div>
+	</div>
+	<div class="flex_row info_row">
+		<div class="flex_col info_col">
+			ST /Hr
+		</div>
+		<% @work_duration.all_days.each do |day| %>
+		<div class="flex_col info_col">
+			<%= day.hours.to_f %>
+		</div>
+		<% end %>
+		<div class="flex_col info_col">
+			<%= @work_duration.all_days.map{|wd|wd.hours}.inject(0, :+).to_f %>
+		</div>
+	</div>
+	
+	<div class="flex_row info_row" style="background:#FFC">
+		<div class="flex_col info_col">
+			Total
+		</div>
+		<% @work_duration.all_days.each do |day| %>
+		<div class="flex_col info_col">
+			<%= day.hours.to_f %>
+		</div>
+		<% end %>
+		<div class="flex_col info_col">
+			<%= @work_duration.all_days.map{|wd|wd.hours}.inject(0, :+).to_f %>
+		</div>
+	</div>
+</div>
+<%= link_to "Generate Printable Report", 
+	timesheet_report_account_managers_url(eid:@work_duration.employee.id,from_date:@work_duration.work_day,to_date:@work_duration.work_day + 5,format:"pdf"), 
+	class: "button_link", style: "float:right" %>
+
+
+<div class="" style="font-size:24px;margin-top:50px">Posting Information</div>
+<div class="flex_col">
+	<div class="flex_row info_row">
+		<div class="flex_col" style="width:30%">
+			Submit Date:
+		</div>
+		<div class="flex_col">
+			<%= @work_duration.updated_at %>
+		</div>
+	</div>
+	
+	<div class="flex_row info_row">
+		<div class="flex_col" style="width:30%">
+			Client:
+		</div>
+		<div class="flex_col">
+			<% client = @work_duration.employee.client %>
+			<%= client.blank? ? "(Not Assigned)" : client.company_name %>
+		</div>
+	</div>
+	
+	<div class="flex_row info_row">
+		<div class="flex_col" style="width:30%">
+			Client Address:
+		</div>
+		<div class="flex_col">
+			<%= client.blank? ? "(Not Assigned)" : client.company_address %>
+		</div>
+	</div>
+</div>

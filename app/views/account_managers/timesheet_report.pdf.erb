@@ -260,6 +260,15 @@
 	  text-align:right;
   }
   
+  .flex_row{
+  	display:flex;
+  	flex-direction:row;
+  	flex-grow:1;
+  	text-align:center;
+  }
+  .flex_col{
+  	flex-grow:1;
+  }
 </style>
 
 <div class="container">
@@ -286,12 +295,43 @@
 	        </h4>
 		</div>
 		<div class="main_data">
-			<b>Period:</b> <%= start_date.strftime("%B %d, %Y") %> - <%= end_date.strftime("%B %d, %Y") %>
+			<% if @employees.count > 1 %>
+			<b>Period:</b> <%= start_date.strftime("%B %d, %Y") %> - <%= end_date.strftime("%B %d, %Y") %> <br />
 			<b>Total Employees:</b> <%= @employees.count %>
+			<% end %>
 		</div>
 		<div class="clr"></div>
 	</div>
-
+	
+	<% if !@work_durations.blank? %>
+		<table border="0" style="width:80%;margin:0 auto">
+			<tr>
+				<td width="20%;"><strong>ID</strong></td>
+				<td width="30%"><%= @work_durations.first.display_id %></td>
+				<td width="20%;font-weight:bold"><strong>Consultant</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.name %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Period</strong></td>
+				<td width="30%"><%= @work_durations.first.work_day.strftime("%b %d, %Y") %> - <%= (@work_durations.first.work_day + 4).strftime("%b %d, %Y") %></td>
+				<td width="20%;font-weight:bold"><strong>Status</strong></td>
+				<td width="30%"><%= @work_durations.first.time_sheet_status %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Client</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.client.company_name %></td>
+				<td width="20%;font-weight:bold"><strong>Address</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.client.company_address %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Employer</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.employer.company_name %></td>
+				<td width="20%;font-weight:bold"><strong>Address</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.employer.company_address %></td>
+			</tr>
+		</table>
+	<% end %>
+	
   <div>
 	
 	<% @employees.each do |emp|%>
@@ -393,7 +433,21 @@
 	      </table>
 	    </div>
 		
-		
+		<h4>Accumulated Absences</h4>
+		<div class="col-xs-12" style="margin-top:12px!important;">
+          <table class="table table-striped col-xs-3 font-size-12">
+            <tr class="panel panel-default border_line cell-border">
+              <th class="text-center col-xs-2">Start Date</th>
+			  <th class="text-center col-xs-2">End Date</th>
+			  <th class="text-center col-xs-2">Number of days absences</th>
+			  <th class="text-center col-xs-2">Number of hours</th>
+			  <th class="text-center col-xs-2">Reason</th>
+			  <th class="text-center col-xs-2">comments</th>
+			  <th class="text-center col-xs-2">Entered By</th>
+			  <th class="text-center col-xs-2">Submit Date</th>
+		  	</tr>
+		  </table>
+	  </div>
 		<% if false %>
 			<div class="row color-black">
       <div class="col-xs-12" style="margin-top:12px!important;">

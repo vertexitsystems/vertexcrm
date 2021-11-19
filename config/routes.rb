@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :clients
   resources :assistants
   resources :employers
   resources :account_managers do 

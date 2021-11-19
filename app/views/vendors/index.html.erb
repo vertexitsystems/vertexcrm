@@ -1,5 +1,74 @@
+<%= link_to "New Vendor", new_vendor_url, {:class => "button_link"} %>
+<div class="section">
 
-<div class="heading"> <%= current_user.profile.role == "Admin" ? "Manage Vendors" : "View Vendors" %> </div>
+  <div class="row top">
+    <div class="col">
+      #
+    </div>
+    <div class="col col25">
+      Name
+    </div>
+    <div class="col col25">
+      Email
+    </div>
+    <div class="col">
+      Phone Number
+    </div>
+    <div class="col">
+      Address
+    </div>
+    <div class="col">Actions</div>
+  </div>
+
+  <% total_hours = 0 %>
+  <% @vendors.each_with_index do |vendor, index| %>
+    <div class="row">
+      <div class="col">
+        <%= index + 1 %>
+      </div>
+      <div class="col col25">
+        <%=  link_to vendor.company_name.blank? ? "(Not Provided)" : vendor.company_name, vendor_path(vendor) %>
+      </div>
+      <div class="col col25">
+        <%= vendor.company_email.blank? ? "(Not Provided)" : vendor.company_email %>
+      </div>
+      <div class="col">
+        <%= vendor.phone_number.blank? ? "(Not Provided)" : vendor.phone_number %>
+      </div>
+      <div class="col">
+        <%= vendor.company_address.blank? ? "(Not Provided)" : vendor.company_address %>
+      </div>
+      <div class="col">
+		  <%= link_to "Edit", edit_vendor_path(vendor)%> |
+		  <%= link_to 'Destroy', vendor_path(vendor), data: {:confirm => 'Are you sure?'}, :method => :delete %>
+					  
+      </div>
+    </div>
+  <% end %>
+  
+
+  <div class="row bottom">
+    <div class="col">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col">
+      
+    </div>
+    <div class="col">
+		
+    </div>
+    <div class="col"></div>
+  </div>
+</div>
+
+
+<% if false %>
 <%if current_user.profile.role == "Admin" or  current_user.profile.role == "Account Manager" %>
   <div class="">
     <%= link_to "New Vendor", new_profile_url(role:"vendor"), {:class => "button_link"} %>
@@ -95,7 +164,6 @@
   </div>
 </div>
 
-<% if false %>
 
 <p id="notice"><%= notice %></p>
 

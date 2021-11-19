@@ -1,6 +1,5 @@
-<div class="heading"> Manage Employees </div>
 <div class="">
-  <%= link_to "New Employee", new_employee_url, {:class => "button_link"} %>
+  <%= link_to "New Consultant", new_employee_url, {:class => "button_link"} %>
 </div>
 <div class="section">
 
@@ -32,12 +31,12 @@
       <div class="col col25">
         <%if employee.try(:profile).present?%>
           <%#  link_to employee.try(:profile).try(:full_name),  edit_profile_path(employee.try(:profile).try(:id),role:employee.try(:profile).try(:role).try(:downcase)) %>
-		  <%=  link_to employee.profile.name, employee_path(employee), role:employee.try(:profile).try(:role).try(:downcase) %>
+		  <%=  link_to employee.profile.name, employee_path(id:employee,order:"period"), role:employee.try(:profile).try(:role).try(:downcase) %>
         <%end%>
       </div>
       <div class="col col25">
         <%if employee.vendors.count > 0 %>
-          <%= employee.vendors.map { |v| v.profile.full_name }.join(',') %>
+          <%= employee.vendors.map { |v| v.name  }.join(',') %>
         <% else %>
         UnAssigned
         <% end %>

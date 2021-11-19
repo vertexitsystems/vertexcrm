@@ -582,3 +582,7 @@ height:40px;
     background-color: rgb(73, 137, 207);
 }
 
+.menu_item_selected{
+	background-color:#DDD;
+	font-weight:bold;
+}

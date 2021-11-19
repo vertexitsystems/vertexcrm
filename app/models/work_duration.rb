@@ -45,4 +45,7 @@ class WorkDuration < ApplicationRecord
     return days
   end
   
+  def display_id
+    id.to_s + work_day.strftime("%b").upcase + work_day.strftime("%d") + work_day.strftime("%y").upcase
+  end
 end

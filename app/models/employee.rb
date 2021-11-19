@@ -19,6 +19,10 @@ class Employee < ApplicationRecord
   	has_many :work_durations,through: :projects
 
   
+    #has_and_belongs_to_many :clients
+    #has_and_belongs_to_many :employers
+    belongs_to :client
+    belongs_to :employer
     
   def name
     self.profile.full_name

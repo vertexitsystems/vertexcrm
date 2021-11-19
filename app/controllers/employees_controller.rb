@@ -74,6 +74,7 @@ class EmployeesController < ApplicationController
 
   # GET /employees/1/edit
   def edit
+    
   end
 
   def add_vendor; end
@@ -112,8 +113,9 @@ class EmployeesController < ApplicationController
   # PATCH/PUT /employees/1
   # PATCH/PUT /employees/1.json
   def update
+    #byebug
     respond_to do |format|
-      if @employee.update(employee_params)
+      if @employee.update(employee_params.except("profile_attributes"))
         format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
         format.json { render :show, status: :ok, location: @employee }
       else
@@ -142,7 +144,7 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
   end
   def user_params
     params[:employee][:profile_attributes]
