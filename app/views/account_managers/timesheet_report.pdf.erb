@@ -319,15 +319,15 @@
 			</tr>
 			<tr>
 				<td width="20%;"><strong>Client</strong></td>
-				<td width="30%"><%= @work_durations.first.employee.client.company_name %></td>
+				<td width="30%"><%= @work_durations.first.employee.client.blank? ? "<Not Provided>" : @work_durations.first.employee.client.company_name %></td>
 				<td width="20%;font-weight:bold"><strong>Address</strong></td>
-				<td width="30%"><%= @work_durations.first.employee.client.company_address %></td>
+				<td width="30%"><%= @work_durations.first.employee.client.blank? ? "<Not Provided>" : @work_durations.first.employee.client.company_address %></td>
 			</tr>
 			<tr>
 				<td width="20%;"><strong>Employer</strong></td>
-				<td width="30%"><%= @work_durations.first.employee.employer.company_name %></td>
+				<td width="30%"><%= @work_durations.first.employee.employer.blank? ? "<Not Provided>" : @work_durations.first.employee.employer.company_name %></td>
 				<td width="20%;font-weight:bold"><strong>Address</strong></td>
-				<td width="30%"><%= @work_durations.first.employee.employer.company_address %></td>
+				<td width="30%"><%= @work_durations.first.employee.employer.blank? ? "<Not Provided>" : @work_durations.first.employee.employer.company_address %></td>
 			</tr>
 		</table>
 	<% end %>

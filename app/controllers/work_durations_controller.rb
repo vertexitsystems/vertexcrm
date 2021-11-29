@@ -26,6 +26,7 @@ class WorkDurationsController < ApplicationController
     @employee = Employee.where(id: eid).first
   end
 
+  
   def weekly_wise_data
     @employee = Employee.find(params[:eid])
     all_work_durations = @employee.work_durations.group_by { |w| w.work_day.beginning_of_week.strftime('%B %d, %Y') }
