@@ -1,9 +1,9 @@
 class AccountManagersController < ApplicationController
   before_action :set_account_manager, only: %i[show edit update destroy]
-  before_action :check_access, only: [:show, :edit, :update, :destroy, :index]
+  before_action :check_access, only: [:show, :edit, :update, :destroy, :index, :time_sheet_approval]
   
   def check_access
-    if !(current_user.is_admin? || current_user.is_account_manager?)
+    if !user_signed_in? || !( current_user.is_admin? || current_user.is_account_manager?)
       redirect_to root_path
     end
   end

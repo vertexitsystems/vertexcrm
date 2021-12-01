@@ -133,8 +133,9 @@
 	  	<li class="option <%= action_name=="time_sheet_approval" ? "menu_item_selected" : "" %>"> <a href="/account_managers/time_sheet_approval?order=status"> Time Sheet Approval </a> </li>
 	  </ul>
 	  <% end %>
-	  
+	 
     <%if current_user.is_admin? || current_user.is_account_manager? %>
+	 <%= current_user.is_admin? %>
       <ul>
         <li class="heading"><a> Role Management </a></li>
         <li class="option <%= controller_name=="employees" ? "menu_item_selected" : "" %>"> <a href="/employees"> Manage Consultants </a> </li>

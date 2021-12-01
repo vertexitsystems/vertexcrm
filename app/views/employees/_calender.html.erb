@@ -157,6 +157,10 @@
 	<% show_pastdue = true %>
 	<% end %>
 	
+	<% if !defined?(show_reopened) %>
+	<% show_reopened = true %>
+	<% end %>
+	
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 
@@ -263,7 +267,7 @@
 <% elsif params["order"] == "project" %>
 <% wds = wds.sort_by { |wd| wd.project_id } %>
 <% elsif params["order"] == "status" %>
-<% wds = wds.sort_by { |wd| wd.is_past_due_date? ? 100 : ["pending", "rejectd", "approved", "unsubmitted", "saved"].index(wd.time_sheet_status.downcase).to_i } %>
+<% wds = wds.sort_by { |wd| wd.is_past_due_date? ? 100 : ["unsubmitted", "reopened", "pending", "rejectd", "approved", "saved"].index(wd.time_sheet_status.downcase).to_i } %>
 <% else %>
 <% wds = wds.sort_by { |wd| wd.work_day }.reverse %>
 <% end %>
@@ -297,7 +301,7 @@
 	      <%= wd.employee.profile.name %>
 	    </div>
 	    <div class="col col8 mt-3">
-	      <%= wd.vendor.name %>
+	      <%= wd.vendor.blank? ? "<Not Provided>" : wd.vendor.name %>
 	    </div>
 	    <% end %>
 	    <div class="col col8 mt-3">
@@ -350,9 +354,9 @@
 		</div>
 
 		<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
-		  <% if wd.is_past_due_date? %>
+		  <% if wd.is_past_due_date? && !wd.is_reopened? %>
 			<label style="color:red">
-				PASSED DUE DATE
+				PASSED DUE DATE <%= wd.time_sheet_status %>
 			</label>
 		  <% else %>
 		  	
@@ -397,18 +401,18 @@
 				</div>
 			</div>
 		
-	  	<% elsif wd.is_past_due_date? %>
+	  	<% elsif wd.is_past_due_date? &&  !wd.is_reopened? %>
 		  
 		  
 		<div class="action_button_container reject" style="margin-left:40px">
-			<%= link_to "" do %>
-			<div class="action_button_div">
-				<i class="material-icons time_sheet_action">lock_open</i>
-			</div>
-			<div class="action_button_title">
-				Reopen
-			</div>
-			<% end %>
+			<a href="/work_durations/reopen_timesheet/<%=wd.id%>"> 
+				<div class="action_button_div">
+					<i class="material-icons time_sheet_action">lock_open</i>
+				</div>
+				<div class="action_button_title">
+					Reopen
+				</div>
+			</a>
 		</div>
 	  
 		<% end %>

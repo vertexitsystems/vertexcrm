@@ -2,7 +2,7 @@ class WorkDuration < ApplicationRecord
   belongs_to :project
   has_one :vendor, through: :project
   has_one :employee, through: :project
-  enum time_sheet_status: %i[unsubmitted saved pending approved rejected]
+  enum time_sheet_status: %i[unsubmitted saved pending approved rejected, reopened]
 
   validates :hours, inclusion: { in: 0..13,
                                  message: '%<value>s is not in between 0 to 13' }
@@ -23,6 +23,9 @@ class WorkDuration < ApplicationRecord
   end
   def is_rejected?
     time_sheet_status == "rejected"
+  end
+  def is_reopened?
+    time_sheet_status == "reopened"
   end
   
   def is_two_weeks_old?

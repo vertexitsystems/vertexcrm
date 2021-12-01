@@ -37,7 +37,7 @@ class WorkDurationsController < ApplicationController
       format.html
     end
   end
-
+  
   def weekly_update
     today = Date.today
     @employee = Employee.find(params[:eid])
@@ -71,7 +71,18 @@ class WorkDurationsController < ApplicationController
       end
     end
   end
-
+  
+  def reopen_timesheet
+    @work_duration = WorkDuration.find(params[:id])
+    
+    if @work_duration.update(time_sheet_status:"reopened")
+      redirect_back(fallback_location: root_path)
+    else
+      redirect_back(fallback_location: root_path)
+    end
+    
+  end
+  
   def show
     @work_duration = WorkDuration.find(params[:id])
   end

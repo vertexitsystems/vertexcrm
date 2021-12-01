@@ -36,11 +36,13 @@ Rails.application.routes.draw do
       get :weekly_wise_data
       put :weekly_update
       put :update_duration_status
+      #get :reopen_timesheet
+      
     end
   end
   resources :projects
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
-  
+  get 'work_durations/reopen_timesheet/:id', :to => 'work_durations#reopen_timesheet'
   
   
   root to: 'profiles#show'
