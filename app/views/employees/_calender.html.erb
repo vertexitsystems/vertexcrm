@@ -280,7 +280,7 @@
 	<% end %>
 <% end%>
 
-<% allow_update = can_update_all ||  (can_update && !wd.is_past_due_date? && wd.should_update?) %>
+<% allow_update = can_update_all ||  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 
 <%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
 <% if false %>
@@ -354,9 +354,9 @@
 		</div>
 
 		<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
-		  <% if wd.is_past_due_date? && !wd.is_reopened? %>
+		  <% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_pending? %>
 			<label style="color:red">
-				PASSED DUE DATE <%= wd.time_sheet_status %>
+				PASSED DUE DATE <%# wd.time_sheet_status %>
 			</label>
 		  <% else %>
 		  	
@@ -366,7 +366,7 @@
 	
 		<% if can_act %>
 		<div class="col col12">
-		<% if !wd.is_past_due_date? && wd.time_sheet_status == "pending" %>
+		<% if  wd.time_sheet_status == "pending" %>
 			<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
 			  <div class="action_button_container approve">
 				  <div class="action_button_div">
@@ -447,8 +447,8 @@
           <% end %>
 		  
 		  <div id="submit_options_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "block" : "none" %>" %>
-			  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"width:61%;margin-right:4%;" %>
-			  
+			  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"width:61%;margin-right:4%;", :disabled => wd.is_reopened? %>
+
 			  <% if wd.work_day.end_of_week - 2 > Date.today %>
 			  Cannot submit until weeks end.
 			  <% else %>

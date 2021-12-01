@@ -90,6 +90,7 @@ class WorkDurationsController < ApplicationController
   # POST /work_durations
   # POST /work_durations.json
   def create
+    
     all_saved = true
     save_for_later = params[:save_for_later].present?
     
@@ -115,7 +116,7 @@ class WorkDurationsController < ApplicationController
       date = DateTime.parse(date_key)
       
       work_duration = project.work_durations.where(work_day: date).first
-      
+
       ## if work duration not nil
       if !work_duration.blank?
         ### change hours to value
@@ -235,9 +236,11 @@ class WorkDurationsController < ApplicationController
     
     wd = WorkDuration.find(params["action_id"])
     wd.time_sheet_status = params["status"]
+    
     if wd.save
       render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
     else
+      byebug
       render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}
     end
   end
