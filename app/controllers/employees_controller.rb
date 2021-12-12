@@ -74,7 +74,9 @@ class EmployeesController < ApplicationController
 
   # GET /employees/1/edit
   def edit
-    
+    if !(current_user.is_admin? || current_user.is_account_manager?)
+      redirect_to edit_profile_path(current_user.profile)
+    end
   end
 
   def add_vendor; end

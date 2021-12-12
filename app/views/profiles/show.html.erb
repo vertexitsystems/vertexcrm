@@ -1,2 +1,206 @@
+<%# render template: "profiles/components/admin_profile" %>
+<style>
+	.profile_main{
+		display:flex;
+		flex-direction:row;
+		margin-top:20px;
+	}
+	.profile_menu_left{
+		width:20%;
+	}
+	.profile_container{
+		box-shadow :0 6px 6px rgba(0,0,0,0.2);
+		padding:10px 20px;
+	}
+	.profile_menu_right{
+	}
+	.profile_menu_left_row{
+		display:flex;
+		flex-direction:row;
+		margin-top:5px;
+	}
+	.profile_actions{
+		display:table;
+		margin:0 auto;
+		font-size:12px;
+	}
+	.profile_menu_left_col{
+		font-size:14px;
+	}
+	.profile_menu_title{
+		font-weight:bold;
+		min-width:40%;
+		font-size:14px;
+	}
+	.profile_menu_left_row img {
+		width:200px;
+		height:200px;
+		border-radius:100px;
+	}
+	.profile_right_section{
+		margin:0px 20px 10px 20px;
+	}
+	.section_title{
+		font-size:32px;
+		color:#3e474f;
+		font-weight:bold;
+		font-family: Arial, Helvetica, sans-serif;
+	}
+			
+</style>
 
-<%= render template: "profiles/components/admin_profile" %>
+<div class="profile_main">
+	<div class="profile_menu_left profile_container">
+		<div class="profile_menu_left_row" style="margin-top:20px">
+			<div style="margin:0 auto;display:table">
+			<img src="<%=current_user.profile.photo.url%>">
+			</div>
+		</div>
+		<div class="profile_menu_left_row profile_actions" style="margin-bottom:10px">
+			<% if @profile.user.is_employee? %>
+			<%= link_to "Edit", edit_employee_path(@profile.employee) %> | 
+			<%= link_to "Timesheet", @profile.employee %>
+			<% end %>
+		</div>
+		<div class="profile_menu_left_row" style="flex-direction:column;margin-bottom:20px">
+			<div style="font-size:24px;margin:0 auto;line-height:24px;">
+				<%= @profile.name %>
+			</div>
+			<div style="font-size:14px;margin:0 auto">
+				<%= @profile.user.email %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				Phone 1:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.phone1 %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				Phone 2:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.phone2 %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				Address:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.address %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				Country:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.country %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				State:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.state %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				City:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.city %>
+			</div>
+		</div>
+		<div class="profile_menu_left_row" style="margin-bottom:20px">
+			<div class="profile_menu_left_col profile_menu_title">
+				Zipcode:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.zip_code %>
+			</div>
+		</div>
+	</div>
+	<% if @profile.user.is_employee? %>
+	<div class="profile_menu_right" style="width:100%">
+		
+		<div class="profile_right_section">
+			<div class="section_title"> Work Details </div>
+			<div class="section_details">
+				<div class="flex_row">
+					
+					<div class="flex_col">
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Client: </div>
+							<div class="flex_col"> <%= @profile.employee.client.blank? ? "(Not Assigned)" : @profile.employee.client.company_name %> </div>
+						</div>
+	
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Client Address: </div>
+							<div class="flex_col"> <%= @profile.employee.client.blank? ? "(Not Assigned)" : @profile.employee.client.company_address %> </div>
+						</div>
+					</div>
+					
+					<div class="flex_col">
+						<% vendor = @profile.employee.vendors.first %>
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Vendor: </div>
+							<div class="flex_col"> <%= vendor.blank? ? "(Not Assigned)" : vendor.company_name %> </div>
+						</div>
+	
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Vendor Address: </div>
+							<div class="flex_col"> <%= vendor.blank? ? "(Not Assigned)" : vendor.company_address %> </div>
+						</div>
+					</div>
+					
+					<div class="flex_col">
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Employer: </div>
+							<div class="flex_col"> <%= @profile.employee.employer.blank? ? "(Not Assigned)" : @profile.employee.employer.company_name %> </div>
+						</div>
+	
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Employer Address: </div>
+							<div class="flex_col"> <%= @profile.employee.employer.blank? ? "(Not Assigned)" : @profile.employee.employer.company_address %> </div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		<div class="profile_right_section">
+			<div class="section_title"> Documents </div>
+			
+			<div class="section_details">
+				<% def show_document(title, document) %>
+				<div class="employee_info_item" style="padding: 0px 20px;">
+					<b><%= title %>: </b> 
+					<% if document.present? %>
+					<%= link_to "Show", document.url, target:"_blank" %>
+					<% else %>
+					(Not Provided)
+					<% end %>
+				</div>
+				<% end %>
+				<% show_document("Passport", @profile.employee.passport) %>
+				<% show_document("Visa", @profile.employee.visa) %>
+				<% show_document("State ID", @profile.employee.state_id) %>
+				<% show_document("i9", @profile.employee.i9) %>
+				<% show_document("E-Verify", @profile.employee.e_verify) %>
+				<% show_document("W9", @profile.employee.w9) %>
+				<% show_document("PSA", @profile.employee.psa) %>
+				<% show_document("Void Check", @profile.employee.voided_check_copy) %>
+			</div>
+		</div>
+		
+	</div>
+	<% end %>
+	<div class="clr"></div>
+</div>

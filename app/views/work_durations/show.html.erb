@@ -35,7 +35,7 @@
 		VENDOR
 		</div>
 		<div class="flex_row info_details">
-		<%= @work_duration.vendor.name %>
+		<%= @work_duration.vendor.blank? ? "<Not Available>" : @work_duration.vendor.name %>
 		</div>
 	</div>
 

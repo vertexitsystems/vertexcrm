@@ -56,6 +56,12 @@
 	.dropdown:hover .dropbtn {
 	  //background-color: #3e8e41;
 	}
+	
+	.welcome_message{
+		float:left;
+		line-height:60px;
+		color:#FFF
+	}
 </style>
 <!DOCTYPE html>
 <html>
@@ -76,10 +82,9 @@
   </head>
 
   <body>
-    <div class="nav_bar">
-      <div class="nav_bar_title"> 
-		  <%# link_to "Recruitement Portal", root_path %>
-		  <%# image_tag "/Images/vertexLogoUpdated.png" %>
+	  
+    <div class="nav_bar page-header">
+      <div class="nav_bar_title">
 		  <img src="/Images/Logo.png">
 	  </div>
       <div class="nav_bar_menu">
@@ -88,11 +93,17 @@
           <% if user_signed_in? %>
             <li>
 				<div class="dropdown">
+					<div class="welcome_message">
+						Welcome <b><%= current_user.profile.name %></b>
+					</div>
 				  <button class="dropbtn">
+					  <%= link_to current_user.profile, :style=>"padding:0px" do %>
 					  <% if current_user.profile.photo.blank? %>
 					  <img src="https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg" />
 					  <% else  %>
 					  <img src="<%=current_user.profile.photo.url%>">
+					  <% end %>
+					  
 					  <% end %>
 				  </button>
 				  <div class="dropdown-content">
@@ -115,7 +126,7 @@
       </div>
       <div class="clr"></div>
     </div>
-    <div class="ap_container">
+    <div class="ap_container page-body">
 
       <% if user_signed_in? %>
 	  
@@ -188,16 +199,46 @@
   </div>
     <% end %>
 
+<div class="top_info flex_row">
+	<% if !notice.blank? || !alert.blank? %>
+	<div class="notification_container flex_col">
+		<div style="float:left">
+			<% if !notice.blank? %>
+			<p id="notice"><%= notice %></p>
+			<% end %>
+			<% if !alert.blank? %>
+			<p id="alert"><b>ERROR:</b> <%= alert %></p>
+			<% end %>
+		</div>
+		<div style="float:right"><a href="">close</a></div>
+	</div>
+	<% end %>
+	<div class="date_container flex_col" style="width:400px;text-align:right">
+		<b>Date:</b> <%= Date.today.strftime("%A %B %d, %Y") %>
+	</div>
+</div>
 <% if user_signed_in? %>
   <div class="main" >
     <% else %>
     <div class="main" style="width:100%">
     <% end %>
+	
     <%= yield %>
   </div>
   <div style="clear:both"></div>
 
 </div>
     
+	<div class="page-footer">
+		<div class="footer_content" style="display:flex;flex-direction:row;justify-content: space-evenly;color:#FFF;margin-left:auto;margin-right:auto;font-family: Roboto;">
+			<div class="footer_message" style="line-height:60px;font-size:14px">
+				© 2021 Vertex IT Systems. Component copyrights belongs to their authors.  
+			</div>
+			<div class="footer_actions" style="float:left;font-size:12px;line-height:14px;padding-top:10px">
+				<span class="footer_action_title" style="padding-right:36px;"> Email:      </span> <a mailto="support@vertexitservice.com">support@vertexitservice.com</a> <br />
+				<span class="footer_action_title" style="padding-right:5px;"> Contact No: </span> <a href="#">Contact</a> <br />
+				<span class="footer_action_title" style="padding-right:22px;"> Website:    </span> <a href="http://vertexitservice.com">www.vertexitservice.com</a> <br />
+			</div>
+	</div>
   </body>
 </html>

@@ -12,7 +12,8 @@ class Profile < ApplicationRecord
   mount_uploader :photo, AttachmentsUploader
   mount_uploader :resume, AttachmentsUploader
   mount_uploader :degree, AttachmentsUploader
-
+  
+  
   def role
     return 'Applicant' if user_type.nil?
 

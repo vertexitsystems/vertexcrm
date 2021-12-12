@@ -16,15 +16,27 @@ class ProfilesController < ApplicationController
         current_user.profile = Profile.create(full_name: '', user_type: current_user.email == 'admin@rp.com' ? 357_168 : 0)
         current_user.save
       end
-      @profile = current_user.profile
-
+      #@profile = Profile#current_user.profile
+      
+      # when logging in profile id will not be passed so profile is set to current_user automatically
+      if @profile.blank?
+        @profile = current_user.profile
+      end
+      
+      # Fail safe to ensure profile has user
+      # TEST WITH: http://localhost:3000/profiles/11
+      if @profile.user.blank?
+        flash[:alert] = 'Profile not linked to any user'
+        redirect_to root_path
+      end
+      
       case @profile.user_type
       when 357_168 # Admin
 
       when 3396 # Employer
         redirect_to employer_url(@profile.employee.id)
       when 445 # Employee
-        redirect_to employee_url(@profile.employee.id)
+        #redirect_to employee_url(@profile.employee.id)
       when 2623 # Vendor
         redirect_to vendor_url(@profile.vendor.id)
       else
