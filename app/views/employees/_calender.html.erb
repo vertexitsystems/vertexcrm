@@ -248,7 +248,7 @@
   <div style="clear:both"></div>
 </div>
 
-<% wds = work_durations.where("extract(dow from work_day) = ?", 1).select{|wd|wd.employee != nil} %>
+<% wds = work_durations.where("extract(dow from work_day) = ?", 1).limit(50).select{|wd|wd.employee != nil} %>
 <% if params["emp"].present? %>
 <% wds = wds.select {|wd| wd.employee.id == params["emp"].to_i }%>
 <% end %>
@@ -274,198 +274,193 @@
 
 <% wds.each_with_index do |wd, loop_index|%>
 
-<% if !(wd.is_past_due_date? && show_pastdue) %>
-	<% if !show_unsubmitted && (wd.is_saved? || wd.is_unsubmitted?) %>
-		<% next %>
-	<% end %>
-<% end%>
+	<% if !(wd.is_past_due_date? && show_pastdue) %>
+		<% if !show_unsubmitted && (wd.is_saved? || wd.is_unsubmitted?) %>
+			<% next %>
+		<% end %>
+	<% end%>
 
-<% allow_update = can_update_all ||  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
+	<% allow_update = can_update_all ||  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 
-<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
-<% if false %>
-<div class="labeled-toggle-<%=loop_index%>" style="background:red;display:none">
-	HELLO
-</div>
-<% end %>
-<div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
-	<div class="row">
-		<div class="col col-5 mt-3">
-			<%= link_to wd do %>
-			<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
-		  	<% end %>
-	    </div>
+	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
+	<div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
+		<div class="row">
+			<div class="col col-5 mt-3">
+				<%= link_to wd do %>
+				<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
+			  	<% end %>
+		    </div>
 	
-		<% if show_employee_info %>
-	    <div class="col col8 mt-3">
-	      <%= wd.employee.profile.name %>
-	    </div>
-	    <div class="col col8 mt-3">
-	      <%= wd.vendor.blank? ? "<Not Provided>" : wd.vendor.name %>
-	    </div>
-	    <% end %>
-	    <div class="col col8 mt-3">
-	      Proj<%= wd.project.id %>
-	    </div>
-		<% wd.all_days.each do |day| %>
+			<% if show_employee_info %>
+		    <div class="col col8 mt-3">
+		      <%= wd.employee.profile.name %>
+		    </div>
+		    <div class="col col8 mt-3">
+		      <%= wd.vendor.blank? ? "<Not Provided>" : wd.vendor.name %>
+		    </div>
+		    <% end %>
+		    <div class="col col8 mt-3">
+		      Proj<%= wd.project.id %>
+		    </div>
+			<% wd.all_days.each do |day| %>
+				<div class="col col8 labeled-toggle-<%=loop_index%>">
+		          <label class="mt-3 " for="work_duration_a1">
+					  <%= day.hours %>
+		          </label>
+		        </div>
+				<div class="col col8 field-toggle-<%=loop_index%>" style="display:none">
+		          <label class="mt-3 label-duration-1" for="work_duration_a1">
+					  <%= d_int = day.work_day.strftime("%d").to_i %>
+					  <% if d_int == 1 %>
+					  st
+					  <% elsif d_int == 2 %>
+					  nd
+					  <% elsif d_int == 3 %>
+					  rd
+					  <% else %>
+					  th
+					  <% end %>
+		          	<%= number_field_tag :thought_author, "", :name => "wds[][#{day.work_day.strftime("%b,%d,%Y")}]", :value => day.hours, :min=>"0", :max=>"12", :class=>"hours_value hours_value_#{loop_index}", :result_id=>"total_#{loop_index}", :siblings=>"hours_value_#{loop_index}", :style=>"min-width:60px" %> <br />
+		          </label>
+		        </div>
+			<% end %>
+	
 			<div class="col col8 labeled-toggle-<%=loop_index%>">
-	          <label class="mt-3 " for="work_duration_a1">
-				  <%= day.hours %>
-	          </label>
-	        </div>
+		      <label class="mt-3 label-duration-1" for="work_duration_a1">
+		      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+		      </label>
+		    </div>
 			<div class="col col8 field-toggle-<%=loop_index%>" style="display:none">
-	          <label class="mt-3 label-duration-1" for="work_duration_a1">
-				  <%= d_int = day.work_day.strftime("%d").to_i %>
-				  <% if d_int == 1 %>
-				  st
-				  <% elsif d_int == 2 %>
-				  nd
-				  <% elsif d_int == 3 %>
-				  rd
-				  <% else %>
-				  th
-				  <% end %>
-	          	<%= number_field_tag :thought_author, "", :name => "wds[][#{day.work_day.strftime("%b,%d,%Y")}]", :value => day.hours, :min=>"0", :max=>"12", :class=>"hours_value hours_value_#{loop_index}", :result_id=>"total_#{loop_index}", :siblings=>"hours_value_#{loop_index}", :style=>"min-width:60px" %> <br />
-	          </label>
-	        </div>
-		<% end %>
-	
-		<div class="col col8 labeled-toggle-<%=loop_index%>">
-	      <label class="mt-3 label-duration-1" for="work_duration_a1">
-	      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
-	      </label>
-	    </div>
-		<div class="col col8 field-toggle-<%=loop_index%>" style="display:none">
-	      <label class="mt-3 label-duration-1" for="work_duration_a1", id="total_<%=loop_index%>">
-	      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
-	      </label>
-		</div>
-		<div class=" col col8">
-			<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
+		      <label class="mt-3 label-duration-1" for="work_duration_a1", id="total_<%=loop_index%>">
+		      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+		      </label>
+			</div>
+			<div class=" col col8">
+				<div class="calendar-picture" full_image="full-image-bg-<%=loop_index%>">
 			
-				<img src="<%=  wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+					<img src="<%=  wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+				</div>
 			</div>
-		</div>
 	
-		<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
-			<div class="full-image">
-				<img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : "" %>" class="picture-src" id="wizardPicturePreview" title=""  style="background:white">
-			</div>
-		</div>
-
-		<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
-		  <% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_pending? %>
-			<label style="color:red">
-				PASSED DUE DATE <%# wd.time_sheet_status %>
-			</label>
-		  <% else %>
-		  	
-		  	<%= wd.time_sheet_status.upcase %>
-		  <% end %>
-	    </div>
-	
-		<% if can_act %>
-		<div class="col col12">
-		<% if  wd.time_sheet_status == "pending" %>
-			<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
-			  <div class="action_button_container approve">
-				  <div class="action_button_div">
-					  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="approved" action_id="<%=  wd.id %>"> 
-						  <i class="material-icons time_sheet_action">check_circle</i> 
-					  </a>
-				  </div>
-				  <div class="action_button_title">
-					  Approve
-				  </div>
-			  </div>
-
-			  <div class="action_button_container reject">
-				  <div class="action_button_div">
-					  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="rejected" action_id="<%=  wd.id %>">
-						  <i class="material-icons time_sheet_action">cancel</i>
-					  </a>
-				  </div>
-				  <div class="action_button_title">
-					  Reject
-				  </div>
-			  </div>
-			  
-			</div>
-  
-			<div class="action_button_container" id="action_loader_container_<%= wd.id%>" style="display:none">
-				<div class="action_button_div">
-				  <div class="loader"></div>
-				</div>
-				<div class="action_button_title">
-				  Updating Status. Please wait.
+			<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
+				<div class="full-image">
+					<img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : "" %>" class="picture-src" id="wizardPicturePreview" title=""  style="background:white">
 				</div>
 			</div>
-		
-	  	<% elsif wd.is_past_due_date? &&  !wd.is_reopened? %>
-		  
-		  
-		<div class="action_button_container reject" style="margin-left:40px">
-			<a href="/work_durations/reopen_timesheet/<%=wd.id%>"> 
-				<div class="action_button_div">
-					<i class="material-icons time_sheet_action">lock_open</i>
-				</div>
-				<div class="action_button_title">
-					Reopen
-				</div>
-			</a>
-		</div>
-	  
-		<% end %>
-	
-		</div>
-		<% end %>
-	</div>
-	<div class="row" id="toggle-row-<%=loop_index%>" style="display:none;">
-        <div class="section">
-          <div>
-            <label for="file">
-              <b>Upload timesheet/screenshot</b>
-            </label> 
-            <br/>
-			<%= file_field_tag :timesheet_screenshot, required: !wd.timesheet_screenshot.attached?, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
-          </div>
-          <b> Certification </b> 
-          <br/>
-          <ul>
-            <li> By submitting this, I agree that the information provided in the screen is accurate.I certify 
-              that the company has all the breaks as agreed upon.
-            </li>
-          </ul>
-        </div>
 
-        <div class="section actions">
-          <%# form.submit "Submit",class: "btn btn-primary",style: "width:35%;" %>
-          <% if @employee != nil %>
-            <%= hidden_field_tag :eid, @employee.id %>
-            <%= hidden_field_tag :pid, wd.project.id %>
-			<%# hidden_field_tag :date,:value=> date %>
-          <% end %>
-		  
-		  <div id="submit_options_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "block" : "none" %>" %>
-			  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"width:61%;margin-right:4%;", :disabled => wd.is_reopened? %>
-
-			  <% if wd.work_day.end_of_week - 2 > Date.today %>
-			  Cannot submit until weeks end.
+			<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
+			  <% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_pending? %>
+				<label style="color:red">
+					PASSED DUE DATE <%# wd.time_sheet_status %>
+				</label>
 			  <% else %>
-			  <%= submit_tag "Submit", class: "btn", style: "width:35%;" %>
+		  	
+			  	<%= wd.time_sheet_status.upcase %>
 			  <% end %>
-		  </div>
-		  <div id="submit_message_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "none" : "block" %>" >
-			  Select Timesheet Image
-		  </div>
-		  <%# submit_tag "Submit", :style=>"min-width:100px" %>
-        </div>
-        <div class="clr"></div>
-
-	</div>
+		    </div>
 	
-</div>
-<% end %>
+			<% if can_act %>
+			<div class="col col12">
+			<% if  wd.time_sheet_status == "pending" %>
+				<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
+				  <div class="action_button_container approve">
+					  <div class="action_button_div">
+						  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="approved" action_id="<%=  wd.id %>"> 
+							  <i class="material-icons time_sheet_action">check_circle</i> 
+						  </a>
+					  </div>
+					  <div class="action_button_title">
+						  Approve
+					  </div>
+				  </div>
+
+				  <div class="action_button_container reject">
+					  <div class="action_button_div">
+						  <a href="/work_durations/update_duration_status" class="time_sheet_action_link" action="rejected" action_id="<%=  wd.id %>">
+							  <i class="material-icons time_sheet_action">cancel</i>
+						  </a>
+					  </div>
+					  <div class="action_button_title">
+						  Reject
+					  </div>
+				  </div>
+			  
+				</div>
+  
+				<div class="action_button_container" id="action_loader_container_<%= wd.id%>" style="display:none">
+					<div class="action_button_div">
+					  <div class="loader"></div>
+					</div>
+					<div class="action_button_title">
+					  Updating Status. Please wait.
+					</div>
+				</div>
+		
+		  	<% elsif wd.is_past_due_date? &&  !wd.is_reopened? %>
+		  
+		  
+			<div class="action_button_container reject" style="margin-left:40px">
+				<a href="/work_durations/reopen_timesheet/<%=wd.id%>"> 
+					<div class="action_button_div">
+						<i class="material-icons time_sheet_action">lock_open</i>
+					</div>
+					<div class="action_button_title">
+						Reopen
+					</div>
+				</a>
+			</div>
+	  
+			<% end %>
+	
+			</div>
+			<% end %>
+		</div>
+		<div class="row" id="toggle-row-<%=loop_index%>" style="display:none;">
+	        <div class="section">
+	          <div>
+	            <label for="file">
+	              <b>Upload timesheet/screenshot</b>
+	            </label> 
+	            <br/>
+				<%= file_field_tag :timesheet_screenshot, required: !wd.timesheet_screenshot.attached?, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
+	          </div>
+	          <b> Certification </b> 
+	          <br/>
+	          <ul>
+	            <li> By submitting this, I agree that the information provided in the screen is accurate.I certify 
+	              that the company has all the breaks as agreed upon.
+	            </li>
+	          </ul>
+	        </div>
+
+	        <div class="section actions">
+	          <%# form.submit "Submit",class: "btn btn-primary",style: "width:35%;" %>
+	          <% if @employee != nil %>
+	            <%= hidden_field_tag :eid, @employee.id %>
+	            <%= hidden_field_tag :pid, wd.project.id %>
+				<%# hidden_field_tag :date,:value=> date %>
+	          <% end %>
+		  
+			  <div id="submit_options_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "block" : "none" %>" %>
+				  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"width:61%;margin-right:4%;", :disabled => wd.is_reopened? %>
+
+				  <% if wd.work_day.end_of_week - 2 > Date.today %>
+				  Cannot submit until weeks end.
+				  <% else %>
+				  <%= submit_tag "Submit", class: "btn", style: "width:35%;" %>
+				  <% end %>
+			  </div>
+			  <div id="submit_message_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "none" : "block" %>" >
+				  Select Timesheet Image
+			  </div>
+			  <%# submit_tag "Submit", :style=>"min-width:100px" %>
+	        </div>
+	        <div class="clr"></div>
+
+		</div>
+	
+	</div>
+	<% end %>
 <% end %>
 
  <!-- DELETE BELOW

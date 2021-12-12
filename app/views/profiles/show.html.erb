@@ -53,7 +53,11 @@
 	<div class="profile_menu_left profile_container">
 		<div class="profile_menu_left_row" style="margin-top:20px">
 			<div style="margin:0 auto;display:table">
-			<img src="<%=current_user.profile.photo.url%>">
+			  <% if current_user.profile.photo.blank? %>
+			  <img src="https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg" />
+			  <% else  %>
+			  <img src="<%=current_user.profile.photo.url%>">
+			  <% end %>
 			</div>
 		</div>
 		<div class="profile_menu_left_row profile_actions" style="margin-bottom:10px">
