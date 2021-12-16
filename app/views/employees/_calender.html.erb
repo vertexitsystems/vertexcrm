@@ -248,7 +248,7 @@
   <div style="clear:both"></div>
 </div>
 
-<% wds = work_durations.where("extract(dow from work_day) = ?", 1).limit(50).select{|wd|wd.employee != nil} %>
+<% wds = work_durations.where("extract(dow from work_day) = ?", 1).order("work_day").limit(100).select{|wd|wd.employee != nil} %>
 <% if params["emp"].present? %>
 <% wds = wds.select {|wd| wd.employee.id == params["emp"].to_i }%>
 <% end %>
