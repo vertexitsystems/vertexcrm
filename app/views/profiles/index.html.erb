@@ -7,7 +7,8 @@ Number of Users: <%= User.count %><br />
 <table>
   <thead>
     <tr>
-      <th>Full name</th>
+      <th>OLD name</th>
+	  <th>NEW name</th>
 	  <th>Role</th>
 	  <th>Associations</th>
 	  <th>Email</th>
@@ -19,6 +20,7 @@ Number of Users: <%= User.count %><br />
     <% @profiles.each do |profile| %>
       <tr>
         <td><%= profile.full_name %></td>
+		<td><%= profile.name %></td>
 		<td><%= profile.role %> </td>
 		<td>
 			<%= profile.account_manager.present? ? "AccMgr" : "" %>

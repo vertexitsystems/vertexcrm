@@ -117,9 +117,29 @@ class EmployeesController < ApplicationController
   def update
     #byebug
     respond_to do |format|
-      if @employee.update(employee_params.except("profile_attributes"))
-        format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
-        format.json { render :show, status: :ok, location: @employee }
+      #print "=================> " + employee_params.except("profile_attributes").except("id").to_s
+      #byebug
+      if @employee.update(employee_params.except("profile_attributes").except("id"))
+        if @employee.profile.update(employee_params["profile_attributes"])
+
+          if @employee.projects.count > 0
+            if @employee.projects.first.update(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
+              format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
+              format.json { render :show, status: :ok, location: @employee }
+            else
+              format.html { render :edit }
+              format.json { render json: @employee.projects.errors, status: :unprocessable_entity }
+            end
+          else
+            @employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
+            format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
+            format.json { render :show, status: :ok, location: @employee }
+          end
+          
+        else
+          format.html { render :edit }
+          format.json { render json: @employee.profile.errors, status: :unprocessable_entity }
+        end
       else
         format.html { render :edit }
         format.json { render json: @employee.errors, status: :unprocessable_entity }
