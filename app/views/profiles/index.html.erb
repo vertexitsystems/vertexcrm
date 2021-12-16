@@ -23,9 +23,9 @@ Number of Users: <%= User.count %><br />
 		<td>
 			<%= profile.account_manager.present? ? "AccMgr" : "" %>
 			<%= profile.employee.present? ? "Emp" : "" %>
-			<%= profile.vendor.present? ? "Vend" : "" %>
-			<%= profile.employer.present? ? "Emplyr" : "" %>
-			<%= profile.employer.present? ? "Assist" : "" %>
+			<%# profile.vendor.present? ? "Vend" : "" %>
+			<%# profile.employer.present? ? "Emplyr" : "" %>
+			<%# profile.employer.present? ? "Assist" : "" %>
 		</td>
 		<td><%= profile.user.blank? ? "<No User>" : profile.user.email %> </td>
         <td><%= link_to 'Show', profile %></td>

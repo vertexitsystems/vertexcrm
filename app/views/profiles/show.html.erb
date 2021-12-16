@@ -74,6 +74,16 @@
 				<%= @profile.user.email %>
 			</div>
 		</div>
+		<% if current_user.profile.id != @profile.id && (current_user.is_admin? || current_user.is_account_manager?) %>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				Designation:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.role %>
+			</div>
+		</div>
+		<% end %>
 		<div class="profile_menu_left_row">
 			<div class="profile_menu_left_col profile_menu_title">
 				Phone 1:
