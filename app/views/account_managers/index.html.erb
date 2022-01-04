@@ -55,37 +55,3 @@
     <div style="clear:both"></div>
   </div>
 </div>
-
-
-
-<% if false %>
-<p id="notice"><%= notice %></p>
-
-<h1>Account Managers</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th>Profile</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @account_managers.each do |account_manager| %>
-      <tr>
-        <td><%= account_manager.name %></td>
-        <td><%= account_manager.profile_id %></td>
-        <td><%= link_to 'Show', account_manager %></td>
-        <td><%= link_to 'Edit', edit_account_manager_path(account_manager) %></td>
-        <td><%= link_to 'Destroy', account_manager, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Account Manager', new_account_manager_path %>
-<%end%>
