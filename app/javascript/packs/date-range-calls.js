@@ -7,10 +7,10 @@ document.addEventListener("turbolinks:load", () => {
 		mode: "single",
 		dateFormat: "Y-m-d"
 	}),
-    // flatpickr("#date-range-work,#date-range-work-report", {
-    //   mode: "range",
-    //   dateFormat: "Y-m-d"
-    // }),
+    flatpickr("#date-range-work,#date-range-work-report", {
+      mode: "range",
+      dateFormat: "Y-m-d"
+    }),
     $("#previous_weeks").on("click", function(event) {
       $(this).parents('ul').hide();
       $("#back").parents('ul').show();
