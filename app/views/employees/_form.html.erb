@@ -27,6 +27,23 @@
 
 <%= render "profiles/embedable_form", profile:employee.profile, allow_submit:false, form:form %>
 
+<div class="page_title"> VISA Details </div>
+<div class="flex_row"> 
+	<div class="flex_col">
+		<b>Visa Status:</b>
+		<%= form.select :visa_status, 
+			options_for_select(["USC", "GC-EAD", "H4-EAD", "H1-B", "OPT-EAD", "CPT"], employee.visa_status),
+			class: 'form-control', 
+			filter_name: "contract"
+			%>
+	</div>
+	<div class="flex_col">
+		<b>Visa Expiry:</b>
+		<%= form.text_field :visa_expiry, :class => 'date_select_field' %>
+	</div>
+</div>
+
+
 <div class="page_title"> Work Details </div>
 <div class="flex_col">
 	<div class="flex_row">
@@ -58,6 +75,17 @@
 </div>
 <div class="page_title"> Documents </div>
 <div class="flex_col">
+	
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Contract Type: </b>
+			<%= form.radio_button :contract_type, 'W8', :checked => true %> 
+			<%= label :contract_type_w8, 'W8' %>
+			<%= form.radio_button :contract_type, 'C2C' %>
+			<%= label :contract_type_c2c, 'C2C' %>
+		</div>
+	</div>
+	
 	<div class="flex_row">
 		<div class="flex_col">
 			<% show_file_field(form, :passport, "Passport", employee.passport) %>

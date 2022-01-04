@@ -1,5 +1,55 @@
-<div class="">
-  <%= link_to "New Consultant", new_employee_url, {:class => "button_link"} %>
+<div class="page_heading">
+	Consultants
+</div>
+<div class="info_print_employee flex_row">
+	<%# The script that makes these filter fields work is defined in application.js %>
+	<%# Any thing with class "filter_field" will get .onChanged attached to it where the "filter_name" attribute will be turned into parameter name and the current url will be called %>
+	
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'employee_filter',  
+			options_from_collection_for_select(Employee.all, "id", "name", params["emp"]),
+			class: 'form-control filter_field',
+			id: "filter_field",
+			filter_name: "emp",
+			prompt: "Consultant" 
+			%>
+	</div>
+	
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'contract_filter',
+			options_from_collection_for_select(Project.all, "id", "name", params["proj"]), 
+			class: 'form-control filter_field',
+			id: "filter_field",
+			filter_name: "proj",
+			prompt: "Project" 
+			%>
+	</div>
+	
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'contract_filter', 
+			options_for_select(["W8", "C2C"], params["contract"]),
+			class: 'form-control filter_field', 
+			id: "filter_field",
+			filter_name: "contract",
+			prompt: "Contract Type"
+			%>
+	</div>
+	
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'vendor_filter',
+			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
+			class: 'form-control filter_field',
+			id: "filter_field",
+			filter_name: "vendor",
+			prompt: "Vendor" %>
+	</div>
+	
+	<div class="flex_col"></div>
+	
+	<div class="flex_col">
+		<%= link_to "Add Consultant", new_employee_url, {:class => "button_link", :style=> "background:#36d673;font-size:13px;width:160px;"} %>
+	</div>
+	
 </div>
 <div class="section">
 
@@ -8,32 +58,46 @@
       #
     </div>
     <div class="col col25">
-      Name
+      Consultant Name
     </div>
-    <div class="col col25">
-      Assigned To
+    
+	<div class="col col25">
+      Project
     </div>
-    <div class="col">
-      Rate
+	
+	<div class="col col8">
+      Contract Type
     </div>
-    <div class="col">
-      Hours Logged
+	<div class="col col25">
+      Vendor
     </div>
     <div class="col">Actions</div>
   </div>
 
   <% total_hours = 0 %>
   <% @employees.each_with_index do |employee, index| %>
-    <div class="row">
+    <div class="row row_hover_highlight">
       <div class="col">
         <%= index + 1 %>
       </div>
+      
       <div class="col col25">
         <%if employee.try(:profile).present?%>
-          <%#  link_to employee.try(:profile).try(:full_name),  edit_profile_path(employee.try(:profile).try(:id),role:employee.try(:profile).try(:role).try(:downcase)) %>
-		  <%=  link_to employee.profile.name, employee_path(id:employee,order:"period"), role:employee.try(:profile).try(:role).try(:downcase) %>
+          <%= link_to employee.profile.name, employee_path(id:employee,order:"period"), role:employee.try(:profile).try(:role).try(:downcase) %>
         <%end%>
+		<% if employee.disabled %>
+		(Disabled)
+		<% end %>
       </div>
+      
+	  <div class="col col25">
+         <%= employee.projects.count > 0 ? "Proj#{employee.projects.first.id}" : "<Not Assigned>" %>
+      </div>
+	  
+      <div class="col col8">
+        <%= employee.contract_type.blank? ? "<Not Provided>" : employee.contract_type %>
+      </div>
+	  
       <div class="col col25">
         <%if employee.vendors.count > 0 %>
           <%= employee.vendors.map { |v| v.name  }.join(',') %>
@@ -41,23 +105,15 @@
         UnAssigned
         <% end %>
       </div>
-      <div class="col">
-        <%if employee.vendors.count > 0 %>
-          <%= employee.projects.map { |p| p.rate }.join(',') %>
-        <% end %>
-      </div>
-      <div class="col">
-        <%if employee.vendors.count > 0 %>
-          <%= th = employee.projects.map { |p| p.total_weekly_hours_worked }.reject { |item| item.blank? }.reduce(&:+).to_i %>
-          <% total_hours += th %>
-        <% end %>
-      </div>
+      
       <div class="col">
 		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
 		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> |
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
-		  <%= link_to 'Destroy', employee_path(employee), data: {:confirm => 'Are you sure?'}, :method => :delete %>
-					  
+		  <%# link_to 'Destroy', employee_path(employee), data: {:confirm => 'Are you sure?'}, :method => :delete %>
+		  <% if !employee.disabled %>
+		  <a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.name%>" class="disable_consultant_link">Disable</a>
+		  <% end %>
       </div>
     </div>
   <% end %>
@@ -77,39 +133,11 @@
       
     </div>
     <div class="col">
-      <%= total_hours %>
+      <%# total_hours %>
     </div>
     <div class="col"></div>
   </div>
 </div>
 
-<% if false %>
-<p id="notice"><%= notice %></p>
+<%= render "employees/close_consultant_form" %>
 
-<h1>Employees</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Rate</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @employees.each do |employee| %>
-      <tr>
-        <td><%= employee.rate %></td>
-        <td><%= link_to 'Show', employee %></td>
-        <td><%= link_to 'Edit', edit_employee_path(employee) %></td>
-        <td><%= link_to 'Destroy', employee, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
-
-<br>
-
-<%= link_to 'New Employee', new_employee_path %>
-
-<% end %>

@@ -50,7 +50,9 @@
   	can_update:current_user.profile.id == @employee.profile.id, 
   	can_act:current_user.is_admin? || current_user.is_account_manager?, 
   	show_employee_info:current_user.is_admin? || current_user.is_account_manager?,
-	show_filters:false
+	show_filters:false,
+	show_each_day:true,
+	show_submitted_date:false
 	%>
 </div>
 
@@ -73,7 +75,6 @@
 	<% else %>
 		<%= link_to "Add Hours", new_work_duration_url(:eid => @employee.id, :date => day) %>
 	<% end %>
-
 </div>
 <% end %>
 

@@ -55,4 +55,8 @@ module ProfilesHelper
         ['Wyoming', 'WY']
       ]
   end
+  
+  def missing_profile_picture_url
+    return "https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg"
+  end
 end

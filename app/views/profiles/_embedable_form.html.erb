@@ -1,3 +1,11 @@
+<script>
+	$(document).ready(function() {
+		$("#profile_picture_image").click(function(e) {
+		    e.preventDefault();
+			$("#image_popup").css({"visibility":"visible","opacity":"1"});
+		});
+	});
+</script>
 <% return unless defined?(form) %>
 
 <% if !defined?(allow_submit) %>
@@ -13,9 +21,16 @@
 <div class="page_title"> Profile Details </div>
 <div class="flex_col">
 	<div class="flex_row">
+		<div class="flex_col"></div>
 		<div class="flex_col">
-			<%= f.file_field :photo, accept: 'image/*', :class => "timesheet_field", :style=>"width:100%" %>
+			<div class="profile_picture_thumbnail_container">
+  			  <img src="<%= profile.photo.blank? ? missing_profile_picture_url : profile.photo.url %>" id="profile_picture_image"/>
+			</div>
+			<div>
+				<%= f.file_field :photo, accept: 'image/*', :class => "timesheet_field", :style=>"width:100%" %>
+			</div>
 		</div>
+		<div class="flex_col"></div>
 	</div>
 	<div class="flex_row">
 		<div class="flex_col">
@@ -73,4 +88,8 @@
 </div>
 
 
+<% end %>
+
+<%= render :layout => 'layouts/popup', :locals => {:popup_id => 'image_popup'} do %>
+	<img src="<%= profile.photo.blank? ? missing_profile_picture_url : profile.photo.url %>" id="profile_picture_image" style="width:100%;"/>
 <% end %>

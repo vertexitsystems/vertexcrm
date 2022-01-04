@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2021_11_10_111720) do
+ActiveRecord::Schema.define(version: 2022_01_02_071845) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,13 @@ ActiveRecord::Schema.define(version: 2021_11_10_111720) do
     t.string "voided_check_copy"
     t.integer "employer_id"
     t.integer "client_id"
+    t.string "contract_type"
+    t.string "visa_status"
+    t.date "visa_expiry"
+    t.boolean "disabled"
+    t.string "disable_reason"
+    t.date "disable_date"
+    t.string "disable_notes"
   end
 
   create_table "employers", force: :cascade do |t|

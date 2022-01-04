@@ -21,11 +21,11 @@ class Employee < ApplicationRecord
   
     #has_and_belongs_to_many :clients
     #has_and_belongs_to_many :employers
-    belongs_to :client
-    belongs_to :employer
+    belongs_to :client, optional: true
+    belongs_to :employer, optional: true
     
   def name
-    self.profile.full_name
+    self.profile.name#full_name
   end
 	
   private
@@ -34,4 +34,9 @@ class Employee < ApplicationRecord
     self.profile.destroy
     self.projects.destroy_all
   end
+  
+  public def days_remaining_till_visa_expiry
+    visa_expiry.blank? ? 0 : (visa_expiry.to_date - Date.today).to_i
+  end
+    
 end

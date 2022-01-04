@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :employees do
     collection do 
       get :employee_report
+      put :disable_consultant
     end
   end
   

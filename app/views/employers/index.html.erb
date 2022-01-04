@@ -1,3 +1,4 @@
+<div class="page_heading"> Employers </div>
 <%= link_to "New Employer", new_employer_url, {:class => "button_link"} %>
 <div class="section">
 
@@ -22,7 +23,7 @@
 
   <% total_hours = 0 %>
   <% @employers.each_with_index do |employer, index| %>
-    <div class="row">
+    <div class="row row_hover_highlight">
       <div class="col">
         <%= index + 1 %>
       </div>

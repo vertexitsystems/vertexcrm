@@ -30,17 +30,27 @@ class ProfilesController < ApplicationController
         redirect_to root_path
       end
       
-      case @profile.user_type
-      when 357_168 # Admin
+      if !@profile.user_type.blank?
+        case @profile.user_type
+          when 357_168 # Admin
 
-      when 3396 # Employer
-        redirect_to employer_url(@profile.employee.id)
-      when 445 # Employee
-        #redirect_to employee_url(@profile.employee.id)
-      when 2623 # Vendor
-        redirect_to vendor_url(@profile.vendor.id)
+          when 3396 # Employer
+            redirect_to employer_url(@profile.employee.id)
+          when 445 # Employee
+            #redirect_to employee_url(@profile.employee.id)
+          when 2623 # Vendor
+            redirect_to vendor_url(@profile.vendor.id)
+          else
+            puts 'Wrong type'
+        end
       else
-        puts 'Wrong type'
+        if !@profile.employee.blank?
+          if @profile.employee.disabled && @profile.id == current_user.profile.id
+            flash[:alert] = "This account has been disabled."
+            sign_out(current_user)
+            redirect_to new_user_session_url
+          end
+        end
       end
 
     else

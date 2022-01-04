@@ -47,17 +47,32 @@
 		font-family: Arial, Helvetica, sans-serif;
 	}
 			
+	.visa_expiry_message_container{
+		border:1px solid red;
+		border-radius:10px;
+		
+		background:var(--main-color);
+		color:#FFF;
+		margin: 0 auto;
+		
+		min-width:350px;
+		text-align:center;
+		
+		padding:3px 10px;
+	}
 </style>
+
+<% if !@profile.employee.blank? && @profile.user == current_user && @profile.employee.days_remaining_till_visa_expiry < 30 %>
+<div class="visa_expiry_message_container">
+	<b>ALERT: </b>Your Visa is about to expire in <%= @profile.employee.days_remaining_till_visa_expiry %> days.
+</div>
+<% end %>
 
 <div class="profile_main">
 	<div class="profile_menu_left profile_container">
 		<div class="profile_menu_left_row" style="margin-top:20px">
 			<div style="margin:0 auto;display:table">
-			  <% if current_user.profile.photo.blank? %>
-			  <img src="https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg" />
-			  <% else  %>
-			  <img src="<%=current_user.profile.photo.url%>">
-			  <% end %>
+			  <img src="<%= @profile.photo.blank? ? missing_profile_picture_url : @profile.photo.url %>" id="profile_picture_image"/>
 			</div>
 		</div>
 		<div class="profile_menu_left_row profile_actions" style="margin-bottom:10px">
@@ -189,6 +204,37 @@
 				</div>
 			</div>
 		</div>
+		
+		<div class="profile_right_section">
+			<div class="section_title"> Visa Details </div>
+			<div class="section_details">
+				<div class="flex_row">
+					
+					<div class="flex_col">
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Visa Status: </div>
+							<div class="flex_col"> <%= @profile.employee.visa_status.blank? ? "(Not Provided)" : @profile.employee.visa_status %> </div>
+						</div>
+	
+						<div class="flex_row info_row">
+							<div class="flex_col col_heading"> Visa Expires: </div>
+							<div class="flex_col">
+								<% if @profile.employee.visa_expiry.blank? %>
+								(Not Provided)
+								<% else %>
+									<%= @profile.employee.visa_expiry.to_date.strftime("%B %d, %Y") %>
+									<span style="font-size:10px;color:<%= @profile.employee.days_remaining_till_visa_expiry > 30 ? '#776' : 'var(--main-color)' %>">
+										(in <%= @profile.employee.days_remaining_till_visa_expiry %> days)
+									</span>
+								<% end %>
+							</div>
+						</div>
+					</div>
+					
+				</div>
+			</div>
+		</div>
+		
 		<div class="profile_right_section">
 			<div class="section_title"> Documents </div>
 			
@@ -213,6 +259,24 @@
 				<% show_document("Void Check", @profile.employee.voided_check_copy) %>
 			</div>
 		</div>
+		
+		<% if @profile.employee.disabled%>
+		<div class="profile_right_section">
+			<div class="section_title"> Diabled </div>
+			
+			<div class="section_details">
+				<div class="employee_info_item" style="padding: 0px 20px;">
+					<b>Disable Date: </b> <%= @profile.employee.disable_date %>
+				</div>
+				<div class="employee_info_item" style="padding: 0px 20px;">
+					<b>Disable Reason: </b> <%= @profile.employee.disable_reason %>
+				</div>
+				<div class="employee_info_item" style="padding: 0px 20px;">
+					<b>Disable Notes: </b> <%= @profile.employee.disable_notes %>
+				</div>
+			</div>
+		</div>
+		<% end %>
 		
 	</div>
 	<% end %>

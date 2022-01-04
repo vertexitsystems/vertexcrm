@@ -6,6 +6,9 @@ class Project < ApplicationRecord
 
   has_many :work_durations
 
+  def name
+    "Proj#{id}"
+  end
   def today
     Date.today
   end

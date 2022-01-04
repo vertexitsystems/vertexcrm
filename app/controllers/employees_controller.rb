@@ -5,7 +5,22 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
-    @employees = Employee.all
+    @employees = Employee.joins(:profile).order("profiles.full_name")
+    
+    params.each do |key, value|
+      if key == "emp"
+        @employees = @employees.select{|emp|emp.id == value.to_i}
+      end
+      if key == "proj"
+        @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.id == value.to_i}
+      end
+      if key == "contract"
+        @employees = @employees.select{|emp|emp.contract_type == value}
+      end
+      if key == "vendor"
+        @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.vendor.id == value.to_i}
+      end
+    end
   end
 
   # GET /employees/1
@@ -156,6 +171,18 @@ class EmployeesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def disable_consultant
+    @employee = Employee.find(params["emp_id"])
+    
+    if @employee.update(:disabled=>true, :disable_reason=>params["disable_reason"], :disable_date=>params["disable_date"], :disable_notes=>params["disable_notes"])
+      render json: {result:true}
+    else
+      print "----> " + @employee.errors.full_messages.to_sentence
+      render json: {result:false,error:@employee.errors}
+    end
+    
+  end
 
   private
 
@@ -166,8 +193,9 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
   end
+  
   def user_params
     params[:employee][:profile_attributes]
   end

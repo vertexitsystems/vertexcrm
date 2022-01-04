@@ -131,7 +131,11 @@
       <% if user_signed_in? %>
 	  
 	  <div class="menu">
-	  
+		  <ul>
+			  <li class="option <%= (controller_name == "profiles" && action_name=="show") ? "menu_item_selected" : "" %>">
+				  <%= link_to "Home", root_path %>
+			  </li>
+  		</ul>
 	  <%if current_user.is_admin? %>
 	  <ul>
 		  <li class="heading"><a> Admin Options </a></li>
@@ -140,42 +144,40 @@
 	  <% end %>
 	  <%if current_user.is_account_manager? %>
 	  <ul>
-		  <li class="heading"><a> Manager Options </a></li>
-	  	<li class="option <%= action_name=="time_sheet_approval" ? "menu_item_selected" : "" %>"> <a href="/account_managers/time_sheet_approval?order=status"> Time Sheet Approval </a> </li>
+		  <li class="option <%= action_name=="time_sheet_approval" ? "menu_item_selected" : "" %>"> 
+			  <a href="/account_managers/time_sheet_approval?order=status"> Timesheet Management </a> 
+		  </li>
 	  </ul>
 	  <% end %>
 	 
     <%if current_user.is_admin? || current_user.is_account_manager? %>
       <ul>
-        <li class="heading"><a> Role Management </a></li>
-        <li class="option <%= controller_name=="employees" ? "menu_item_selected" : "" %>"> <a href="/employees"> Manage Consultants </a> </li>
-        <li class="option <%= controller_name=="vendors" ? "menu_item_selected" : "" %>"> <a href="/vendors"> Manage Vendors </a> </li>
-		<li class="option <%= controller_name=="employers" ? "menu_item_selected" : "" %>"> <a href="/employers"> Manage Employers </a> </li>
-		<li class="option <%= controller_name=="clients" ? "menu_item_selected" : "" %>"> <a href="/clients"> Manage Clients </a> </li>
-		<!--
-		<li class="option <%= controller_name=="projects" ? "menu_item_selected" : "" %>"> <a href="/projects"> Manage Projects </a> </li>
-			-->
-		<% if false%>
-        <li class="option"> <a href="/employers"> Manage Employers </a> </li>
-		<li class="option"> <a href="/assistants"> Manage Assistants </a> </li>
-		
-		
-        <li class="heading"><a> Personal Information </a></li>
-        <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
-		<% end %>
+        <li class="option <%= controller_name=="vendors" ? "jos" : "" %>"> <a onclick="alert('In Progress!')">User Management</a> </li>
       </ul>
+	  
+	  <ul>
+        
+		<li class="option <%= controller_name=="vendors" ? "menu_item_selected" : "" %>"> <a href="/vendors"> Prime Vendors </a> </li>
+		<li class="option <%= controller_name=="clients" ? "menu_item_selected" : "" %>"> <a href="/clients"> Clients </a> </li>
+		<li class="option <%= controller_name=="employees" ? "menu_item_selected" : "" %>"> <a href="/employees"> Consultants </a> </li>
+		<li class="option <%= controller_name=="employers" ? "menu_item_selected" : "" %>"> <a href="/employers"> Employers </a> </li>
+		
+      </ul>
+	  
+      <ul>
+        
+		<li class="option <%= controller_name=="vendors" ? "jos" : "" %>"> <a onclick="alert('In Progress!')">Jobs</a> </li>
+		<li class="option <%= controller_name=="clients" ? "reports" : "" %>"> <a onclick="alert('In Progress!')">Reports</a> </li>
+		<li class="option <%= controller_name=="employees" ? "invoices" : "" %>"> <a onclick="alert('In Progress!')">Invoices</a> </li>
+		
+      </ul>
+	  
     <%elsif current_user.profile.role == "Employee" %>
         <%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
         <ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
-          <li class="heading"><a> Main Menu </a></li>
-          <%# <li class="option"> <a href="/work_durations/new"> Weekly Time Entry </a> </li> %>
-          <li class="option"> <a href="/employees/<%=@employee.id%>">Weekly Time Report </a> </li>
-		  <%# <li class="option" id="previous_weeks" style="cursor:pointer;">  <a > Previous Weeks </a> </li> %>
-		  <% if false %>
-          <li class="heading"><a> Personal Information </a></li>
-          <li class="option"> <%= link_to 'View Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %> </li>
-          <!--  <li class="option"> <a href=""> Edit Provided Documents </a> </li> -->
-		  <% end %>
+          <li class="option <%= (controller_name == "employees" && action_name=="show") ? "menu_item_selected" : "" %>"> 
+			  <a href="/employees/<%=@employee.id%>">Weekly Time Report </a> 
+		  </li>
         </ul>
         <%if @employee.present?%>
           <ul style="<%= params["prv"] == "true" ? "" : "display:none"%>">
@@ -217,15 +219,18 @@
 		<b>Date:</b> <%= Date.today.strftime("%A %B %d, %Y") %>
 	</div>
 </div>
+<div class="main_page_title">
+	<%= @title %>
+</div>
 <% if user_signed_in? %>
   <div class="main" >
-    <% else %>
-    <div class="main" style="width:100%">
-    <% end %>
+<% else %>
+  <div class="main" style="width:100%">
+<% end %>
 	
     <%= yield %>
-  </div>
-  <div style="clear:both"></div>
+</div>
+<div style="clear:both"></div>
 
 </div>
     

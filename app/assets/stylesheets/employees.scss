@@ -1,6 +1,7 @@
 // Place all the styles related to the Employees controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: https://sass-lang.com/
+
 .full-image-bg{
 	position: absolute;
     height: 130%;
@@ -100,4 +101,14 @@
 .col_heading{
 	width:30%;
 	font-weight:bold;
+}
+
+.closing_consultant_form_container{
+	background: #FFF;
+	border:1px solid #AAA;
+	border-radius:24px;
+	width:60%;
+	margin: 0 auto;
+	
+	//position:absolute;
 }

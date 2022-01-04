@@ -1,3 +1,4 @@
+<div class="page_heading"> Clients </div>
 <%= link_to "New Client", new_client_url, {:class => "button_link"} %>
 <div class="section">
 
@@ -22,7 +23,7 @@
 
   <% total_hours = 0 %>
   <% @clients.each_with_index do |client, index| %>
-    <div class="row">
+    <div class="row row_hover_highlight">
       <div class="col">
         <%= index + 1 %>
       </div>

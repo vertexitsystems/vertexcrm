@@ -1,5 +1,6 @@
 <script>
 	$(document).ready(function() {
+		
 		/*
 			This event calculates the total number of hours as the the user is typing them in the textfields
 			this even will be triggerd for any textfield with class .hours_value (using class because name is being generated dynamically)
@@ -106,7 +107,7 @@
 			});
 		});
 	});
-	
+	/*
 	$(document).ready(function() {
 		$('#employee_filter').on('change', function () {
 			var emp_id = $(this).val();
@@ -125,6 +126,7 @@
 	        return false;
 		}
 	});
+	*/
 </script>
 	
 	<%= csrf_meta_tag %>
@@ -161,6 +163,14 @@
 	<% show_reopened = true %>
 	<% end %>
 	
+	<% if !defined?(show_each_day) %>
+	<% show_each_day = false %>
+	<% end %>
+	
+	<% if !defined?(show_submitted_date) %>
+	<% show_submitted_date = true %>
+	<% end %>
+	
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 
@@ -170,34 +180,49 @@
 		<%= link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],format:"pdf"), class: "button_link" %>
 	</div>
 	<div class="flex_col"></div>
+	
 	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'vendor_filter',  options_from_collection_for_select(Vendor.all, "id", "name", params["vend"]), class: 'form-control', id: "vendor_filter", :prompt => "Vendor Filter" %>
+		<%= select_tag 'employee_filter',  
+			options_from_collection_for_select(Employee.all, "id", "name", params["emp"]), 
+			class: 'form-control filter_field',
+			id: "employee_filter",
+			filter_name: "emp",
+			prompt: "Consultant" 
+			%>
 	</div>
+	
 	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'employee_filter',  options_from_collection_for_select(Employee.all, "id", "name", params["emp"]), class: 'form-control', id: "employee_filter", :prompt => "Employee Filter" %>
+		<%= select_tag 'employee_filter',  
+			options_for_select(["W8", "C2C"], params["contract"]),
+			class: 'form-control filter_field',
+			id: "contract_filter",
+			filter_name: "contract",
+			prompt: "Contract Type" 
+			%>
 	</div>
+	
 	<div class="flex_col" style="padding:0px 10px">
-		<%= text_field_tag 'time_sheet_date_range',  @date, class: 'form-control daterange',id:"date-range-work" %>
+		<%= select_tag 'vendor_filter',  
+			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
+			class: 'form-control filter_field', 
+			id: "vendor_filter",
+			filter_name: "vendor",
+			prompt: "Vendor" 
+			%>
 	</div>
+	
+	<div class="flex_col" style="padding:0px 10px">
+		<%= text_field_tag 'time_sheet_date_range',
+			  @date,
+			  class: 'form-control daterange',
+			  id:"date-range-work" 
+			  %>
+	</div>
+	
 </div>
 <% end %>
 
-<% def sortable_header_old(title, sort_value) %>
-  <div class="flex_row">
-	  <div class="flex_col"></div>
-	  
-	  <% if params["order"].present? && params["order"] == sort_value %>
-	  <div class="flex_col" style="flex-grow:0">
-		  <i class="material-icons">arrow_drop_down</i>
-	  </div>
-	  <% end %>
-	  
-	  <div class="flex_col" style="flex-grow:2;line-height:25px">
-		  <%= link_to title, url_for( :order => sort_value ) %>
-	  </div>
-	  <div class="flex_col"></div>
-  </div>
-<% end %>
+
 
 <% def sortable_header(title, sort_value) %>
 	<% if params["order"].present? && params["order"] == sort_value %>
@@ -209,25 +234,38 @@
 <% end %>
 
 <div class="row top">
-  <div class="col col-5">
-	  <% sortable_header("Time Period", "period") %>
-  </div>
+	<% if show_submitted_date %>
+	  <div class="col col8">
+		  Submitted Date
+	  </div>
+  	<% end %>
+  
   <% if show_employee_info %>
   <div class="col col8">
-	  <% sortable_header("Employee", "employee") %>
+	  <% sortable_header("Consultant Name", "employee") %>
   </div>
   <div class="col col8">
 	  <% sortable_header("Vendor", "vendor") %>
   </div>
   <% end %>
+  
+  <div class="col col-5">
+	  <% sortable_header("Time Period", "period") %>
+  </div>
+  
+  <div class="col col8">
+	  Contract Type
+  </div>
+  
   <div class="col col8">
 	  <% sortable_header("Project", "project") %>
   </div>
-  
+  <% if show_each_day %>
   <% for day in (today.at_beginning_of_week..today.at_end_of_week).to_a.take(5).map.each { |day| day } do %>
     <div class="col col8">
 	  <%= day.strftime("%a") %>
     </div>
+  <% end %>
   <% end %>
   <div class="col col8">
     Total Hours
@@ -248,12 +286,63 @@
   <div style="clear:both"></div>
 </div>
 
-<% wds = work_durations.where("extract(dow from work_day) = ?", 1).order("created_at DESC").limit(50).select{|wd|wd.employee != nil} %>
+<%
+	records_per_page = 10
+	
+	page = params[:page].to_i
+	if page.blank?
+		page = 0
+	end
+	
+	
+	#@listings = Listing.joins(:categorizations, :listing_disciplines, :listing_targets)
+	#wds = WorkDuration.joins(:project).where("project.employee_id IS NOT NULL")
+	wds = work_durations.where("extract(dow from work_day) = ?", 1)#.order("created_at DESC")
+	
+	
+	wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
+	wds = wds.order(:time_sheet_status) if params[:order].present? && params[:order] == "status"
+	wds = wds.joins(:project).order("projects.employee_id DESC") if params[:order].present? && params[:order] == "employee"
+	wds = wds.joins(:project).order("projects.vendor_id DESC") if params[:order].present? && params[:order] == "vendor"
+	wds = wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
+	
+	wds = wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
+	wds = wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
+	
+	wds = wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
+	wds = wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
+	wds = wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
+
+	
+	total_records = wds.count
+	
+	wds = wds.limit(records_per_page).offset(page * records_per_page)
+	
+	
+	
+	#wds.includes(:projects).parent.children.reorder("projects.employee_id")
+	
+  	#@listings = @listings.where("categorizations.category_id = ?", params[:category_id]) if params[:category_id].present? && params[:category_id] != ""
+  	#@listings = @listings.where("listings_disciplines.discipline_id = ?", params[:discipline_id]) if params[:discipline_id].present? && params[:discipline_id] != ""
+  	#@listings = @listings.where("listing_targets.target_id = ?", params[:target_id]) if params[:target_id].present? && params[:target_id] != ""
+  	#@listings = @listings.page(params[:page])
+	
+	# If order is set to status it cannot be applied in db
+	# if params[:order].present? && params[:order] == "status"
+# 		priority = ["pending","reopened","approved","rejected","saved"]
+# 		wds = wds.sort_by { |wd| priority.index(wd.time_sheet_status.downcase) || priority.size }
+# 	end
+
+%>
+
+<% if false %>
+<% return wds.map{|w|w.vendor.id} %>
+<%# wds = work_durations.where("extract(dow from work_day) = ?", 1).order("created_at DESC").select{|wd|wd.employee != nil} %>
 <% if params["emp"].present? %>
 <% wds = wds.select {|wd| wd.employee.id == params["emp"].to_i }%>
 <% end %>
-<% if params["vend"].present? %>
-<% wds = wds.select {|wd| wd.employee.id == params["vend"].to_i }%>
+<% if params["vendor"].present? %>
+<% wds = wds.select {|wd| wd.vendor.id == params["vendor"].to_i }%>
 <% end %>
 <% if params["from_date"].present? %>
 <% wds = wds.select {|wd| wd.work_day >= params["from_date"].to_date.beginning_of_week }%>
@@ -267,31 +356,39 @@
 <% elsif params["order"] == "project" %>
 <% wds = wds.sort_by { |wd| wd.project_id } %>
 <% elsif params["order"] == "status" %>
-<%# wds = wds.sort_by { |wd| wd.is_past_due_date? ? 100 : ["unsubmitted", "pending", "reopened", "rejectd", "approved", "saved"].index(wd.time_sheet_status.downcase).to_i } %>
-<%# wds = wds.sort_by { |wd| ["pending", "reopened", "unsubmitted", "rejectd", "approved", "saved"].index(wd.time_sheet_status.downcase).to_i } %>
 <% wds = wds.sort_by { |wd| wd.time_sheet_status.downcase == "pending" ? 0 : 1 } %>
 <% else %>
 <% wds = wds.sort_by { |wd| wd.work_day }.reverse %>
 <% end %>
 
+<% end %>
 <% wds.each_with_index do |wd, loop_index|%>
 
-	<% if !(wd.is_past_due_date? && show_pastdue) %>
-		<% if !show_unsubmitted && (wd.is_saved? || wd.is_unsubmitted?) %>
-			<% next %>
-		<% end %>
-	<% end%>
+	<% # In some freak cases the employee might be missing, so make sure it exists before continuing
+	if wd.employee.blank?
+		next
+	end
+	
+	%>
+	
+	<% #Skip unsubmitted
+	if !(wd.is_past_due_date? && show_pastdue)
+		if !show_unsubmitted && (wd.is_saved? || wd.is_unsubmitted?)
+			next
+		end
+	end
+	%>
 
 	<% allow_update = can_update_all ||  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 
 	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
 	<div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
-		<div class="row">
-			<div class="col col-5 mt-3">
-				<%= link_to wd do %>
-				<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
-			  	<% end %>
-		    </div>
+		<div class="row row_hover_highlight">
+			<% if show_submitted_date %>
+				<div class="col col8 mt-3">
+					<%= wd.updated_at.strftime("%b %d, %Y") %>
+				</div>
+			<% end %>
 	
 			<% if show_employee_info %>
 		    <div class="col col8 mt-3">
@@ -301,9 +398,22 @@
 		      <%= wd.vendor.blank? ? "<Not Provided>" : wd.vendor.name %>
 		    </div>
 		    <% end %>
+			
+			<div class="col col-5 mt-3">
+				<%= link_to wd do %>
+				<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
+			  	<% end %>
+		    </div>
+			
+			<div class="col col8 mt-3">
+				<%= wd.employee.contract_type.blank? ? "<Not Provided>" : wd.employee.contract_type %>
+		    </div>
+			
 		    <div class="col col8 mt-3">
 		      Proj<%= wd.project.id %>
 		    </div>
+			
+			<% if show_each_day %>
 			<% wd.all_days.each do |day| %>
 				<div class="col col8 labeled-toggle-<%=loop_index%>">
 		          <label class="mt-3 " for="work_duration_a1">
@@ -325,8 +435,9 @@
 		          	<%= number_field_tag :thought_author, "", :name => "wds[][#{day.work_day.strftime("%b,%d,%Y")}]", :value => day.hours, :min=>"0", :max=>"12", :class=>"hours_value hours_value_#{loop_index}", :result_id=>"total_#{loop_index}", :siblings=>"hours_value_#{loop_index}", :style=>"min-width:60px" %> <br />
 		          </label>
 		        </div>
-			<% end %>
-	
+			<% end %> <!-- END OF if loop -->
+			<% end %> <!-- END OF if show_each_day -->
+			
 			<div class="col col8 labeled-toggle-<%=loop_index%>">
 		      <label class="mt-3 label-duration-1" for="work_duration_a1">
 		      	<%= wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
@@ -353,7 +464,7 @@
 			<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
 			  <% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_pending? %>
 				<label style="color:red">
-					PASSED DUE DATE <%# wd.time_sheet_status %>
+					PASSED DUE DATE <%= wd.time_sheet_status %>
 				</label>
 			  <% else %>
 		  	
@@ -465,6 +576,44 @@
 	<% end %>
 <% end %>
 
+
+<div class="recorc_bottom flex_row">
+	<div class="flex_row"></div>
+	<div class="pagination_container flex_row" style="flex-grow:0;width:160px">
+		<% total_pages = (total_records.to_f / 10.0).floor.to_i + (((total_records.to_f / 10.0).modulo(1) > 0) ? 1 : 0) %>
+		<% if page > 0 %>
+		<div class="flex_col" style="padding:0px">
+			<a href="" class="pagination_link" new_page="0">
+				<span class="material-icons">
+				skip_previous
+				</span>
+			</a>
+			<a href="" class="pagination_link" new_page="<%= page - 1 %>">
+				<span class="material-icons">
+				navigate_before
+				</span>
+			</a>
+		</div> 
+		<% end %>
+		<div class="flex_col" style="padding:0px;text-align:center">
+		<%= "#{page + 1} / #{total_pages}" %> 
+		</div>
+		<% if page < total_pages - 1 %>
+		<div class="flex_col" style="padding:0px">
+		<a href="" class="pagination_link" new_page="<%= page + 1 %>">
+			<span class="material-icons">
+			navigate_next
+			</span>
+		</a>
+		<a href="" class="pagination_link" new_page="<%= total_pages - 1%>">
+			<span class="material-icons">
+			skip_next
+			</span>
+		</a>
+		</div>
+		<% end %>
+	</div>
+</div>
  <!-- DELETE BELOW
 	 
 <% if false %>

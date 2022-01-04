@@ -240,7 +240,6 @@ class WorkDurationsController < ApplicationController
     if wd.save
       render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
     else
-      byebug
       render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}
     end
   end
