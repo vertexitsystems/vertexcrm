@@ -1,0 +1,148 @@
+<%if false %>
+<p id="notice"><%= notice %></p>
+
+<h1>Job Posts</h1> 
+<% if user_signed_in? %>
+Profile Exists: <%= current_user.profile != nil %>
+<% end %>
+
+<div class="job_posts_container">
+  <% @job_posts.each do |job_post| %>
+    <div class="job_post_container">
+      <div class="job_title">
+        <%= job_post.title %>
+      </div>
+      <div class="job_description">
+        <%= job_post.description.truncate(250, separator: '...') %>
+      </div>
+      <div class="job_menu">
+        
+        <% if user_signed_in? %>
+          <%= link_to 'Edit', edit_job_post_path(job_post) %> |
+          <%= link_to 'Destroy', job_post, method: :delete, data: { confirm: 'Are you sure?' } %> | 
+        <% end %>
+        <%= link_to 'Show', job_post %>
+
+      </div>
+    </div>
+  <% end %>
+</div>
+<% end %>
+
+<div class="heading"> Active Job Posts: </div>
+<a class="button_link" href=""> Create New Post </a>
+<div class="section" style="width: 100%;">
+  <div class="row top">
+    <div class="col" style="width:20px">
+      #
+    </div>
+    <div class="col" style="width: 48%;">
+      Post
+    </div>
+    <div class="col">
+      Status
+    </div>
+    <div class="col">
+      Applications
+    </div>
+    <div class="col">
+      Shotlists
+    </div>
+    <div style="clear:both"></div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="width:20px">
+      1
+    </div>
+    <div class="col" style="width: 48%;">
+      <a href=""> Developer required at some place, please apply and let us know, thankyou. </a>
+    </div>
+    <div class="col">
+      Active
+    </div>
+    <div class="col">
+      30
+    </div>
+    <div class="col">
+      12
+    </div>
+    <div style="clear:both"></div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="width:20px">
+      2
+    </div>
+    <div class="col" style="width: 48%;">
+      <a href=""> Microsoft Specialist required for a fortune 500 company, work remotely. thankyou. </a>
+    </div>
+    <div class="col">
+      Active
+    </div>
+    <div class="col">
+      23
+    </div>
+    <div class="col">
+      8
+    </div>
+    <div style="clear:both"></div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="width:20px">
+      3
+    </div>
+    <div class="col" style="width: 48%;">
+      <a href=""> Developer required at some place, please apply and let us know, thankyou.  </a>
+    </div>
+    <div class="col">
+      Complete
+    </div>
+    <div class="col">
+      3
+    </div>
+    <div class="col">
+      0
+    </div>
+    <div style="clear:both"></div>
+  </div>
+
+  <div class="row">
+    <div class="col" style="width:20px">
+      2
+    </div>
+    <div class="col" style="width: 48%;">
+      <a href=""> Microsoft Specialist required for a fortune 500 company, work remotely. thankyou. </a>
+    </div>
+    <div class="col">
+      complete
+    </div>
+    <div class="col">
+      23
+    </div>
+    <div class="col">
+      8
+    </div>
+    <div style="clear:both"></div>
+  </div>
+
+  <div class="row bottom">
+    <div class="col" style="width:20px">
+      
+    </div>
+    <div class="col" style="width:48%;">
+      
+    </div>
+    <div class="col">
+      
+    </div>
+    <div class="col">
+      56
+    </div>
+    <div class="col">
+      20
+    </div>
+    <div style="clear:both"></div>
+  </div>
+</div>

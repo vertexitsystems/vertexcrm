@@ -1,0 +1,32 @@
+<%= form_with(model: job_application, local: true) do |form| %>
+  <% if job_application.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(job_application.errors.count, "error") %> prohibited this job_application from being saved:</h2>
+
+      <ul>
+        <% job_application.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+
+  <div class="field">
+    <%= form.label :ph_no %>
+    <%= form.text_field :ph_no %>
+  </div>
+
+  <div class="field">
+    <%= form.label :cover_letter %>
+    <%= form.text_area :cover_letter %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>

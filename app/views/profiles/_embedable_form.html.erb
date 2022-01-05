@@ -1,0 +1,95 @@
+<script>
+	$(document).ready(function() {
+		$("#profile_picture_image").click(function(e) {
+		    e.preventDefault();
+			$("#image_popup").css({"visibility":"visible","opacity":"1"});
+		});
+	});
+</script>
+<% return unless defined?(form) %>
+
+<% if !defined?(allow_submit) %>
+<% allow_submit = true %>
+<% end %>
+  
+<% def show_field(f, field, title, required=false) %>
+	<b><%= title %>:</b>
+	<%= f.text_field field, :required => required %>
+<% end %>
+
+<%= form.fields_for :profile do |f| %>
+<div class="page_title"> Profile Details </div>
+<div class="flex_col">
+	<div class="flex_row">
+		<div class="flex_col"></div>
+		<div class="flex_col">
+			<div class="profile_picture_thumbnail_container">
+  			  <img src="<%= profile.photo.blank? ? missing_profile_picture_url : profile.photo.url %>" id="profile_picture_image"/>
+			</div>
+			<div>
+				<%= f.file_field :photo, accept: 'image/*', :class => "timesheet_field", :style=>"width:100%" %>
+			</div>
+		</div>
+		<div class="flex_col"></div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<% show_field(f, :first_name, "First Name", true) %>
+		</div>
+		<div class="flex_col">
+			<% show_field(f, :middle_name, "Middle Name") %>
+		</div>
+		<div class="flex_col">
+			<% show_field(f, :last_name, "Last Name") %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Phone Number 1:</b>
+			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true %>
+		</div>
+		<div class="flex_col">
+			<b>Phone Number 2:</b>
+			<%= f.telephone_field :phone2, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}"%>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<%# show_field(f, :email, "Email", true) %>
+			<b>Email:</b>
+			<%= f.text_field :email, :value=>(profile.user.present? ? profile.user.email : "") %>
+		</div>
+		<div class="flex_col">
+			<% show_field(f, :password, "Password", !profile.user.present?) %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<% show_field(f, :address, "Address") %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Country:</b>
+			<%= f.text_field :country, :required => false, :value => "USA", :disabled=>true %>
+		</div>
+		<div class="flex_col">
+			<%# show_field(f, :state, "State") %>
+			<b>State:</b>
+			<%= select_tag :state, options_for_select(us_states) %>
+		</div>
+		<div class="flex_col">
+			<% show_field(f, :city, "City") %>
+		</div>
+		<div class="flex_col">
+			<% show_field(f, :zip_code, "Zip Code") %>
+		</div>
+	</div>
+</div>
+
+
+<% end %>
+
+<%= render :layout => 'layouts/popup', :locals => {:popup_id => 'image_popup'} do %>
+	<img src="<%= profile.photo.blank? ? missing_profile_picture_url : profile.photo.url %>" id="profile_picture_image" style="width:100%;"/>
+<% end %>

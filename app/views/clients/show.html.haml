@@ -1,0 +1,40 @@
+%p#notice= notice
+.button
+	= link_to "Edit Details", edit_client_path(@client)
+.page_title
+	Company Details
+.flex_col
+	.flex_col
+		%b Name:
+		= @client.company_name
+	.flex_col
+		%b Email: 
+		= @client.company_website
+	.flex_col
+		%b Website: 
+		= @client.company_email
+	.flex_col
+		%b Phone Number: 
+		= @client.phone_number
+	.flex_col
+		%b Fax Number: 
+		= @client.fax_number
+	.flex_col
+		%b Address: 
+		= @client.company_address
+		
+.page_title
+	Contact Details
+.flex_col
+	.flex_col
+		%b Name:
+		= @client.contact_name
+	.flex_col
+		%b Designation: 
+		= @client.contact_designation
+	.flex_col
+		%b Phone Number: 
+		= @client.contact_number
+	.flex_col
+		%b Email: 
+		= @client.contact_email

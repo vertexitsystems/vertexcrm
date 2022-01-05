@@ -1,0 +1,63 @@
+<%= form_with(model: project, local: true) do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="section" style="margin:0px">
+    <div class="row form_row top_title">  </div>
+    <div class="row form_row heading">
+      Assign New Vendor
+    </div>
+    <div class="row form_row">
+      <div class="col title">Employee: </div>
+      <div class="col field"> 
+        <%= form.select :employee_id, Employee.all.map{|r| [r.profile.full_name, r.id]}, :selected => params[:eid] %>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <div class="row form_row">
+      <div class="col title">Vendor: </div>
+      <div class="col field">
+        <%= form.select :vendor_id, Vendor.all.map{|r| [r.profile.full_name, r.id]} %>
+      </div>
+      <div class="clr"></div>
+    </div>
+    <div class="row form_row">
+      <div class="col title">Rate: </div>
+      <div class="col field"> <%= form.text_field :rate %> </div>
+      <div class="clr"></div>
+    </div>
+
+    <div class="row form_row bottom_button">
+      <%= form.submit "Assign Vendor" %>
+    </div>
+  </div>
+<% end %>
+
+<%if false %>
+<%= form_with(model: project, local: true) do |form| %>
+  <% if project.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(project.errors.count, "error") %> prohibited this project from being saved:</h2>
+
+      <ul>
+        <% project.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
+<% end %>

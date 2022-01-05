@@ -1,0 +1,69 @@
+<div class="page_heading"> Clients </div>
+<%= link_to "New Client", new_client_url, {:class => "button_link"} %>
+<div class="section">
+
+  <div class="row top">
+    <div class="col">
+      #
+    </div>
+    <div class="col col25">
+      Name
+    </div>
+    <div class="col col25">
+      Email
+    </div>
+    <div class="col">
+      Phone Number
+    </div>
+    <div class="col">
+      Address
+    </div>
+    <div class="col">Actions</div>
+  </div>
+
+  <% total_hours = 0 %>
+  <% @clients.each_with_index do |client, index| %>
+    <div class="row row_hover_highlight">
+      <div class="col">
+        <%= index + 1 %>
+      </div>
+      <div class="col col25">
+        <%=  link_to client.company_name, client_path(client) %>
+      </div>
+      <div class="col col25">
+        <%= client.company_email %>
+      </div>
+      <div class="col">
+        <%= client.phone_number %>
+      </div>
+      <div class="col">
+        <%= client.company_address %>
+      </div>
+      <div class="col">
+		  <%= link_to "Edit", edit_client_path(client)%> |
+		  <%= link_to 'Destroy', client_path(client), data: {:confirm => 'Are you sure?'}, :method => :delete %>
+					  
+      </div>
+    </div>
+  <% end %>
+  
+
+  <div class="row bottom">
+    <div class="col">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col col25">
+      
+    </div>
+    <div class="col">
+      
+    </div>
+    <div class="col">
+		
+    </div>
+    <div class="col"></div>
+  </div>
+</div>

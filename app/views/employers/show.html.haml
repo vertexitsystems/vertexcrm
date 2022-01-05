@@ -1,0 +1,40 @@
+%p#notice= notice
+.button
+	= link_to "Edit Details", edit_employer_path(@employer)
+.page_title
+	Company Details
+.flex_col
+	.flex_col
+		%b Name:
+		= @employer.company_name
+	.flex_col
+		%b Email: 
+		= @employer.company_website
+	.flex_col
+		%b Website: 
+		= @employer.company_email
+	.flex_col
+		%b Phone Number: 
+		= @employer.phone_number
+	.flex_col
+		%b Fax Number: 
+		= @employer.fax_number
+	.flex_col
+		%b Address: 
+		= @employer.company_address
+		
+.page_title
+	Contact Details
+.flex_col
+	.flex_col
+		%b Name:
+		= @employer.contact_name
+	.flex_col
+		%b Designation: 
+		= @employer.contact_designation
+	.flex_col
+		%b Phone Number: 
+		= @employer.contact_number
+	.flex_col
+		%b Email: 
+		= @employer.contact_email

@@ -1,0 +1,39 @@
+<p id="notice"><%= notice %></p>
+
+<h1>Projects</h1>
+<%= link_to 'New Project', new_project_path %>
+<div class="flex_container">
+	<div class="flex_row top" style="color:#FFF;background-color: var(--main-color);">
+		<div class="flex_col" style="width:2%">
+			#
+		</div>
+		<div class="flex_col">
+			Name
+		</div>
+		<div class="flex_col">
+			Vendor
+		</div>
+		<div class="flex_col">
+			Employee
+		</div>
+		<div class="flex_col" style="width:2%">
+			Rate
+		</div>
+		<div class="flex_col">
+			Actions
+		</div>
+	</div>
+	<% @projects.each_with_index do |project, index| %>
+	<div class="flex_row" style="border-bottom:1px solid #DDD; padding:5px 0px;">
+		<div class="flex_col" style="width:2%"> <%= index %> </div>
+		<div class="flex_col"> <%= link_to "Proj#{project.id}", project %> </div>
+		<div class="flex_col"> <%= project.vendor.profile.full_name %> </div>
+		<div class="flex_col"> <%= project.employee == nil ? "<UnAssigned>" : project.employee.profile.full_name %> </div>
+		<div class="flex_col" style="width:2%"> <%= project.rate %> </div>
+	    <div class="flex_col"> 
+			<%= link_to 'Edit', edit_project_path(project) %> |
+	    	<%= link_to 'Destroy', project, method: :delete, data: { confirm: 'Are you sure?' } %>
+		</div>
+	</div>
+	<% end %>
+</div>
