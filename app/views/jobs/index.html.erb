@@ -7,11 +7,20 @@
 	
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'client_filter',
-			options_for_select(["Open", "Close"], params["status"]),
+			options_from_collection_for_select(Client.all, "id", "company_name", params["client"]),
 			class: 'form-control filter_field',
 			id: "filter_field",
 			filter_name: "client",
 			prompt: "Client" %>
+	</div>
+	
+	<div class="flex_col" style="padding:0px 10px">
+		<%= select_tag 'vendor_filter',
+			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
+			class: 'form-control filter_field',
+			id: "filter_field",
+			filter_name: "vendor",
+			prompt: "Vendor" %>
 	</div>
 	
 	<div class="flex_col" style="padding:0px 10px">
@@ -23,14 +32,6 @@
 			prompt: "Status" %>
 	</div>
 	
-	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'vendor_filter',
-			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
-			class: 'form-control filter_field',
-			id: "filter_field",
-			filter_name: "vendor",
-			prompt: "Vendor" %>
-	</div>
 	
 	<div class="flex_col" style="padding:0px 10px">
 		<%= text_field_tag 'time_sheet_date_range',
