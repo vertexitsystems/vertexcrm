@@ -84,6 +84,10 @@ class WorkDurationsController < ApplicationController
   end
   
   def show
+    if WorkDuration.where(id:params[:id]).count <= 0
+      redirect_to root_path
+      return
+    end
     @work_duration = WorkDuration.find(params[:id])
     
     if params[:reset_all].present?
