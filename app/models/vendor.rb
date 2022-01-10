@@ -6,6 +6,8 @@ class Vendor < ApplicationRecord
 	has_many :projects
 	has_many :employees, through: :projects
 
+  has_many :jobs
+  
   #has_and_belongs_to_many :employees
   def name
     company_name.blank? ? "(Not Provided)" : company_name

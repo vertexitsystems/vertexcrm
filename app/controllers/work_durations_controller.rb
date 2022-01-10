@@ -85,6 +85,20 @@ class WorkDurationsController < ApplicationController
   
   def show
     @work_duration = WorkDuration.find(params[:id])
+    
+    if params[:reset_all].present?
+      WorkDuration.all.each do |wd|
+        if ((2.weeks.ago)..(Date.today)).include?(wd.work_day)
+          puts "Set to Unsubmitted"
+          wd.update(time_sheet_status: 1)
+        else
+          puts "Set to Pending"
+          wd.update(time_sheet_status: 0)
+        end
+        
+      end
+    end
+    
   end
 
   # POST /work_durations

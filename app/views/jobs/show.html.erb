@@ -1,0 +1,83 @@
+<style>
+	.job_container{
+		padding:0px;
+	}
+	.job_title_container{
+		font-weight:bold;
+		font-size:24px;
+		
+	}
+	.job_info_title{
+		font-weight:bold;
+	}
+	.job_info_header{
+		background:var(--main-color);
+		color:#FFF;
+		text-align:center;
+		padding:10px;
+		font-family: Arial;
+	}
+	.job_info_container{
+		max-width:450px;
+		min-width:120px;
+		
+		font-family: Roboto Slab;
+		font-size: 19px;
+		
+		border: 1px solid var(--main-color);
+	}
+</style>
+
+<div class="job_container flex_row">
+	<div class="job_body_container flex_col">
+		<div class="job_title_container flex_row">
+			<%= @job.title %>
+		</div>
+		<div class="job_desc_container flex_row">
+			<%= @job.job_description %>
+		</div>
+	</div>
+	<div class="job_info_container flex_col">
+		<div class="flex_row job_info_header">
+			Job Overview
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Rate:</div>
+			<div class="flex_col"><%= @job.rate %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Job Type</div>
+			<div class="flex_col"><%= @job.type_string %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Active Between: </div>
+			<div class="flex_col"><%= @job.start_date.strftime("%b %d, %Y") %> to <%= @job.end_date.strftime("%b %d, %Y") %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Vendor:</div>
+			<div class="flex_col"><%= @job.vendor.name %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Client:</div>
+			<div class="flex_col"><%= @job.client.company_name %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Location: </div>
+			<div class="flex_col"><%= @job.location %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Status:</div>
+			<div class="flex_col"><%= @job.status %></div>
+		</div>
+		<% if !@job.closing_date.blank? %>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Closing Date: </div>
+			<div class="flex_col"><%= @job.closing_date %></div>
+		</div>
+		<div class="flex_row">
+			<div class="flex_col job_info_title">Closing Remarks: </div>
+			<div class="flex_col"><%= @job.closing_remarks %></div>
+		</div>
+		<% end %>
+	</div>
+</div>

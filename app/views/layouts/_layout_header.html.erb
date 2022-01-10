@@ -1,0 +1,43 @@
+<div class="nav_bar page-header">
+	<div class="nav_bar_title">
+	  <img src="/Images/Logo.png">
+	</div>
+	<div class="nav_bar_menu">
+	<ul>
+
+	  <% if user_signed_in? %>
+	    <li>
+			<div class="dropdown">
+				<div class="welcome_message">
+					Welcome <b><%= current_user.profile.name %></b>
+				</div>
+			  <button class="dropbtn">
+				  <%= link_to current_user.profile, :style=>"padding:0px" do %>
+				  <% if current_user.profile.photo.blank? %>
+				  <img src="https://st.depositphotos.com/2101611/3925/v/600/depositphotos_39258143-stock-illustration-businessman-avatar-profile-picture.jpg" />
+				  <% else  %>
+				  <img src="<%=current_user.profile.photo.url%>">
+				  <% end %>
+			  
+				  <% end %>
+			  </button>
+			  <div class="dropdown-content">
+			    <%= link_to 'Edit Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %>
+	            <a rel="nofollow" data-method="delete" href="/users/sign_out">
+	              Logout
+	            </a>
+			  </div>
+			</div>
+		</li>
+	  <% else %>
+	    <li> 
+	      <a href="/users/sign_in"> 
+	        <i class="material-icons" style="font-size:20px;color:#FFF;">login</i> 
+	        <span> Login</span>
+	      </a> 
+	    </li>
+	  <% end %>
+	</ul>
+	</div>
+	<div class="clr"></div>
+</div>

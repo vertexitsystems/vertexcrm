@@ -1,0 +1,72 @@
+<script>
+
+	$(document).ready(function() {
+		$(".close_job_link").click(function(e) {
+		    e.preventDefault();
+			$("#popup1").css({"visibility":"visible","opacity":"1"});
+			$("#job_id_field").val($(this).attr("job_id"));
+			$("#close_consultant_name_container").html($(this).attr("job_title"));
+		});
+		
+		$("#submit_close_form_link").click(function(e) {
+		    e.preventDefault();
+			
+			var link = "/jobs/disable_job";
+			var job_id = $("#job_id_field").val();
+			var close_date = $("#close_job_field_date").val();
+			var reason = $("#close_job_field_remarks").val();
+			
+			$.ajax({
+				url: link,
+				type: 'PUT',
+				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+				data: "disable_reason="+reason+"&disable_date="+close_date+"&job_id="+job_id,
+				success: function(data) {
+					if($.trim(data["result"]) == "true"){
+						location.reload();
+					} else {
+						alert("Failed to update status. Please try again.");
+					}
+				},
+				error: function (data) {
+					alert('Failed to update status.' + JSON.stringify(data));
+				}
+			}); // End of ajax call
+			
+		}); // End of submit buttom click function
+		
+	}); // end fo documnet ready
+	
+</script>
+
+<%= render :layout => 'layouts/popup', :locals => {:title => 'some title'} do %>
+	
+	<div class="flex_row">
+		<div class="flex_col col25"> Closing Consultant: </div>
+		<div class="flex_col" id="close_consultant_name_container"> [Consultant Name] </div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col col25">Close Date: </div>
+		<div class="flex_col">
+			<%= text_field_tag 'time_sheet_date_range',
+				  Date.today,
+				  class: 'form-control daterange',
+				  id:"close_job_field_date" 
+				  %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col col25">Closing Remarks: </div>
+		<div class="flex_col"><input type="text" id="close_job_field_remarks"></div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col"><input type="hidden" id="job_id_field"></div>
+	</div>
+	
+	<div class="clr"></div>
+	<div style="float:right"> 
+		<a href="#" id="submit_close_form_link" style="padding:10px;background:#EEE">Close Job</a> 
+	</div>
+	<div class="clr"></div>
+	
+<% end %>

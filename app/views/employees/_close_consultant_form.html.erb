@@ -1,49 +1,4 @@
 <script>
-	/*
-		This is the ajax call that dynamically submits and updated the aprroved or rejected status
-	*/
-	$('#diable_consultant_submit').click(function(e) {
-	    e.preventDefault();
-		
-		var link = $(this).prop("href");
-		var status = $(this).attr("action");
-		var id = $(this).attr("action_id");
-		var status_div = $(this).attr("status_div");
-		
-		//alert(link + " - " + status + " - " + id);
-		$("#action_buttons_container_"+id).hide();
-		$("#action_loader_container_"+id).show();
-		
-		$.ajax({
-		  url: link,
-		  type: 'PUT',
-		  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-		  data: "status="+status+"&action_id="+id,
-		  success: function(data) {
-		    
-			  				
-			if($.trim(data["result"]) == "true"){
-  				$("#action_buttons_container_"+data["id"]).hide();
-  				$("#action_loader_container_"+data["id"]).hide();
-				
-				$("#status-div-"+data["id"]).html(data["status"].toUpperCase());
-				$("#status-div-"+data["id"]).removeClass('pending');
-				$("#status-div-"+data["id"]).addClass(data["status"]);
-			} else {
-				alert("Failed to update status. Please try again.");
-				$("#action_buttons_container_"+data["id"]).show();
-				$("#action_loader_container_"+data["id"]).hide();
-			}
-			
-		  },
-		  error: function (data) {
-		    alert('Failed to update status.' + JSON.stringify(data));
-			$("#action_buttons_container_"+data["id"]).show();
-			$("#action_loader_container_"+data["id"]).hide();
-          }
-		  
-		});
-	});
 	
 	$(document).ready(function() {
 		$(".disable_consultant_link").click(function(e) {

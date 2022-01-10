@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  
   resources :clients
   resources :assistants
   resources :employers
@@ -41,6 +42,13 @@ Rails.application.routes.draw do
       
     end
   end
+  
+  resources :jobs do 
+    collection do 
+      put :disable_job
+    end
+  end
+  
   resources :projects
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   get 'work_durations/reopen_timesheet/:id', :to => 'work_durations#reopen_timesheet'

@@ -1,0 +1,77 @@
+<% if @job.present? and @job.try(:errors).any? %>
+<div id="error_explanation">
+  <h2><%= pluralize(@job.errors.count, "error") %> prohibited this profile from being saved:</h2>
+
+  <ul>
+    <% @job.errors.full_messages.each do |message| %>
+      <li><%= message %></li>
+    <% end %>
+  </ul>
+</div>
+<% end %>
+
+<%= form_with(model: @job, local: true) do |form| %>
+
+<%# render "profiles/embedable_form", profile:@job.profile, allow_submit:false, form:form %>
+
+<div class="page_title"> <%= @job.persisted? ? "Edit Job" : "Create New Job" %> </div>
+<div class="flex_col">
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Job Title:</b>
+			<%= form.text_field :title %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Job Description:</b> <br />
+			<%= form.text_area :job_description, :style => "width:100%;min-height:120px" %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Start Date:</b>
+			<%= form.text_field :start_date, :class => 'date_select_field' %>
+		</div>
+		<div class="flex_col">
+			<b>End Date:</b>
+			<%= form.text_field :end_date, :class => 'date_select_field' %>
+		</div>
+		<div class="flex_col">
+			<b>Job Rate($/hr):</b>
+			<%= form.text_field :rate %>
+		</div>
+		<div class="flex_col">
+			<b>Job Type:</b>
+			<%= form.select :job_type, 
+				options_for_select(["Remote", "On-Site", "Initial Remote"], @job.job_type),
+				class: 'form-control', 
+				filter_name: "contract"
+				%>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Job Location:</b> <br />
+			<%= form.text_field :location %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Vendor:</b>
+			<%= form.select :vendor_id, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => @job.persisted? ? @job.vendor.id : nil %>
+		</div>
+		<div class="flex_col">
+			<b>Client:</b>
+			<%= form.select :client_id, Client.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => @job.persisted? ? @job.client.id : nil %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col"></div>
+		<div class="flex_col" style="max-width:200px">
+			<%= form.submit "Submit", :class=>"submit_button" %>
+		</div>
+	</div>
+</div>
+
+<% end %>
