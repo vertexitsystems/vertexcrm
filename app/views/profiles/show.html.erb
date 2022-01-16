@@ -31,10 +31,22 @@
 				Designation:
 			</div>
 			<div class="profile_menu_left_col">
-				<%= @profile.role %>
+				<%= @profile.role == "Employee" ? "Consultant" : @profile.role %>
 			</div>
 		</div>
 		<% end %>
+		
+		<% if @profile.user.is_employee? && !@profile.employee.blank? %>
+		<div class="profile_menu_left_row">
+			<div class="profile_menu_left_col profile_menu_title">
+				Contract:
+			</div>
+			<div class="profile_menu_left_col">
+				<%= @profile.employee.contract_type %>
+			</div>
+		</div>
+		<% end %>
+		
 		<div class="profile_menu_left_row">
 			<div class="profile_menu_left_col profile_menu_title">
 				Phone 1:

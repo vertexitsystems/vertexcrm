@@ -2,6 +2,8 @@ class ProfilesController < ApplicationController
   before_action :set_profile, only: %i[show edit update destroy]
   before_action :authenticate_user!
 
+  include ActionView::Helpers::UrlHelper
+  
   # GET /profiles
   # GET /profiles.json
   def index
@@ -37,7 +39,9 @@ class ProfilesController < ApplicationController
           when 3396 # Employer
             redirect_to employer_url(@profile.employee.id)
           when 445 # Employee
-            #redirect_to employee_url(@profile.employee.id)
+            if current_page?('/')
+              redirect_to dashboard_employees_path#employee_url(@profile.employee.id)
+            end
           when 2623 # Vendor
             redirect_to vendor_url(@profile.vendor.id)
           else

@@ -151,6 +151,14 @@
 	<% show_submitted_date = true %>
 	<% end %>
 	
+	<% if !defined?(show_contract_type) %>
+	<% show_contract_type = true %>
+	<% end %>
+	
+	<% if !defined?(show_project_name) %>
+	<% show_project_name = true %>
+	<% end %>
+	
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 
@@ -161,6 +169,7 @@
 	</div>
 	<div class="flex_col"></div>
 	
+	<% if show_employee_info %>
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'employee_filter',  
 			options_from_collection_for_select(Employee.all, "id", "name", params["emp"]), 
@@ -170,7 +179,9 @@
 			prompt: "Consultant" 
 			%>
 	</div>
+	<% end %>
 	
+	<% if show_contract_type %>
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'employee_filter',  
 			options_for_select(["W8", "C2C"], params["contract"]),
@@ -180,7 +191,8 @@
 			prompt: "Contract Type" 
 			%>
 	</div>
-	
+	<% end %>
+	<% if show_employee_info %>
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'vendor_filter',  
 			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
@@ -190,12 +202,15 @@
 			prompt: "Vendor" 
 			%>
 	</div>
+	<% end %>
 	
 	<div class="flex_col" style="padding:0px 10px">
 		<%= text_field_tag 'time_sheet_date_range',
 			  @date,
 			  class: 'form-control daterange',
-			  id:"date-range-work" 
+			  id:"date-range-work",
+			  placeholder: "Date Filter",
+			  value: params["from_date"].present? ? "#{params["from_date"]} to #{params["to_date"]}" : "Select Date"
 			  %>
 	</div>
 	
@@ -233,13 +248,18 @@
 	  <% sortable_header("Time Period", "period") %>
   </div>
   
+  <% if show_contract_type %>
   <div class="col col8">
 	  Contract Type
   </div>
+  <% end %>
   
+  <% if show_project_name %>
   <div class="col col8">
 	  <% sortable_header("Project", "project") %>
   </div>
+  <% end %>
+  
   <% if show_each_day %>
   <% for day in (today.at_beginning_of_week..today.at_end_of_week).to_a.take(5).map.each { |day| day } do %>
     <div class="col col8">
@@ -277,28 +297,43 @@
 	
 	#@listings = Listing.joins(:categorizations, :listing_disciplines, :listing_targets)
 	#wds = WorkDuration.joins(:project).where("project.employee_id IS NOT NULL")
+	# work days limited to past two weeks
+	#wds = work_durations.where("work_day >= ?", 2.week.ago.utc).where("extract(dow from work_day) = ?", 1)#.order("created_at DESC")
 	wds = work_durations.where("extract(dow from work_day) = ?", 1)#.order("created_at DESC")
 	
-	
 	wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
-	wds = wds.order(:time_sheet_status) if params[:order].present? && params[:order] == "status"
+	
+	wds = wds.order(:time_sheet_status).order(work_day: :desc) if params[:order].present? && params[:order] == "status"
+	
+	#wds = wds.priority_order if params[:order].present? && params[:order] == "status"
+	
 	wds = wds.joins(:project).order("projects.employee_id DESC") if params[:order].present? && params[:order] == "employee"
 	wds = wds.joins(:project).order("projects.vendor_id DESC") if params[:order].present? && params[:order] == "vendor"
 	wds = wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
-	
+
 	wds = wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
 	wds = wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
-	
+
 	wds = wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
 	wds = wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
 	wds = wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
 
 	
+	# if params[:order].present? && params[:order] == "status"
+# 		wds_active = wds.where("time_sheet_status = 2 OR time_sheet_status = 4 OR time_sheet_status = 5 OR work_day >= ?", 2.week.ago.utc)#.order(:time_sheet_status)
+# 		wds_passed = wds.where("time_sheet_status != 2 AND time_sheet_status != 4 AND time_sheet_status != 5 AND work_day < ?", 2.week.ago.utc)#.order(work_day: :desc)
+# 		wds = wds_active + wds_passed
+# 	end
+	
 	total_records = wds.count
 	
-	wds = wds.limit(records_per_page).offset(page * records_per_page)
 	
 	
+	# if show_pastdue && (params[:order].present? && params[:order] == "status")
+	# 	wds = wds.sort_by{|wd| wd.is_past_due_date? ? 1 : 0}.select{}
+	# else
+		wds = wds.limit(records_per_page).offset(page * records_per_page)
+	# end
 	
 	#wds.includes(:projects).parent.children.reorder("projects.employee_id")
 	
@@ -314,7 +349,6 @@
 # 	end
 
 %>
-
 <% if false %>
 <% return wds.map{|w|w.vendor.id} %>
 <%# wds = work_durations.where("extract(dow from work_day) = ?", 1).order("created_at DESC").select{|wd|wd.employee != nil} %>
@@ -358,6 +392,12 @@
 		end
 	end
 	%>
+	
+	<% #Skip passed_due_Date if set to skip
+	if (wd.is_past_due_date? && !show_pastdue)
+		next
+	end
+	%>
 
 	<% allow_update = can_update_all ||  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 
@@ -385,13 +425,17 @@
 			  	<% end %>
 		    </div>
 			
+			<% if show_contract_type %>
 			<div class="col col8 mt-3">
 				<%= wd.employee.contract_type.blank? ? "<Not Provided>" : wd.employee.contract_type %>
 		    </div>
+			<% end %>
 			
+			<% if show_project_name %>
 		    <div class="col col8 mt-3">
 		      Proj<%= wd.project.id %>
 		    </div>
+			<% end %>
 			
 			<% if show_each_day %>
 			<% wd.all_days.each do |day| %>
@@ -441,20 +485,19 @@
 				</div>
 			</div>
 
-			<div class="col col8 mt-3 <%= wd.time_sheet_status %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
-			  <% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_pending? %>
+			<div class="col col8 mt-3 <%= !wd.is_past_due_date? ? wd.time_sheet_status : "" %>" id="status-div-<%=wd.id%>" style="<%= wd.is_past_due_date? ? "margin-top: 0.3rem !important;" : "" %>">
+			  <% if wd.is_past_due_date? && !wd.is_reopened? %>
 				<label style="color:red">
 					PASSED DUE DATE <%= wd.time_sheet_status %>
 				</label>
 			  <% else %>
-		  	
 			  	<%= wd.time_sheet_status.upcase %>
 			  <% end %>
 		    </div>
 	
 			<% if can_act %>
 			<div class="col col12">
-			<% if  wd.time_sheet_status == "pending" %>
+			<% if  !wd.is_past_due_date? && wd.time_sheet_status == "pending" %>
 				<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
 				  <div class="action_button_container approve">
 					  <div class="action_button_div">

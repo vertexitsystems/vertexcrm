@@ -33,7 +33,7 @@ class WorkDuration < ApplicationRecord
     (DateTime.now - work_day.at_beginning_of_week).to_i >= 14
   end
   def is_past_due_date?
-    !is_approved? && is_two_weeks_old?
+    return !is_approved? && !is_rejected? && !is_reopened? && is_two_weeks_old?
   end
   
   def should_update?
@@ -52,4 +52,15 @@ class WorkDuration < ApplicationRecord
   def display_id
     id.to_s + work_day.strftime("%b").upcase + work_day.strftime("%d") + work_day.strftime("%y").upcase
   end
+  
+  scope :priority_order, -> {
+    order(<<-SQL)
+        CASE work_durations.work_day 
+        WHEN #{Date.today} THEN 'a'
+        ELSE 'z' 
+        END ASC, 
+        id ASC
+      SQL
+  }
+    
 end

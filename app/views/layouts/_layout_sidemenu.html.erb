@@ -3,7 +3,7 @@
 		
 		<div class="menu">
 		  <ul>
-			  <li class="option <%= (controller_name == "profiles" && action_name=="show") ? "menu_item_selected" : "" %>">
+			  <li class="option <%= (action_name=="dashboard") ? "menu_item_selected" : "" %>">
 				  <%= link_to "Home", root_path %>
 			  </li>
 		</ul>
@@ -48,7 +48,10 @@
 
 		<ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
 			<li class="option <%= (controller_name == "employees" && action_name=="show") ? "menu_item_selected" : "" %>">
-				<a href="/employees/<%=@employee.id%>">Weekly Time Report </a>
+				<a href="/employees/<%=@employee.id%>?order=status"> Timesheet Management </a>
+			</li>
+			<li class="option <%= (controller_name == "profiles" && action_name=="show") ? "menu_item_selected" : "" %>">
+				<%= link_to 'Profile', current_user.profile %>
 			</li>
 		</ul>
 

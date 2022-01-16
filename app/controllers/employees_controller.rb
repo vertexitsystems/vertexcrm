@@ -23,6 +23,16 @@ class EmployeesController < ApplicationController
     end
   end
 
+  # GET //employees/dashboard
+  def dashboard
+    if current_user.is_employee? && !current_user.profile.employee.blank?
+      @employee = current_user.profile.employee
+    else
+      redirect_to root_path
+    end
+    
+  end
+  
   # GET /employees/1
   # GET /employees/1.json
   def show
