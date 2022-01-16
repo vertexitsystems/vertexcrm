@@ -43,7 +43,7 @@ class EmployeesController < ApplicationController
       last_week_date = Date.today - Date.today.wday
       (last_week_date.at_beginning_of_week..Date.today.at_end_of_week).to_a.map.each_with_index do |day, _index|
         day_entry = project.work_durations.where(work_day: day)
-        project.work_durations.create(hours: 0, work_day: day) unless day_entry.present?
+        project.work_durations.create(hours: 0, work_day: day, time_sheet_status:1) unless day_entry.present?
       end
     end
     
