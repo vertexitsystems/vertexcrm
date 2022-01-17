@@ -27,7 +27,7 @@
 	
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'contract_filter', 
-			options_for_select(["W8", "C2C"], params["contract"]),
+			options_for_select(contract_types, params["contract"]),
 			class: 'form-control filter_field', 
 			id: "filter_field",
 			filter_name: "contract",
@@ -111,8 +111,8 @@
 		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> |
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
 		  <%# link_to 'Destroy', employee_path(employee), data: {:confirm => 'Are you sure?'}, :method => :delete %>
-		  <% if !employee.disabled %>
-		  <a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.name%>" class="disable_job_link">Disable</a>
+		  <% if !employee.disabled %><!--disable_job_link-->
+		  <a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.name%>" class="disable_consultant_link">Disable</a>
 		  <% end %>
       </div>
     </div>

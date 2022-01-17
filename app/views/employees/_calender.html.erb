@@ -184,7 +184,7 @@
 	<% if show_contract_type %>
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'employee_filter',  
-			options_for_select(["W8", "C2C"], params["contract"]),
+			options_for_select(contract_types, params["contract"]),
 			class: 'form-control filter_field',
 			id: "contract_filter",
 			filter_name: "contract",
@@ -192,6 +192,7 @@
 			%>
 	</div>
 	<% end %>
+	
 	<% if show_employee_info %>
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'vendor_filter',  
