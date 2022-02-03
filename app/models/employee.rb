@@ -24,6 +24,8 @@ class Employee < ApplicationRecord
     belongs_to :client, optional: true
     belongs_to :employer, optional: true
     
+    has_many :invoices
+    
   def name
     self.profile.name#full_name
   end

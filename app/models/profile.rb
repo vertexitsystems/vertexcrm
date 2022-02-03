@@ -2,11 +2,13 @@ class Profile < ApplicationRecord
   after_destroy :destroy_associations
   
   belongs_to :user
+  
   has_one :employee, dependent: :destroy
   #has_one :vendor, dependent: :destroy
   has_one :account_manager, dependent: :destroy
-  #has_one :employer, dependent: :destroy
+  has_one :employer, dependent: :destroy
   has_one :assistant, dependent: :destroy
+  
   attr_accessor(:email, :password)
 
   mount_uploader :photo, AttachmentsUploader
@@ -20,8 +22,8 @@ class Profile < ApplicationRecord
     case user_type
     when 357_168
       'Admin'
-      #when 3396
-      #'Employer'
+    when 3396
+      'Employer'
     when 445
       'Employee'
     when 2623

@@ -1,38 +1,103 @@
-%p#notice= notice
-.page_title
-	Company Details
-.flex_col
+.flex_row
 	.flex_col
-		%b Name:
-		= @employer.company_name
-	.flex_col
-		%b Email: 
-		= @employer.company_website
-	.flex_col
-		%b Website: 
-		= @employer.company_email
-	.flex_col
-		%b Phone Number: 
-		= @employer.phone_number
-	.flex_col
-		%b Fax Number: 
-		= @employer.fax_number
-	.flex_col
-		%b Address: 
-		= @employer.company_address
-		
-.page_title
-	Contact Details
-.flex_col
-	.flex_col
-		%b Name:
-		= @employer.contact_name
-	.flex_col
-		%b Designation: 
-		= @employer.contact_designation
-	.flex_col
-		%b Phone Number: 
-		= @employer.contact_number
-	.flex_col
-		%b Email: 
-		= @employer.contact_email
+		.section
+			.row.top
+				.col
+					Invoice Date
+				.col
+					Employee
+				.col
+					Employer
+				.col
+					File
+				.col
+					Payament Status
+			
+			- @employer.invoices.each do |invoice|
+				.row.row_hover_highlight
+					.col.img_col
+						= invoice.created_at.strftime("%d %b, %Y")
+					.col.img_col
+						= invoice.employee.profile.name 
+					.col.img_col
+						= invoice.employer.company_name 
+					.col.img_col
+						- if invoice.invoice_file.attached?
+							= image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"
+						- else
+							(Not Provided)
+					.col.img_col
+						= invoice.payment_date.blank? ? "Pending" : "Complete"
+						
+						
+	.flex_col{:style=>"width:10%;min-width:350px"}
+		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
+			.flex_row{:style=>"margin:0px"}
+				.flex_col.info_section_title
+					Upload Invoice
+			.flex_row{:style=>"margin:0px"}
+				= render "invoices/form", employees:@employer.employees
+			
+		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
+			.flex_row
+				.flex_col.info_section_title
+					Profile Info
+			.flex_row
+				.flex_col
+					%b Email:
+				.flex_col
+					= @employer.profile.blank? ? "(Missing Profile)" : @employer.profile.email
+		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
+			.flex_row
+				.flex_col.info_section_title
+					Company Info
+			.flex_row
+				.flex_col
+					%b Name:
+				.flex_col
+					= @employer.company_name
+			.flex_row
+				.flex_col
+					%b Website: 
+				.flex_col
+					= @employer.company_website
+			.flex_row
+				.flex_col
+					%b Phone Number: 
+				.flex_col
+					= @employer.phone_number
+			.flex_row
+				.flex_col
+					%b Fax Number: 
+				.flex_col
+					= @employer.fax_number
+			.flex_row
+				.flex_col
+					%b Address: 
+				.flex_col
+					= @employer.company_address
+					
+		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
+			.flex_row
+				.flex_col.info_section_title
+					Contact Details
+			.flex_row
+				.flex_col
+					%b Name:
+				.flex_col
+					= @employer.contact_name
+			.flex_row
+				.flex_col
+					%b Designation: 
+				.flex_col
+					= @employer.contact_designation
+			.flex_row
+				.flex_col
+					%b Phone Number: 
+				.flex_col
+					= @employer.contact_number
+			.flex_row
+				.flex_col
+					%b Email: 
+				.flex_col
+					= @employer.contact_email

@@ -17,17 +17,29 @@
 
 <%= form_with(model: @employer, local: true) do |form| %>
 
-<div class="page_title"> Profile Details </div>
+
+<%= render "profiles/embedable_form", 
+	profile:@employer.profile, 
+	allow_submit:false, 
+	only_login_info:true,
+	disable_login_info:@employer.persisted? && !@employer.profile.email.blank?, 
+	form:form %>
+
+
+<div class="page_title"> Company Details </div>
 <div class="flex_col">
 	<div class="flex_row">
 		<div class="flex_col">
 			<% show_field(form, :company_name, "Company Name", true) %>
 		</div>
+		<% if false %>
+		<!-- This email field is now handled through the profile form-->
 		<div class="flex_col">
 			<b>Company Email:</b>
 			<%= form.telephone_field :company_email, :placeholder=>"example@address.com", :required=>true %>
 			
 		</div>
+		<% end %>
 		<div class="flex_col">
 			<% show_field(form, :company_website, "Website Address") %>
 		</div>
@@ -40,14 +52,14 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Phone Number:</b>
-			<%= form.telephone_field :phone_number, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true %>
+			<%= form.telephone_field :phone_number, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number" %>
 		</div>
 		<div class="flex_col">
 			<%= show_field(form, :fax_number, "Fax Number") %>
 		</div>
 	</div>
 </div>
-	
+
 <div class="page_title"> Contact Details </div>
 <div class="flex_col">
 	<div class="flex_row">

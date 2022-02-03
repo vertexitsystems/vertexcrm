@@ -37,7 +37,7 @@ class ProfilesController < ApplicationController
           when 357_168 # Admin
 
           when 3396 # Employer
-            redirect_to employer_url(@profile.employee.id)
+            redirect_to employer_url(@profile.employer.id)
           when 445 # Employee
             if current_page?('/')
               redirect_to dashboard_employees_path#employee_url(@profile.employee.id)
@@ -165,7 +165,7 @@ class ProfilesController < ApplicationController
     end
     respond_to do |format|
       if @profile.update(profile_params)
-        format.html { redirect_to @profile, notice: 'Profile was successfully updated.' }
+        format.html { redirect_to profile_path(@profile), notice: 'Profile was successfully updated.' }
         format.json { render :show, status: :ok, location: @profile }
       else
         format.html { render :edit }

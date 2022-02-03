@@ -28,16 +28,17 @@
         <%= index + 1 %>
       </div>
       <div class="col col25">
-        <%=  link_to employer.company_name, employer_path(employer) %>
+
+		<%= link_to employer.profile.blank? ? "#{employer.company_name} (Missing Profile)" : employer.company_name, employer_path(employer) %>
       </div>
       <div class="col col25">
-        <%= employer.company_email %>
+        <%= employer.profile.blank? ? "#{employer.company_email}" : employer.profile.email %>
       </div>
       <div class="col">
-        <%= employer.phone_number %>
+		<%= employer.phone_number %>
       </div>
       <div class="col">
-        <%= employer.company_address %>
+		<%= employer.company_address %>
       </div>
       <div class="col">
 		  <%= link_to "Edit", edit_employer_path(employer)%> |

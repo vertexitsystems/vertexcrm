@@ -1,0 +1,15 @@
+%p#notice= notice
+
+%p
+  %b Invoice file:
+  = @invoice.invoice_file
+%p
+  %b Emplyee:
+  = @invoice.emplyee
+%p
+  %b Employer:
+  = @invoice.employer
+
+= link_to 'Edit', edit_invoice_path(@invoice)
+\|
+= link_to 'Back', invoices_path

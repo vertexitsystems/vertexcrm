@@ -24,6 +24,7 @@ import("styles/tabs.css")
 document.addEventListener("turbolinks:load", function() {
 	bind_filters();
 	bind_date_selectors();
+	bind_phonenumber_formatter();
 })
 
 function bind_filters() {
@@ -43,6 +44,40 @@ function bind_date_selectors(){
 	flatpickr(".date_select_field", {
 		mode: "single",
 		dateFormat: "Y-m-d"
+	});
+}
+function bind_popup_image(){
+	$(document).ready(function() {
+		$("#profile_picture_image").click(function(e) {
+		    e.preventDefault();
+			$("#image_popup").css({"visibility":"visible","opacity":"1"});
+		});
+	});
+}
+function bind_phonenumber_formatter(){
+	$(".filtered_phone_number").on("input", function() {
+	   var value = $(this).val();
+	   
+	   // remove dashes and readd them each time... This is needed to ensure consistant result when user deletes characters
+	   value = value.replace(/\-/g, "");
+	   
+	   for (const item of [3,7]) {
+		   if (value.length > item && value[item] != "-"){
+			   var v = value
+			   value = [value.slice(0, item), "-", value.slice(item)].join('');
+			   
+		   }
+	   }
+	   
+	   $(this).val(value);
+	   
+	   // Remove non-numerical characters and any characters above length 12 (12 accounts for two dashes aswell) 
+	   if (!$.isNumeric(value[value.length - 1]) || value.length > 12){
+		   var output = value.slice(0, Math.min((value.length - 1), 12) );
+		   $(this).val(output);
+		   return;
+	   }
+	   
 	});
 }
 

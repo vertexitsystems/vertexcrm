@@ -12,7 +12,7 @@
 			</div>
 		</div>
 		<div class="profile_menu_left_row profile_actions" style="margin-bottom:10px">
-			<% if @profile.user.is_employee? %>
+			<% if @profile.user.is_employee? && (current_user.profile.user.is_admin? || current_user.profile.user.is_account_manager?) %>
 			<%= link_to "Edit", edit_employee_path(@profile.employee) %> | 
 			<%= link_to "Timesheet", @profile.employee %>
 			<% end %>

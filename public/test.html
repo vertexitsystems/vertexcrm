@@ -1,0 +1,34 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+	
+	$( document ).ready(function() {
+	    var result_text = readTextFile("words.txt");
+		//alert(result_text);
+		//var words_array = result_text.split("\n");
+		//$("#result_container").html(result_text);
+		//$("#result_container").html(words_array);
+	});
+	
+	function readTextFile(file)
+	{
+		var allText = "";
+	    var rawFile = new XMLHttpRequest();
+	    rawFile.open("GET", file, false);
+	    rawFile.onreadystatechange = function ()
+	    {
+	        if(rawFile.readyState === 4)
+	        {
+	            if(rawFile.status === 200 || rawFile.status == 0)
+	            {
+	                allText = rawFile.responseText;
+					//alert(allText);
+	            }
+	        }
+	    }
+	    rawFile.send(null);
+		return allText;
+	}
+</script>
+HTML File for testing stuff
+<div id="result_container">
+</div>

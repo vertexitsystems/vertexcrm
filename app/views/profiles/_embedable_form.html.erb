@@ -11,6 +11,14 @@
 <% if !defined?(allow_submit) %>
 <% allow_submit = true %>
 <% end %>
+
+<% if !defined?(only_login_info) %>
+<% only_login_info = false %>
+<% end %>
+
+<% if !defined?(disable_login_info) %>
+<% disable_login_info = false %>
+<% end %>
   
 <% def show_field(f, field, title, required=false) %>
 	<b><%= title %>:</b>
@@ -32,6 +40,7 @@
 		</div>
 		<div class="flex_col"></div>
 	</div>
+	<% if !only_login_info %>
 	<div class="flex_row">
 		<div class="flex_col">
 			<% show_field(f, :first_name, "First Name", true) %>
@@ -46,13 +55,16 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Phone Number 1:</b>
-			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true %>
+			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number" %>
 		</div>
 		<div class="flex_col">
 			<b>Phone Number 2:</b>
-			<%= f.telephone_field :phone2, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}"%>
+			<%= f.telephone_field :phone2, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :class =>"filtered_phone_number"%>
 		</div>
 	</div>
+	<% end %>
+	
+	<% if !disable_login_info %>
 	<div class="flex_row">
 		<div class="flex_col">
 			<%# show_field(f, :email, "Email", true) %>
@@ -63,11 +75,15 @@
 			<% show_field(f, :password, "Password", !profile.user.present?) %>
 		</div>
 	</div>
+	<% end %>
+	
+	<% if !only_login_info %>
 	<div class="flex_row">
 		<div class="flex_col">
 			<% show_field(f, :address, "Address") %>
 		</div>
 	</div>
+	
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Country:</b>
@@ -85,6 +101,7 @@
 			<% show_field(f, :zip_code, "Zip Code") %>
 		</div>
 	</div>
+	<% end %>
 </div>
 
 
