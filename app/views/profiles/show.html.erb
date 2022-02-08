@@ -31,9 +31,7 @@
 				Designation:
 			</div>
 			<div class="profile_menu_left_col">
-				<%= @profile.role == "Employee" ? "Consultant" : @profile.role %>
-			</div>
-		</div>
+				<%= @profile.role %> </div>
 		<% end %>
 		
 		<% if @profile.user.is_employee? && !@profile.employee.blank? %>
@@ -183,6 +181,7 @@
 			</div>
 		</div>
 		
+		<% if current_user.is_account_manager? || current_user.is_admin? %>
 		<div class="profile_right_section">
 			<div class="section_title"> Documents </div>
 			
@@ -207,6 +206,7 @@
 				<% show_document("Void Check", @profile.employee.voided_check_copy) %>
 			</div>
 		</div>
+		<% end %>
 		
 		<% if @profile.employee.disabled%>
 		<div class="profile_right_section">

@@ -48,7 +48,11 @@
 		</div>
 	</div>
 </div>
-
+<% if @work_duration.time_sheet_status == "rejected"%>
+<div class="notification_container flex_col" style="margin:20px;width:90%">
+	<b>Rejected with reason:</b> <%= @work_duration.rejection_message %>
+</div>
+<% end %>
 <div class="flex_col">
 	<div class="flex_row info_row" style="border-top:2px solid #DDD">
 		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF">

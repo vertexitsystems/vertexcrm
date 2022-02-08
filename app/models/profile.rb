@@ -25,7 +25,7 @@ class Profile < ApplicationRecord
     when 3396
       'Employer'
     when 445
-      'Employee'
+      'Consultant'
     when 2623
       'Vendor'
     when 7392

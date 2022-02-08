@@ -755,7 +755,8 @@ height:40px;
 /* Change color of dropdown links on hover */
 .dropdown-content a:hover {
 	background-color: #f1f1f1;
-	color:#FFF !important;
+	color:var(--main-color);
+	//color:#FFF !important;
 	text-decoration:none;
 }
 
@@ -771,6 +772,11 @@ height:40px;
 
 .welcome_message{
 	float:left;
-	line-height:60px;
-	color:#FFF
+	//line-height:60px;
+	color:#FFF;
+	margin-top:13px;
+	text-align:right;
+}
+.welcome_message .user_role {
+	font-size:12px;
 }

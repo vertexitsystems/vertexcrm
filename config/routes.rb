@@ -41,7 +41,7 @@ Rails.application.routes.draw do
       put :weekly_update
       put :update_duration_status
       #get :reopen_timesheet
-      
+      put :update_notification_read
     end
   end
   

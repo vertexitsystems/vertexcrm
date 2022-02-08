@@ -254,11 +254,31 @@ class WorkDurationsController < ApplicationController
     
     wd = WorkDuration.find(params["action_id"])
     wd.time_sheet_status = params["status"]
+    wd.rejection_message = params["reason"]
+    wd.status_read = true # IF this value is true consultatnt will see notification for status change
     
     if wd.save
       render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
     else
       render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}
+    end
+  end
+  
+  def update_notification_read
+    
+    wd = WorkDuration.find(params["wd_id"])
+    wd.status_read = false # IF this value is true consultatnt will see notification for status change
+    
+    if wd.save
+      respond_to do |format|
+        format.html { redirect_to wd.employee }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to wd.employee }
+        format.json { head :no_content }
+      end
     end
   end
   

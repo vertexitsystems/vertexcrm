@@ -11,7 +11,8 @@
 	    <li>
 			<div class="dropdown">
 				<div class="welcome_message">
-					Welcome <b><%= current_user.profile.name %></b>
+					Welcome <b><%= current_user.profile.name %></b><br />
+					<span class="user_role"><%= current_user.profile.role %> </span>
 				</div>
 			  <button class="dropbtn">
 				  <%= link_to current_user.profile, :style=>"padding:0px" do %>

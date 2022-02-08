@@ -70,6 +70,11 @@
 			var id = $(this).attr("action_id");
 			var status_div = $(this).attr("status_div");
 			
+			var reason_text = "";
+			if (status == "rejected") {
+				reason_text = prompt("Provide Reason for Rejection", "");
+			}
+			
 			//alert(link + " - " + status + " - " + id);
 			$("#action_buttons_container_"+id).hide();
 			$("#action_loader_container_"+id).show();
@@ -78,7 +83,7 @@
  			  url: link,
  			  type: 'PUT',
 			  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
- 			  data: "status="+status+"&action_id="+id,
+ 			  data: "status="+status+"&action_id="+id+"&reason="+reason_text,
  			  success: function(data) {
  			    
 				  				
@@ -214,7 +219,12 @@
 			  value: params["from_date"].present? ? "#{params["from_date"]} to #{params["to_date"]}" : "Select Date"
 			  %>
 	</div>
-	
+	<div class="flex_col" style="padding:0px 10px;max-width: 100px;">
+		<% sheet_link = current_user.is_employee? ? "/employees/#{current_user.profile.employee.id}?order=status" : "/account_managers/time_sheet_approval?order=status" %>
+		<a href="<%= sheet_link %>" style="background:transparent;line-height:36px">
+			clear filters
+		</a>
+	</div>
 </div>
 <% end %>
 
@@ -330,11 +340,14 @@
 	
 	
 	
-	# if show_pastdue && (params[:order].present? && params[:order] == "status")
-	# 	wds = wds.sort_by{|wd| wd.is_past_due_date? ? 1 : 0}.select{}
-	# else
+	if show_pastdue && (params[:order].present? && params[:order] == "status")
+		wds1 = wds.select { |wd| !wd.is_past_due_date? }
+		wds2 = wds.select { |wd| wd.is_past_due_date? }
+		wds = wds1 + wds2
+	 	#wds = wds.sort_by{|wd| wd.is_past_due_date? ? 1 : 0}.select{}
+	else
 		wds = wds.limit(records_per_page).offset(page * records_per_page)
-	# end
+	end
 	
 	#wds.includes(:projects).parent.children.reorder("projects.employee_id")
 	
@@ -403,7 +416,7 @@
 	<% allow_update = can_update_all ||  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 
 	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
-	<div class="<%= allow_update ? "parent-toggle" : "" %>" data-index="<%=loop_index%>">
+	<div class="<%= allow_update ? "parent-toggle" : "" %> gg" data-index="<%=loop_index%>">
 		<div class="row row_hover_highlight">
 			<% if show_submitted_date %>
 				<div class="col col8 mt-3">
@@ -480,7 +493,7 @@
 				</div>
 			</div>
 	
-			<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none">
+			<div class="full-image-bg" id="full-image-bg-<%=loop_index%>" style="display:none;position:fixed">
 				<div class="full-image">
 					<img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : "" %>" class="picture-src" id="wizardPicturePreview" title=""  style="background:white">
 				</div>
@@ -559,7 +572,7 @@
 	              <b>Upload timesheet/screenshot</b>
 	            </label> 
 	            <br/>
-				<%= file_field_tag :timesheet_screenshot, required: !wd.timesheet_screenshot.attached?, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*" %>
+				<%= file_field_tag :timesheet_screenshot, required: !wd.timesheet_screenshot.attached?, :style=>"width:100%", :class => "timesheet_field", :index => loop_index, :accept=>"image/*,application/pdf" %>
 	          </div>
 	          <b> Certification </b> 
 	          <br/>
@@ -570,7 +583,7 @@
 	          </ul>
 	        </div>
 
-	        <div class="section actions">
+	        <div class="section actions" style="width:330px">
 	          <%# form.submit "Submit",class: "btn btn-primary",style: "width:35%;" %>
 	          <% if @employee != nil %>
 	            <%= hidden_field_tag :eid, @employee.id %>
@@ -579,12 +592,12 @@
 	          <% end %>
 		  
 			  <div id="submit_options_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "block" : "none" %>" %>
-				  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"width:61%;margin-right:4%;", :disabled => wd.is_reopened? %>
+				  <%= submit_tag "Save For Later", name: "save_for_later", class: "btn", style:"margin:0px 4px 4px 0px;min-width: 150px;", :disabled => wd.is_reopened? %>
 
 				  <% if wd.work_day.end_of_week - 2 > Date.today %>
 				  Cannot submit until weeks end.
 				  <% else %>
-				  <%= submit_tag "Submit", class: "btn", style: "width:35%;" %>
+				  <%= submit_tag "Submit", class: "btn", style: "width:35%;min-width: 150px;" %>
 				  <% end %>
 			  </div>
 			  <div id="submit_message_<%=loop_index%>" style="display:<%= wd.timesheet_screenshot.attached? ? "none" : "block" %>" >

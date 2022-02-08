@@ -42,7 +42,7 @@
 			<li class="option <%= controller_name=="employees" ? "invoices" : "" %>"> <a onclick="alert('In Progress!')">Invoices</a> </li>
 		</ul>
 
-		<%elsif current_user.profile.role == "Employee" %>
+		<%elsif current_user.profile.role == "Consultant" %>
 
 		<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
 
