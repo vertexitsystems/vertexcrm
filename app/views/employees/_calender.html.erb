@@ -314,7 +314,7 @@
 	
 	wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
 	
-	wds = wds.order(:time_sheet_status).order(work_day: :desc) if params[:order].present? && params[:order] == "status"
+	wds = wds.order(time_sheet_status: :desc, work_day: :desc) if params[:order].present? && params[:order] == "status"
 	
 	#wds = wds.priority_order if params[:order].present? && params[:order] == "status"
 	
@@ -340,14 +340,13 @@
 	
 	
 	
-	if show_pastdue && (params[:order].present? && params[:order] == "status")
-		wds1 = wds.select { |wd| !wd.is_past_due_date? }
-		wds2 = wds.select { |wd| wd.is_past_due_date? }
-		wds = wds1 + wds2
-	 	#wds = wds.sort_by{|wd| wd.is_past_due_date? ? 1 : 0}.select{}
-	else
+	# if show_pastdue && (params[:order].present? && params[:order] == "status")
+	# 	wds1 = wds.select { |wd| !wd.is_past_due_date? }
+	# 	wds2 = wds.select { |wd| wd.is_past_due_date? }
+	# 	wds = wds1 + wds2
+	# else
 		wds = wds.limit(records_per_page).offset(page * records_per_page)
-	end
+	# end
 	
 	#wds.includes(:projects).parent.children.reorder("projects.employee_id")
 	
