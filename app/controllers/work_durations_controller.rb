@@ -140,7 +140,7 @@ class WorkDurationsController < ApplicationController
         ### change hours to value
         work_duration.hours = params["wds"].first[date.strftime("%b,%d,%Y")].to_i
         ### change status to pending if save_for_later else saved
-        work_duration.time_sheet_status = save_for_later ? 'saved' : 'pending'
+        work_duration.time_sheet_status = save_for_later ? 'saved' : (work_duration.time_sheet_status == "reopened") ? 'resubmitted' : 'pending'
         ### we also change the created_at date because this date is used to signify when the timesheet was submitted
         work_duration.created_at = DateTime.now
         
@@ -169,64 +169,65 @@ class WorkDurationsController < ApplicationController
       end
     end
     
-    return
-    #byebug
-    
-    # Today's date %>
-    date = Date.today
-    date = params['work_duration']['date'].to_datetime if params['work_duration']['date'].present?
-    employee = Employee.where(id: params['work_duration']['eid']).first
-    time_card_certify = true if params[:time_card_certify] == 'true'
-    company_certify = true if params[:company_certify] == 'true'
-    save_for_later = params[:save_for_later].present?
-    @errors = []
-    # First iterate over all the vendors this employee has
-    employee.vendors.each do |vendor|
-      # Project is the relationship between employee and vendor, also workDuration record is attached to this relationship so we need to fetch it first
-      project = employee.projects.where(vendor_id: vendor.id).first
-      # Next iterate over all the hours each day has
-      (date.at_beginning_of_week..date.at_end_of_week).to_a.take(5).map.each_with_index do |day, index|
-        # extract the number of hours for each
-        hours_worked = params['work_duration'][%w[a b c d e][index] + project.id.to_s]
-        # Try to fetch the work duration object for the day that we are iterating over
-        @work_duration = project.work_durations.where(work_day: day).first
-        
-        # if we did not find a pre existing work duration create new one else update oldone
-        if @work_duration.nil?
-          @work_duration = project.work_durations.new(hours: hours_worked, work_day: day,
-                                                      time_card_certify: time_card_certify, company_certify: company_certify, save_for_later: save_for_later)
-        else
-          @work_duration.hours = hours_worked
-          @work_duration.time_card_certify = time_card_certify
-          @work_duration.company_certify = company_certify
-          @work_duration.save_for_later = save_for_later
-        end
-        @work_duration.time_sheet_status = if save_for_later
-                                             'saved'
-                                           else
-                                             'pending'
-                                           end
-        @work_duration.timesheet_screenshot = params[:work_duration][:timesheet_screenshot] if day.strftime('%A') == 'Monday'
-        @errors << @work_duration.errors.full_messages unless @work_duration.save
-      end
-    end
-    # @work_duration = WorkDuration.new(work_duration_params)
-    respond_to do |format|
-      if !@errors.present?
-        format.html { redirect_to @work_duration.employee, notice: 'Work duration was successfully created.' }
-        format.json { render :show, status: :created, location: @work_duration }
-      else
-        format.html do
-          redirect_to { redirect_to @work_duration.employee}
-        end
-        format.json { render json: @work_duration.errors, status: :unprocessable_entity }
-      end
-    end
+    # return
+    # #byebug
+    #
+    # # Today's date %>
+    # date = Date.today
+    # date = params['work_duration']['date'].to_datetime if params['work_duration']['date'].present?
+    # employee = Employee.where(id: params['work_duration']['eid']).first
+    # time_card_certify = true if params[:time_card_certify] == 'true'
+    # company_certify = true if params[:company_certify] == 'true'
+    # save_for_later = params[:save_for_later].present?
+    # @errors = []
+    # # First iterate over all the vendors this employee has
+    # employee.vendors.each do |vendor|
+    #   # Project is the relationship between employee and vendor, also workDuration record is attached to this relationship so we need to fetch it first
+    #   project = employee.projects.where(vendor_id: vendor.id).first
+    #   # Next iterate over all the hours each day has
+    #   (date.at_beginning_of_week..date.at_end_of_week).to_a.take(5).map.each_with_index do |day, index|
+    #     # extract the number of hours for each
+    #     hours_worked = params['work_duration'][%w[a b c d e][index] + project.id.to_s]
+    #     # Try to fetch the work duration object for the day that we are iterating over
+    #     @work_duration = project.work_durations.where(work_day: day).first
+    #
+    #     # if we did not find a pre existing work duration create new one else update oldone
+    #     if @work_duration.nil?
+    #       @work_duration = project.work_durations.new(hours: hours_worked, work_day: day,
+    #                                                   time_card_certify: time_card_certify, company_certify: company_certify, save_for_later: save_for_later)
+    #     else
+    #       @work_duration.hours = hours_worked
+    #       @work_duration.time_card_certify = time_card_certify
+    #       @work_duration.company_certify = company_certify
+    #       @work_duration.save_for_later = save_for_later
+    #     end
+    #     @work_duration.time_sheet_status = if save_for_later
+    #                                          'saved'
+    #                                        else
+    #                                          'pending'
+    #                                        end
+    #     @work_duration.timesheet_screenshot = params[:work_duration][:timesheet_screenshot] if day.strftime('%A') == 'Monday'
+    #     @errors << @work_duration.errors.full_messages unless @work_duration.save
+    #   end
+    # end
+    # # @work_duration = WorkDuration.new(work_duration_params)
+    # respond_to do |format|
+    #   if !@errors.present?
+    #     format.html { redirect_to @work_duration.employee, notice: 'Work duration was successfully created.' }
+    #     format.json { render :show, status: :created, location: @work_duration }
+    #   else
+    #     format.html do
+    #       redirect_to { redirect_to @work_duration.employee}
+    #     end
+    #     format.json { render json: @work_duration.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # PATCH/PUT /work_durations/1
   # PATCH/PUT /work_durations/1.json
   def update
+    
     @work_duration = WorkDuration.find(params[:id])
     respond_to do |format|
       if @work_duration.update(work_duration_params)

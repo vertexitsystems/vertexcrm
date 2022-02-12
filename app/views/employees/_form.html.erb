@@ -20,7 +20,7 @@
 <% end %>
 </span>
 
-<%= form.file_field field, accept: 'image/*', :class => "timesheet_field", :style=>"width:100%" %>
+<%= form.file_field field, accept: 'image/*,application/pdf', :class => "timesheet_field", :style=>"width:100%" %>
 <% end %>
 
 <%= form_with(model: employee, local: true) do |form| %>

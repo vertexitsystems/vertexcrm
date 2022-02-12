@@ -31,7 +31,9 @@
 				Designation:
 			</div>
 			<div class="profile_menu_left_col">
-				<%= @profile.role %> </div>
+				<%= @profile.role %>
+			</div>
+		</div>
 		<% end %>
 		
 		<% if @profile.user.is_employee? && !@profile.employee.blank? %>
@@ -102,6 +104,7 @@
 			</div>
 		</div>
 	</div>
+	
 	<% if @profile.user.is_employee? %>
 	<div class="profile_menu_right" style="width:100%">
 		
@@ -228,5 +231,6 @@
 		
 	</div>
 	<% end %>
+	
 	<div class="clr"></div>
 </div>
