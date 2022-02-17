@@ -269,6 +269,7 @@ class WorkDurationsController < ApplicationController
       if wd.is_approved? || wd.is_rejected?
         WorkDurationMailer.with(work_duration: wd).work_duration_status_changed_email.deliver_now
       end
+      
       render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
     else
       render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}

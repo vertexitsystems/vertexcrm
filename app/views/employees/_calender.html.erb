@@ -1,5 +1,20 @@
 <script>
 	$(document).ready(function() {
+		$('#generate_report_button').click(function(event){
+			event.preventDefault();
+			//do whatever
+			var searchString = window.location.search.substring(1);
+			var params = searchString.split("&");
+			
+			var final_string = "";
+			
+			if (window.location.toString().includes("?")){
+				final_string = $(this).attr("href") + "&" + searchString;
+			} else {
+				final_string = $(this).attr("href") + "?" + searchString;
+			}
+			location.href = final_string;
+		});
 		
 		/*
 			This event calculates the total number of hours as the the user is typing them in the textfields
@@ -164,13 +179,18 @@
 	<% show_project_name = true %>
 	<% end %>
 	
+	<% if !defined?(ignore_filters) %>
+	<% ignore_filters = false %>
+	<% end %>
+	
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 
 <% if show_filters %>
 <div class="info_print_employee flex_row">
 	<div class="flex_col">
-		<%= link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],eid:@employee.blank? ? nil : @employee.id,format:"pdf"), class: "button_link" %>
+		<%= link_to "Generate Report", timesheet_report_account_managers_url(eid:@employee.blank? ? nil : @employee.id,format:"pdf"), class: "button_link", id:"generate_report_button" %>
+		<%# link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],eid:@employee.blank? ? nil : @employee.id,format:"pdf"), class: "button_link" %>
 	</div>
 	<div class="flex_col"></div>
 	
@@ -307,34 +327,37 @@
 	
 	wds = work_durations.where("extract(dow from work_day) = ?", 1)
 	
-	wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
+	if !ignore_filters
+		
+		wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
 	
-	wds = wds.order(time_sheet_status: :desc, work_day: :desc) if params[:order].present? && params[:order] == "status"
+		wds = wds.order(time_sheet_status: :desc, work_day: :desc) if params[:order].present? && params[:order] == "status"
 	
-	#wds = wds.priority_order if params[:order].present? && params[:order] == "status"
+		#wds = wds.priority_order if params[:order].present? && params[:order] == "status"
 	
-	wds = wds.joins(:project).order("projects.employee_id DESC") if params[:order].present? && params[:order] == "employee"
-	wds = wds.joins(:project).order("projects.vendor_id DESC") if params[:order].present? && params[:order] == "vendor"
-	wds = wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
+		wds = wds.joins(:project).order("projects.employee_id DESC") if params[:order].present? && params[:order] == "employee"
+		wds = wds.joins(:project).order("projects.vendor_id DESC") if params[:order].present? && params[:order] == "vendor"
+		wds = wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
 
-	wds = wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
-	wds = wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
+		wds = wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
+		wds = wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
 
-	wds = wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
-	wds = wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
-	wds = wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
+		wds = wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
+		wds = wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
+		wds = wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
 
-	total_records = wds.count
+		total_records = wds.count
 	
 	
+		# if show_pastdue && (params[:order].present? && params[:order] == "status")
+		# 	wds1 = wds.select { |wd| !wd.is_past_due_date? }
+		# 	wds2 = wds.select { |wd| wd.is_past_due_date? }
+		# 	wds = wds1 + wds2
+		# else
+			wds = wds.limit(records_per_page).offset(page * records_per_page)
+		# end
 	
-	# if show_pastdue && (params[:order].present? && params[:order] == "status")
-	# 	wds1 = wds.select { |wd| !wd.is_past_due_date? }
-	# 	wds2 = wds.select { |wd| wd.is_past_due_date? }
-	# 	wds = wds1 + wds2
-	# else
-		wds = wds.limit(records_per_page).offset(page * records_per_page)
-	# end
+	end
 
 %>
 
@@ -562,6 +585,7 @@
 <% end %>
 
 
+<% if !ignore_filters %>
 <div class="recorc_bottom flex_row">
 	<div class="flex_row"></div>
 	<div class="pagination_container flex_row" style="flex-grow:0;width:160px">
@@ -599,6 +623,8 @@
 		<% end %>
 	</div>
 </div>
+<% end %>
+
  <!-- DELETE BELOW
 	 
 <% if false %>

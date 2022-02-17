@@ -1,6 +1,7 @@
 class JobsController < ApplicationController
   before_action :set_job, only: %i[ show edit update destroy ]
-
+  before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  
   # GET /jobs or /jobs.json
   def index
     records_per_page = 10

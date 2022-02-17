@@ -1,13 +1,8 @@
 class EmployersController < ApplicationController
   before_action :set_employer, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-  before_action :check_access, only: [:index, :destroy]
+  before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   
-  def check_access
-    if !(user_signed_in? && (current_user.is_admin? || current_user.is_account_manager?))
-      redirect_to root_path
-    end
-  end
   # GET /employers
   # GET /employers.json
   def index

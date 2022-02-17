@@ -1,6 +1,7 @@
 class VendorsController < ApplicationController
   before_action :set_vendor, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
+  before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   
   # GET /vendors
   # GET /vendors.json

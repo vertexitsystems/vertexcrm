@@ -104,7 +104,7 @@
 		</div>
 	</div>
 	<% else %>
-	<%= form.hidden_field :user_type, { :value => Profile.role_id(params[:role]) } %>
+	<%= form.hidden_field :user_type %>
 	<% end %>
 	
 	<% if allow_submit %>

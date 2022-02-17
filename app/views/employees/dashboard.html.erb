@@ -35,10 +35,11 @@
 
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
+
 <div class="section" id="calender">
   <%= render "calender", 
     show_unsubmitted:(@employee.profile.id == current_user.profile.id),
-  	work_durations:@employee.work_durations, 
+  	work_durations:@employee.work_durations.where("work_day >= ?", 10.days.ago.at_beginning_of_week), 
   	can_update_all:false, 
   	can_update:current_user.profile.id == @employee.profile.id, 
   	can_act:current_user.is_admin? || current_user.is_account_manager?, 
@@ -48,7 +49,8 @@
 	show_submitted_date:false,
 	show_contract_type:false,
 	show_project_name:false,
-	show_pastdue:false
+	show_pastdue:false,
+	ignore_filters:true
 	%>
 </div>
 

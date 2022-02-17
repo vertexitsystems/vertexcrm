@@ -1,7 +1,8 @@
 class JobPostsController < ApplicationController
   before_action :set_job_post, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-
+  before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  
   # GET /job_posts
   # GET /job_posts.json
   def index

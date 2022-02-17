@@ -1,7 +1,8 @@
 class ProfilesController < ApplicationController
   before_action :set_profile, only: %i[show edit update destroy]
   before_action :authenticate_user!
-
+  before_action :has_admin_access?, only: [:index, :new, :edit, :create, :update, :destroy]
+  
   include ActionView::Helpers::UrlHelper
   
   # GET /profiles
@@ -45,6 +46,9 @@ class ProfilesController < ApplicationController
           when 2623 # Vendor
             redirect_to vendor_url(@profile.vendor.id)
           else
+            if @profile.update(user_type:445)
+              redirect_to root_path
+            end
             puts 'Wrong type'
         end
       else
@@ -164,6 +168,7 @@ class ProfilesController < ApplicationController
                      employee_id: @profile&.employee&.id)
     end
     respond_to do |format|
+      
       if @profile.update(profile_params)
         format.html { redirect_to profile_path(@profile), notice: 'Profile was successfully updated.' }
         format.json { render :show, status: :ok, location: @profile }

@@ -1,7 +1,8 @@
 class UserTypesController < ApplicationController
   before_action :set_user_type, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-
+  before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  
   # GET /user_types
   # GET /user_types.json
   def index

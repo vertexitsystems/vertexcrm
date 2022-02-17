@@ -52,6 +52,9 @@
 					  <% if user_signed_in? && current_user.is_employee? %>
 					      <% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>
 						  <% wd_notifications.each do |wd| %>
+						  <% if !(wd.is_rejected? || wd.is_approved?) %>
+						  <% next %>
+						  <% end %>
 						  <div class="notification_container flex_col">
 						  <div style="float:left">
 							  Timesheet for period <b>(<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>)</b> has been 

@@ -1,7 +1,6 @@
 class AccountManagersController < ApplicationController
   before_action :set_account_manager, only: %i[show edit update destroy]
   before_action :check_access, only: [:show, :edit, :update, :destroy, :index, :time_sheet_approval]
-  
   def check_access
     if !user_signed_in? || !( current_user.is_admin? || current_user.is_account_manager?)
       redirect_to root_path
@@ -202,29 +201,48 @@ class AccountManagersController < ApplicationController
   end
   
   def timesheet_report
-    #acc_mgr = current_user.profile.account_manager
-    if params["eid"].blank?
-      @employees = Employee.all
-    else
-      @employees = [Employee.find(params["eid"])]
-      
-      
-      end_date = params["to_date"].nil? ? DateTime.now : DateTime.parse(params["to_date"])
-      end_date = end_date.at_beginning_of_week
-      @work_durations = @employees.first.work_durations.where(:work_day => end_date..(end_date+6)).order(:work_day)
-    end
+    
+  	records_per_page = 10
+	
+  	page = params[:page].to_i
+  	if page.blank?
+  		page = 0
+  	end
     
     
-#     @work_durations = @employee.work_durations
-#     @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
-#     @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|
-#  [w.project.employee.name, w.work_day.beginning_of_week]
-#     end
+  	work_durations = params["eid"].blank? ? WorkDuration.all : Employee.find(params["eid"]).work_durations
+	
+  	@wds = work_durations.where("extract(dow from work_day) = ?", 1)
+	
+  	@wds = @wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
+	
+  	@wds = @wds.order(time_sheet_status: :desc, work_day: :desc) if params[:order].present? && params[:order] == "status"
+    
+  	@wds = @wds.joins(:project).order("projects.employee_id DESC") if params[:order].present? && params[:order] == "employee"
+  	@wds = @wds.joins(:project).order("projects.vendor_id DESC") if params[:order].present? && params[:order] == "vendor"
+  	@wds = @wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
+
+  	@wds = @wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
+  	@wds = @wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
+
+  	@wds = @wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
+  	@wds = @wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
+  	@wds = @wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
+
+  	@total_records = @wds.count
+    
+    
+  	@wds = @wds.limit(records_per_page).offset(page * records_per_page)
+    
+    
     respond_to do |format|
       format.html
       format.pdf do
         render pdf: 'Weekly TimeSheet', page_size: 'A4',
-               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, encoding: 'UTF-8', show_as_html: params.key?('debug')
+               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
+               encoding: 'UTF-8', 
+               show_as_html: params.key?('debug'),
+               footer: { :left => 'Vertex IT Systems, Inc', :right => '[page]/[topage]' }
       end
     end
   end
