@@ -301,42 +301,37 @@
 		<table border="0" style="width:80%;margin:0 auto">
 			<tr>
 				<td width="20%;"><strong>ID</strong></td>
-				<td width="30%"><%= wds.first.display_id %></td>
+				<td width="30%"><%= @wds.first.display_id %></td>
 				<td width="20%;font-weight:bold"><strong>Consultant</strong></td>
-				<td width="30%"><%= wds.first.employee.name %></td>
+				<td width="30%"><%= @wds.first.employee.name %></td>
 			</tr>
 			<tr>
 				<td width="20%;"><strong>Period</strong></td>
 				
 				<td width="30%">
-					<%= wds.first.work_day.strftime("%b %d, %Y") %> - <%= wds.last.work_day.strftime("%b %d, %Y") %>
+					<%= @wds.first.work_day.strftime("%b %d, %Y") %> - <%= @wds.last.work_day.strftime("%b %d, %Y") %>
 				</td>
-				<!--
-				<td width="30%"><%= wds.first.work_day.strftime("%b %d, %Y") %> - <%= (wds.first.work_day + 4).strftime("%b %d, %Y") %></td>
-					-->
 				<td width="20%;font-weight:bold"><strong>Project</strong></td>
-				<td width="30%"><%= wds.first.project.name %></td>
+				<td width="30%"><%= @wds.first.project.name %></td>
 			</tr>
 			<tr>
 				<td width="20%;"><strong>Client</strong></td>
-				<td width="30%"><%= wds.first.employee.client.blank? ? "<Not Provided>" : wds.first.employee.client.company_name %></td>
+				<td width="30%"><%= @wds.first.employee.client.blank? ? "<Not Provided>" : @wds.first.employee.client.company_name %></td>
 				<td width="20%;font-weight:bold"><strong>Address</strong></td>
-				<td width="30%"><%= wds.first.employee.client.blank? ? "<Not Provided>" : wds.first.employee.client.company_address %></td>
+				<td width="30%"><%= @wds.first.employee.client.blank? ? "<Not Provided>" : @wds.first.employee.client.company_address %></td>
 			</tr>
 			<tr>
 				<td width="20%;"><strong>Employer</strong></td>
-				<td width="30%"><%= wds.first.employee.employer.blank? ? "<Not Provided>" : wds.first.employee.employer.company_name %></td>
+				<td width="30%"><%= @wds.first.employee.employer.blank? ? "<Not Provided>" : @wds.first.employee.employer.company_name %></td>
 				<td width="20%;font-weight:bold"><strong>Address</strong></td>
-				<td width="30%"><%= wds.first.employee.employer.blank? ? "<Not Provided>" : wds.first.employee.employer.company_address %></td>
+				<td width="30%"><%= @wds.first.employee.employer.blank? ? "<Not Provided>" : @wds.first.employee.employer.company_address %></td>
 			</tr>
-			<% if wds.to_a.count == 1 %>
 			<tr>
 				<td width="20%;font-weight:bold"><strong>Status</strong></td>
-				<td width="30%"><%= wds.first.time_sheet_status %></td>
+				<td width="30%"><%= @wds.first.time_sheet_status %></td>
 				<td width="20%;font-weight:bold"><strong>Submitted Date</strong></td>
-				<td width="30%"><%= wds.first.updated_at.strftime("%B %d, %Y") %></td>
+				<td width="30%"><%= @wds.first.updated_at.strftime("%B %d, %Y") %></td>
 			</tr>
-			<% end %>
 		</table>
 	<% end %>
 	
