@@ -1,10 +1,70 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<style>
+	.form_field{
+		display: block;
+		width: 100%;
+		padding: .375rem .75rem;
+		font-size: 1rem;
+		font-weight: 400;
+		line-height: 1.5;
+		color: #212529;
+		background-color: #fff;
+		background-clip: padding-box;
+		border: 1px solid #ced4da;
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+		border-radius: .25rem;
+		transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	}
+</style>
+<%= link_to "< Back", edit_profile_path(current_user.profile.id) %>
+<div class="page_title"> Update Credentials </div>
 
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
   <%= render "users/shared/error_messages", resource: resource %>
 
+<div class="flex_col">
+	<div class="flex_row">
+		<div class="flex_col">
+			<b><%= f.label :email %></b>
+			<%= f.email_field :email, autofocus: true, autocomplete: "email", class: "form_field" %>
+		    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+		      <div>Currently waiting confirmation for: <% resource.unconfirmed_email %></div>
+		    <% end %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b><%= f.label :password %></b> <i>(leave blank if you don't want to change it)</i>
+		    <%= f.password_field :password, autocomplete: "new-password", class: "form_field" %>
+		    <% if @minimum_password_length %>
+		      <em><%= @minimum_password_length %> characters minimum</em>
+		    <% end %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b><%= f.label :password_confirmation %></b>
+			<%= f.password_field :password_confirmation, autocomplete: "new-password", class: "form_field" %>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b><%= f.label :current_password %></b> <i>(we need your current password to confirm your changes)</i>
+			<%= f.password_field :current_password, autocomplete: "current-password", class: "form_field" %>
+		</div>
+	</div>
+	
+	<div class="flex_row">
+		<div class="flex_col" style="text-align:right">
+			<%= f.submit "Submit", :class=>"submit_button" %>
+		</div>
+	</div>
+</div>
+
+<% if false %>
   <div class="field">
-    <%= f.label :email %><br />
+    <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i>
     <%= f.email_field :email, autofocus: true, autocomplete: "email" %>
   </div>
 
@@ -30,14 +90,22 @@
     <%= f.label :current_password %> <i>(we need your current password to confirm your changes)</i><br />
     <%= f.password_field :current_password, autocomplete: "current-password" %>
   </div>
-
+  
   <div class="actions">
-    <%= f.submit "Update" %>
+    <%= f.submit "Update", :class=>"submit_button" %>
   </div>
+<% end %> <!-- End of if false -->
+	
+	
+  
 <% end %>
 
+<!-- Keeping this code hidden just in case it is needed in future -->
+<% if false %>
 <h3>Cancel my account</h3>
 
 <p>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?" }, method: :delete %></p>
 
 <%= link_to "Back", :back %>
+
+<% end %>

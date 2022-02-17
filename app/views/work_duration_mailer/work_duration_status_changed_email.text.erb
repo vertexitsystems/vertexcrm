@@ -1,0 +1,12 @@
+Time Sheet Status Updated
+=================================
+
+Status:  <%= @wd.is_approved? ? "Approved" : "Rejected" %> 
+<% if @wd.is_rejected? %>
+Message: <%= @wd.rejection_message%>
+<% end %>
+Period:  <%= @wd.period %>
+Project: <%= @wd.project.display_id %>
+
+---------------------------------
+You can visit the update TimeSheet at: <%= work_durations_url(id:@wd.id) %>

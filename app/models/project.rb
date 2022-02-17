@@ -14,7 +14,7 @@ class Project < ApplicationRecord
   end
   
   def display_id
-    id
+    "P#{id}#{created_at.strftime("%b").upcase}#{created_at.strftime("%d%y")}"
   end
   
   def days_from_this_week

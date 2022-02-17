@@ -271,6 +271,255 @@
   }
 </style>
 
+<%
+	records_per_page = 10
+	
+	page = params[:page].to_i
+	if page.blank?
+		page = 0
+	end
+	
+	work_durations = @employees.first.blank? ? WorkDuration.all : @employees.first.work_durations
+	
+	wds = work_durations.where("extract(dow from work_day) = ?", 1)
+	
+	wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
+	
+	wds = wds.order(time_sheet_status: :desc, work_day: :desc) if params[:order].present? && params[:order] == "status"
+	
+	#wds = wds.priority_order if params[:order].present? && params[:order] == "status"
+	
+	wds = wds.joins(:project).order("projects.employee_id DESC") if params[:order].present? && params[:order] == "employee"
+	wds = wds.joins(:project).order("projects.vendor_id DESC") if params[:order].present? && params[:order] == "vendor"
+	wds = wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
+
+	wds = wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
+	wds = wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
+
+	wds = wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
+	wds = wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
+	wds = wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
+
+	total_records = wds.count
+	
+	
+	
+	# if show_pastdue && (params[:order].present? && params[:order] == "status")
+	# 	wds1 = wds.select { |wd| !wd.is_past_due_date? }
+	# 	wds2 = wds.select { |wd| wd.is_past_due_date? }
+	# 	wds = wds1 + wds2
+	# else
+		wds = wds.limit(records_per_page).offset(page * records_per_page)
+	# end
+
+%>
+<div class="container">
+	<div class="main_container">
+		<div class="main_logo">
+	        <div class="vertex-logo">
+	        	<img src="https://i.ibb.co/sg4pBjv/Logo.png">
+	        </div>
+		</div>
+		<div class="main_title">
+	        <h4 style="color: black;text-align: center; font-weight:bold;">
+	          <strong>Vertex Job Portal</strong>
+	        </h4>
+	        <h4 class="color-black text-center" style="text-transform: uppercase;">
+	          <div>
+	            <strong>Weekly Timesheet</strong>
+	          </div>
+	        </h4>
+		</div>
+		<div class="main_data">
+			<% if @employees.count > 1 %>
+			<b>Period:</b> <%= wds.first.work_day.at_end_of_week.strftime("%B %d, %Y") %> - <%= wds.last.work_day.at_beginning_of_week.strftime("%B %d, %Y") %> <br />
+			<b>Total Employees:</b> <%= @employees.count %>
+			<% end %>
+		</div>
+		<div class="clr"></div>
+	</div>
+	
+	<% if !@employees.first.blank? %>
+		<table border="0" style="width:80%;margin:0 auto">
+			<tr>
+				<td width="20%;"><strong>ID</strong></td>
+				<td width="30%"><%= wds.first.display_id %></td>
+				<td width="20%;font-weight:bold"><strong>Consultant</strong></td>
+				<td width="30%"><%= wds.first.employee.name %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Period</strong></td>
+				
+				<td width="30%">
+					<%= wds.first.work_day.strftime("%b %d, %Y") %> - <%= wds.last.work_day.strftime("%b %d, %Y") %>
+				</td>
+				<!--
+				<td width="30%"><%= wds.first.work_day.strftime("%b %d, %Y") %> - <%= (wds.first.work_day + 4).strftime("%b %d, %Y") %></td>
+					-->
+				<td width="20%;font-weight:bold"><strong>Project</strong></td>
+				<td width="30%"><%= wds.first.project.name %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Client</strong></td>
+				<td width="30%"><%= wds.first.employee.client.blank? ? "<Not Provided>" : wds.first.employee.client.company_name %></td>
+				<td width="20%;font-weight:bold"><strong>Address</strong></td>
+				<td width="30%"><%= wds.first.employee.client.blank? ? "<Not Provided>" : wds.first.employee.client.company_address %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Employer</strong></td>
+				<td width="30%"><%= wds.first.employee.employer.blank? ? "<Not Provided>" : wds.first.employee.employer.company_name %></td>
+				<td width="20%;font-weight:bold"><strong>Address</strong></td>
+				<td width="30%"><%= wds.first.employee.employer.blank? ? "<Not Provided>" : wds.first.employee.employer.company_address %></td>
+			</tr>
+			<% if wds.to_a.count == 1 %>
+			<tr>
+				<td width="20%;font-weight:bold"><strong>Status</strong></td>
+				<td width="30%"><%= wds.first.time_sheet_status %></td>
+				<td width="20%;font-weight:bold"><strong>Submitted Date</strong></td>
+				<td width="30%"><%= wds.first.updated_at.strftime("%B %d, %Y") %></td>
+			</tr>
+			<% end %>
+		</table>
+	<% end %>
+	
+	<div style="margin-top:50px"> Time Worked </div>
+	
+	<div class="col-xs-12" style="margin-top:12px!important;">
+      <table class="table table-striped col-xs-3 font-size-12">
+        <tr class="panel panel-default border_line cell-border">
+          
+		  <th class="text-center col-xs-2">Date</th>
+		  <% if @employees.count > 1 %>
+		  <th class="text-center col-xs-2">Employee Name</th>
+		  <% end %>
+		  
+          <% today = Date.today %>
+          <% for day in ((today.at_beginning_of_week - 1)..(today.at_end_of_week - 1)).map.each { |day| day } do %>
+            <th class="text-center">
+              <%= day.strftime("%m/%d %a") %>
+            </th>
+          <% end %>
+          <th class="text-center">Total Hours</th>
+		  
+		  <% if wds.to_a.count > 1 %>
+          <th class="text-center col-xs-2">Time Sheet Status</th>
+		  <% end %>
+		  
+	    </tr>
+	  	<tr>
+			<td colspan="9" style="text-align:left"> Billable </td>
+		</tr>
+		<tr>
+			<td colspan="9" style="text-align:left"> <%= wds.first.project.name %> (<%= wds.first.project.display_id %>)</td>
+		</tr>
+		<tbody class="border_line cell-border" style="text-align: center;">
+			<%# loop do %>
+			<%# work_durations = emp.work_durations.where(:work_day => week_date..(week_date+6)).order(:work_day) %>
+			<% total_hours = 0 %>
+			<% wds.each do |wd| %>
+			
+          <tr>
+            
+			<% if wds.to_a.count > 1 %>
+			<td class="defult-border-left defult-border-right tr1">
+				<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
+			</td>
+			<% else %>
+            <td class="defult-border-left tr1">
+				ST /Hr
+			</td>
+			<% end %>
+			
+			<% if @employees.count > 1 %>
+            <td class="defult-border-left tr1">
+				<%= wd.employee.profile.full_name %>
+			</td>
+			<% end %>
+            
+            
+			<% if !wd.is_unsubmitted? && !wd.is_saved? %>
+				<td class="text-center"> 0.0 </td> <!-- Sunday -->
+	            <% wd.all_days.each do |day| %>
+	              <td class="text-center">
+					  <% total_hours += day.hours %>
+					  <%= day.hours.to_f %>
+	              </td>
+	            <% end %>
+				<td class="text-center"> 0.0 </td> <!-- Saturday -->
+			<% else %>
+				<td colspan="7">
+					Hours not submitted
+				</td>
+			<% end %>
+			
+			
+			 
+            <td class="text-center">
+				<%= total_hours.to_f %>
+			</td>
+			
+            
+			<% if wds.to_a.count > 1 %>
+			<td class="text-center col-xs-2">
+				<% wd.time_sheet_status %>
+			</td>
+			<% end %>
+			
+			<% end %>
+		  </tr>
+		  
+		  <% if wds.to_a.count > 1 %>
+          <tr>
+			  <td class="defult-border-left"></td>
+			  <% if @employees.count > 1 %>
+			  <td class="defult-border-left"></td>
+			  <% end %>
+            
+            <td class="defult-border-left"></td>
+            <td class="defult-border-left"></td>
+            <td class="defult-border-left"></td>
+            <td class="defult-border-left"></td>
+            <td class="defult-border-left"></td>
+			<td class="defult-border-left"></td>
+			<td class="defult-border-left">
+              <strong>Total</strong>
+            </td>
+            <td class="defult-border-left">
+              <strong>
+                <%= total_hours.to_f %>
+              </strong>
+            </td>
+			
+			<td class="defult-border-left"></td>
+			
+          </tr>
+		  <% else %>
+		  <tr>
+			  <% total_hours = 0 %>
+			  <td class="defult-border-left"> Total </td>
+			  <td class="defult-border-left">0.0</td>
+			  <% wds.first.all_days.each do |day| %>
+			  <td class="text-center"> 
+				  <% total_hours += day.hours %>
+				  <%= day.hours.to_f %>
+			  </td>
+			  <% end %>
+			  <td class="defult-border-left">0.0</td>
+			  <td class="defult-border-left">
+				  <strong> <%= total_hours.to_f %>
+              </strong>
+            </td>
+			
+          </tr>
+		  <% end %>
+        </tbody>
+      </table>
+    </div>
+	
+</div>
+
+<!-- OLD CODE BELOW -->
+<% if false %>
 <div class="container">
 	
 	<% start_date = params["from_date"].nil? ? DateTime.now - 7 : DateTime.parse(params["from_date"]) %>
@@ -520,3 +769,4 @@
 	<% end %>
   </div>
 </div>
+<% end %>

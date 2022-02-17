@@ -170,7 +170,7 @@
 <% if show_filters %>
 <div class="info_print_employee flex_row">
 	<div class="flex_col">
-		<%= link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],format:"pdf"), class: "button_link" %>
+		<%= link_to "Generate Report", timesheet_report_account_managers_url(from_date:params["from_date"],to_date:params["to_date"],eid:@employee.blank? ? nil : @employee.id,format:"pdf"), class: "button_link" %>
 	</div>
 	<div class="flex_col"></div>
 	
@@ -305,12 +305,7 @@
 		page = 0
 	end
 	
-	
-	#@listings = Listing.joins(:categorizations, :listing_disciplines, :listing_targets)
-	#wds = WorkDuration.joins(:project).where("project.employee_id IS NOT NULL")
-	# work days limited to past two weeks
-	#wds = work_durations.where("work_day >= ?", 2.week.ago.utc).where("extract(dow from work_day) = ?", 1)#.order("created_at DESC")
-	wds = work_durations.where("extract(dow from work_day) = ?", 1)#.order("created_at DESC")
+	wds = work_durations.where("extract(dow from work_day) = ?", 1)
 	
 	wds = wds.order("created_at DESC") if !params[:order].present? || params[:order] == ""
 	
@@ -329,13 +324,6 @@
 	wds = wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
 	wds = wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
 
-	
-	# if params[:order].present? && params[:order] == "status"
-# 		wds_active = wds.where("time_sheet_status = 2 OR time_sheet_status = 4 OR time_sheet_status = 5 OR work_day >= ?", 2.week.ago.utc)#.order(:time_sheet_status)
-# 		wds_passed = wds.where("time_sheet_status != 2 AND time_sheet_status != 4 AND time_sheet_status != 5 AND work_day < ?", 2.week.ago.utc)#.order(work_day: :desc)
-# 		wds = wds_active + wds_passed
-# 	end
-	
 	total_records = wds.count
 	
 	
@@ -347,48 +335,9 @@
 	# else
 		wds = wds.limit(records_per_page).offset(page * records_per_page)
 	# end
-	
-	#wds.includes(:projects).parent.children.reorder("projects.employee_id")
-	
-  	#@listings = @listings.where("categorizations.category_id = ?", params[:category_id]) if params[:category_id].present? && params[:category_id] != ""
-  	#@listings = @listings.where("listings_disciplines.discipline_id = ?", params[:discipline_id]) if params[:discipline_id].present? && params[:discipline_id] != ""
-  	#@listings = @listings.where("listing_targets.target_id = ?", params[:target_id]) if params[:target_id].present? && params[:target_id] != ""
-  	#@listings = @listings.page(params[:page])
-	
-	# If order is set to status it cannot be applied in db
-	# if params[:order].present? && params[:order] == "status"
-# 		priority = ["pending","reopened","approved","rejected","saved"]
-# 		wds = wds.sort_by { |wd| priority.index(wd.time_sheet_status.downcase) || priority.size }
-# 	end
 
 %>
-<% if false %>
-<% return wds.map{|w|w.vendor.id} %>
-<%# wds = work_durations.where("extract(dow from work_day) = ?", 1).order("created_at DESC").select{|wd|wd.employee != nil} %>
-<% if params["emp"].present? %>
-<% wds = wds.select {|wd| wd.employee.id == params["emp"].to_i }%>
-<% end %>
-<% if params["vendor"].present? %>
-<% wds = wds.select {|wd| wd.vendor.id == params["vendor"].to_i }%>
-<% end %>
-<% if params["from_date"].present? %>
-<% wds = wds.select {|wd| wd.work_day >= params["from_date"].to_date.beginning_of_week }%>
-<% end %>
-<% if params["to_date"].present? %>
-<% wds = wds.select {|wd| wd.work_day <= params["to_date"].to_date.beginning_of_week }%>
-<% end %>
 
-<% if params["order"] == "employee" %>
-<% wds = wds.sort_by { |wd| wd.employee } %>
-<% elsif params["order"] == "project" %>
-<% wds = wds.sort_by { |wd| wd.project_id } %>
-<% elsif params["order"] == "status" %>
-<% wds = wds.sort_by { |wd| wd.time_sheet_status.downcase == "pending" ? 0 : 1 } %>
-<% else %>
-<% wds = wds.sort_by { |wd| wd.work_day }.reverse %>
-<% end %>
-
-<% end %>
 <% wds.each_with_index do |wd, loop_index|%>
 
 	<% # In some freak cases the employee might be missing, so make sure it exists before continuing

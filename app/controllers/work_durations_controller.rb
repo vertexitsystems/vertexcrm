@@ -1,7 +1,13 @@
 class WorkDurationsController < ApplicationController
   # before_action :set_work_duration, only: [:show,:destroy]
   before_action :authenticate_user!
+  before_action :validate_access!, only: [:index]
   
+  def validate_access!
+    if !(current_user.is_admin? || current_user.is_account_manager?)
+      redirect_to root_path
+    end
+  end  
   # GET /work_durations
   # GET /work_durations.json
   def index
@@ -259,6 +265,10 @@ class WorkDurationsController < ApplicationController
     wd.status_read = true # IF this value is true consultatnt will see notification for status change
     
     if wd.save
+      # if status has changed to accepted or rejected then we send and email to the consultant to let them know
+      if wd.time_sheet_status == "accepted" || wd.time_sheet_status == "rejected"
+        WorkDurationMailer.with(work_duration: wd).work_duration_status_changed_email.deliver_later
+      end
       render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
     else
       render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}

@@ -10,6 +10,9 @@ class WorkDuration < ApplicationRecord
   #mount_uploader :timesheet_screenshot, AttachmentsUploader
   has_one_attached :timesheet_screenshot
   
+  def period
+    "#{work_day.strftime("%b %d, %Y")} - #{(work_day + 4).strftime("%b %d, %Y")}"
+  end
   def is_unsubmitted?
     time_sheet_status == "unsubmitted"
   end
@@ -53,7 +56,7 @@ class WorkDuration < ApplicationRecord
   end
   
   def display_id
-    id.to_s + work_day.strftime("%b").upcase + work_day.strftime("%d") + work_day.strftime("%y").upcase
+    "WD#{id}#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}"
   end
   
   scope :priority_order, -> {
