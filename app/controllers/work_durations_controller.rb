@@ -266,7 +266,7 @@ class WorkDurationsController < ApplicationController
     
     if wd.save
       # if status has changed to accepted or rejected then we send and email to the consultant to let them know
-      if wd.time_sheet_status == "accepted" || wd.time_sheet_status == "rejected"
+      if wd.is_approved? || wd.is_rejected?
         WorkDurationMailer.with(work_duration: wd).work_duration_status_changed_email.deliver_later
       end
       render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
