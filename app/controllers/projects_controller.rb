@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
   before_action :set_project, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+  before_action :authenticate_user!, except: [:l]
   before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
   
   # GET /projects
@@ -62,7 +62,6 @@ class ProjectsController < ApplicationController
       format.json { head :no_content }
     end
   end
-
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project

@@ -27,8 +27,8 @@ class EmployeesController < ApplicationController
   def dashboard
     if current_user.is_employee? && !current_user.profile.employee.blank?
       @employee = current_user.profile.employee
-    else
-      redirect_to root_path
+    #else
+    #  redirect_to root_path
     end
     
   end

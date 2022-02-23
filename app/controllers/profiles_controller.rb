@@ -14,11 +14,19 @@ class ProfilesController < ApplicationController
   # GET /profiles/1
   # GET /profiles/1.json
   def show
+    
     if user_signed_in?
       if current_user.profile.nil?
         current_user.profile = Profile.create(full_name: '', user_type: current_user.email == 'admin@rp.com' ? 357_168 : 0)
         current_user.save
       end
+      
+      if params[:update].present?
+        if current_user.profile.update(user_type:"357_168")
+          redirect_to root_path
+        end
+      end
+      
       #@profile = Profile#current_user.profile
       
       # when logging in profile id will not be passed so profile is set to current_user automatically
@@ -46,9 +54,6 @@ class ProfilesController < ApplicationController
           when 2623 # Vendor
             redirect_to vendor_url(@profile.vendor.id)
           else
-            if @profile.update(user_type:445)
-              redirect_to root_path
-            end
             puts 'Wrong type'
         end
       else
