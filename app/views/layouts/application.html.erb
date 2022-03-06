@@ -48,6 +48,7 @@
 					  </div>
 				  </div>
 				  
+				  <% if !devise_controller? %>
 				  <div class="top_info flex_row">
 					  <% if user_signed_in? && current_user.is_employee? %>
 					      <% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>
@@ -63,11 +64,14 @@
 							  <br /><b>message:</b> <%= wd.rejection_message %>
 							  <% end %>
 						  </div>
+						  
 						  <div style="float:right"><%= link_to "ok", {:controller => "work_durations", :action => "update_notification_read", :wd_id => wd.id }, :method => :put %></div>
+						  
 						  </div>
 						  <% end %>
 					  <% end %>
 				  </div>
+				  <% end %>
 			  </div>
 		  
 			  <div class="main_page_title"> <%= @title %> </div>

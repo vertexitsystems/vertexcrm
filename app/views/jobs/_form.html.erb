@@ -18,8 +18,13 @@
 <div class="flex_col">
 	<div class="flex_row">
 		<div class="flex_col">
-			<b>Job Title:</b>
-			<%= form.text_field :title %>
+			<b>Note: Fields marked with * are required.</b>
+		</div>
+	</div>
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Job Title:*</b>
+			<%= form.text_field :title, :required => true %>
 		</div>
 	</div>
 	<div class="flex_row">
@@ -30,11 +35,11 @@
 	</div>
 	<div class="flex_row">
 		<div class="flex_col">
-			<b>Start Date:</b>
+			<b>Start Date:*</b>
 			<%= form.text_field :start_date, :class => 'date_select_field' %>
 		</div>
 		<div class="flex_col">
-			<b>End Date:</b>
+			<b>End Date:*</b>
 			<%= form.text_field :end_date, :class => 'date_select_field' %>
 		</div>
 		<div class="flex_col">
@@ -42,7 +47,7 @@
 			<%= form.text_field :rate %>
 		</div>
 		<div class="flex_col">
-			<b>Job Type:</b>
+			<b>Job Type:*</b>
 			<%= form.select :job_type, 
 				options_for_select(["Remote", "On-Site", "Initial Remote"], @job.job_type),
 				class: 'form-control', 
@@ -58,11 +63,11 @@
 	</div>
 	<div class="flex_row">
 		<div class="flex_col">
-			<b>Vendor:</b>
+			<b>Vendor:*</b>
 			<%= form.select :vendor_id, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => @job.persisted? ? @job.vendor.id : nil %>
 		</div>
 		<div class="flex_col">
-			<b>Client:</b>
+			<b>Client:*</b>
 			<%= form.select :client_id, Client.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => @job.persisted? ? @job.client.id : nil %>
 		</div>
 	</div>

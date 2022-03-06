@@ -1,6 +1,6 @@
 class AccountManagersController < ApplicationController
   before_action :set_account_manager, only: %i[show edit update destroy]
-  before_action :check_access, only: [:show, :edit, :update, :destroy, :index, :time_sheet_approval]
+  before_action :check_access, only: [:show, :edit, :update, :destroy, :index, :time_sheet_approval, :reports]
   def check_access
     if !user_signed_in? || !( current_user.is_admin? || current_user.is_account_manager?)
       redirect_to root_path
@@ -234,11 +234,30 @@ class AccountManagersController < ApplicationController
     
   	@wds = @wds.limit(records_per_page).offset(page * records_per_page)
     
+    #@to_date   = (params[:from_date].present? && params[:from_date] != "") ? params[:from_date].to_date.beginning_of_week : today.beginning_of_week
+    #@from_date = (params[:to_date].present? && params[:to_date] != "")     ? params[:to_date].to_date.beginning_of_week : today.beginning_of_week
+    
+  	#@wds = @wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
+  	#@wds = @wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
     
     respond_to do |format|
       format.html
       format.pdf do
         render pdf: 'Weekly TimeSheet', page_size: 'A4',
+               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
+               encoding: 'UTF-8', 
+               show_as_html: params.key?('debug'),
+               footer: { :left => 'Vertex IT Systems, Inc', :right => '[page]/[topage]' }
+      end
+    end
+  end
+  
+  def consultant_report
+    @consultatnts = Employee.all
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: 'Consultant Report', page_size: 'A4',
                margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
                encoding: 'UTF-8', 
                show_as_html: params.key?('debug'),
@@ -293,6 +312,9 @@ class AccountManagersController < ApplicationController
       format.html { redirect_to account_managers_url, notice: 'Account manager was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+  
+  def reports
   end
 
   private

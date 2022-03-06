@@ -4,15 +4,16 @@
 			event.preventDefault();
 			//do whatever
 			var searchString = window.location.search.substring(1);
-			var params = searchString.split("&");
+			var params = searchString.split("?");
 			
 			var final_string = "";
-			
-			if (window.location.toString().includes("?")){
-				final_string = $(this).attr("href") + "&" + searchString;
-			} else {
-				final_string = $(this).attr("href") + "?" + searchString;
-			}
+			// alert(params);
+// 			if (window.location.toString().includes("?")){
+// 				final_string = $(this).attr("href") + "&" + searchString;
+// 			} else {
+// 				final_string = $(this).attr("href") + "?" + searchString;
+// 			}
+			final_string = $(this).attr("href") + "?" + params;
 			location.href = final_string;
 		});
 		

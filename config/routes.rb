@@ -13,6 +13,8 @@ Rails.application.routes.draw do
       get :send_vendor_email
       
       get :timesheet_report
+      get :reports
+      get :consultant_report
     end
   end
   resources :employees do

@@ -43,7 +43,8 @@ function bind_filters() {
 function bind_date_selectors(){
 	flatpickr(".date_select_field", {
 		mode: "single",
-		dateFormat: "Y-m-d"
+		dateFormat: "Y-m-d",
+		defaultDate: new Date()
 	});
 }
 function bind_popup_image(){

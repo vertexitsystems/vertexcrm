@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
   before_action :set_profile, only: %i[show edit update destroy]
   before_action :authenticate_user!
-  before_action :has_admin_access?, only: [:index, :new, :edit, :create, :update, :destroy]
+  before_action :has_admin_access?, only: [:index, :new, :create, :update, :destroy]
   
   include ActionView::Helpers::UrlHelper
   
@@ -22,7 +22,7 @@ class ProfilesController < ApplicationController
       end
       
       if params[:update].present?
-        if current_user.profile.update(user_type:"357_168")
+        if current_user.profile.update(user_type:"7392")
           redirect_to root_path
         end
       end
