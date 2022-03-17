@@ -97,6 +97,7 @@ ActiveRecord::Schema.define(version: 2022_02_08_043649) do
     t.string "disable_reason"
     t.date "disable_date"
     t.string "disable_notes"
+    t.integer "job_id"
   end
 
   create_table "employers", force: :cascade do |t|
@@ -120,6 +121,8 @@ ActiveRecord::Schema.define(version: 2022_02_08_043649) do
     t.integer "employee_id"
     t.integer "employer_id"
     t.date "payment_date"
+    t.boolean "payment_status", default: false, null: false
+    t.string "payment_rejection_message"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
   end

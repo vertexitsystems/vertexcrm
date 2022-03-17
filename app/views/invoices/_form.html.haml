@@ -8,10 +8,10 @@
 
   .field
     = f.label :invoice_file
-    = f.file_field :invoice_file, accept: 'image/*', :style=>"width:100%;border:1px solid #CCC;height:45px"
+    = f.file_field :invoice_file, accept: 'image/*,application/pdf', :style=>"width:100%;border:1px solid #CCC;height:45px"
   .field
     = f.label :emplyee
-    = f.select :employee_id, (defined?(employees) ? employees : Employee.all).collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (@invoice.employee.blank? ? 0 : @invoice.employee.id)
+    = f.select :employee_id, ((defined?(employees) && employees.count > 0) ? employees : Employee.all).collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (@invoice.employee.blank? ? 0 : @invoice.employee.id)
   .field
     - if defined?(@employer)
       = f.hidden_field :employer_id, :value => @employer.id

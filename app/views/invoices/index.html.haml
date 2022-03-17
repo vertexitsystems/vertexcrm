@@ -1,25 +1,40 @@
-%h1 Listing invoices
-
-%table
-  %thead
-    %tr
-      %th Invoice file
-      %th Emplyee
-      %th Employer
-      %th
-      %th
-      %th
-
-  %tbody
-    - @invoices.each do |invoice|
-      %tr
-        %td= invoice.invoice_file
-        %td= invoice.emplyee
-        %td= invoice.employer
-        %td= link_to 'Show', invoice
-        %td= link_to 'Edit', edit_invoice_path(invoice)
-        %td= link_to 'Destroy', invoice, method: :delete, data: { confirm: 'Are you sure?' }
-
-%br
-
-= link_to 'New Invoice', new_invoice_path
+.flex_row
+	.flex_col
+		.section
+			.row.top
+				.col
+					Invoice Date
+				.col
+					Employee
+				.col
+					Employer
+				.col
+					File
+				.col
+					Payament Status
+				- if current_user.is_admin? || current_user.is_account_manager?
+					.col
+						Actions
+			
+			- @invoices.each do |invoice|
+				.row.row_hover_highlight
+					.col.img_col
+						= invoice.created_at.strftime("%d %b, %Y")
+					.col.img_col
+						= invoice.employee.profile.name 
+					.col.img_col
+						= invoice.employer.company_name 
+					.col.img_col
+						- if invoice.invoice_file.attached?
+							= link_to (image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"), url_for(invoice.invoice_file)
+						- else
+							(Not Provided)
+					.col.img_col
+						= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Complete"
+					- if current_user.is_admin? || current_user.is_account_manager?
+						.col
+							- if !invoice.payment_status
+								= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
+								- if invoice.payment_rejection_message.blank?
+									|
+									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put

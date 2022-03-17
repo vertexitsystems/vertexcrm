@@ -17,10 +17,10 @@
 			</div>
 			<% @vendor.employees.each_with_index do |employee, index| %>
 
-				<div class="admin_profile_vendor_row" style="background:<%= index % 2 == 0 ? "#EEE" : "#DDD" %>">
+				<div class="admin_profile_vendor_row" style="background:<%= index % 2 == 0 ? "#EEE" : "#DDD" %>;padding:5px 10px">
 				
 				<div class="admin_profile_vendor_col">
-					<%= link_to employee.profile.full_name, employee %>
+					<%= link_to employee.profile.name, employee %>
 				</div>
 				<div class="admin_profile_vendor_col">
 					<%# employee.weekly_hours_worked .reject { |item| item.blank? }%>

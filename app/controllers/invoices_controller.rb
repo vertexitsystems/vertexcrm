@@ -55,6 +55,24 @@ class InvoicesController < ApplicationController
       format.json { head :no_content }
     end
   end
+  
+  def update_status
+    if !(current_user.is_admin? || current_user.is_account_manager?)
+      flash[:notice] = "Only Account managers and Admins can perform this action"
+      redirect_to invoices_path
+    else
+      invoice = Invoice.find(params["invoice_id"])
+      if invoice.update(:payment_status => (params["payment_status"] == "1"), :payment_rejection_message => (params["payment_status"] == "0") ? "Unable to verify validity" : "")
+        flash[:notice] = "Updated Invoice status"
+        redirect_to invoices_path
+      else
+        flash[:notice] = "Failed to update Status"
+        redirect_to invoices_path
+      end
+      
+    end
+    
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -64,6 +82,6 @@ class InvoicesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def invoice_params
-      params.require(:invoice).permit(:invoice_file, :employee_id, :employer_id, :payment_date)
+      params.require(:invoice).permit(:invoice_file, :employee_id, :employer_id, :payment_date, :payment_status, :payment_rejection_message)
     end
 end

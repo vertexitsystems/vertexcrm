@@ -39,7 +39,7 @@
 		<ul>
 			<li class="option <%= controller_name=="vendors" ? "jos" : "" %>"> <a href="/jobs">Jobs</a> </li>
 			<li class="option <%= controller_name=="clients" ? "reports" : "" %>"> <%= link_to "Reports", reports_account_managers_path %> </li>
-			<li class="option <%= controller_name=="employees" ? "invoices" : "" %>"> <a onclick="alert('In Progress!')">Invoices</a> </li>
+			<li class="option <%= controller_name=="employees" ? "invoices" : "" %>"> <%= link_to "Invoices", invoices_path %> </li>
 		</ul>
 
 		<%elsif current_user.profile.role == "Consultant" %>

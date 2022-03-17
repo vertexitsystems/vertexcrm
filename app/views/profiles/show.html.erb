@@ -8,7 +8,9 @@
 	<div class="profile_menu_left profile_container">
 		<div class="profile_menu_left_row" style="margin-top:20px">
 			<div style="margin:0 auto;display:table">
-			  <img src="<%= @profile.photo.blank? ? missing_profile_picture_url : @profile.photo.url %>" id="profile_picture_image"/>
+				<%= link_to (@profile.photo.blank? ? missing_profile_picture_url : @profile.photo.url)  do %>
+			  		<img src="<%= @profile.photo.blank? ? missing_profile_picture_url : @profile.photo.url %>" id="profile_picture_image"/>
+				<% end %>
 			</div>
 		</div>
 		<div class="profile_menu_left_row profile_actions" style="margin-bottom:10px">

@@ -26,6 +26,8 @@ class Employee < ApplicationRecord
     
     has_many :invoices
     
+    belongs_to :job
+    
   def name
     self.profile.name#full_name
   end

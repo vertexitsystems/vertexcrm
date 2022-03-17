@@ -1,7 +1,7 @@
 class EmployersController < ApplicationController
   before_action :set_employer, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-  before_action :has_admin_access?, only: [:index, :show, :new, :edit, :create, :update, :destroy]
+  before_action :has_admin_access?, only: [:index, :new, :edit, :create, :update, :destroy]
   
   # GET /employers
   # GET /employers.json

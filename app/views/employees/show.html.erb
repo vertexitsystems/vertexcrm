@@ -37,7 +37,17 @@
 			<div class="flex_col col_heading"> Employer Address: </div>
 			<div class="flex_col"> <%= @employee.employer.blank? ? "(Not Assigned)" : @employee.employer.company_address %> </div>
 		</div>
+		
+		<div class="" style="height:10px"></div>
+		
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Active Job: </div>
+			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.title %> </div>
+		</div>
+	
+		
 	</div>
+	
 </div>
 
 <% today = Date.today # Today's date %>

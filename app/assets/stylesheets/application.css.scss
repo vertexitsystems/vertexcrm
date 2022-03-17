@@ -97,6 +97,10 @@ p#alert{
     text-decoration: none;
     color: #FFF !important;
     margin:5px 10px;
+	
+	background: #36d673;
+	font-size: 13px;
+	width: 160px;
 }
 .button_link:hover {
     background: var(--main-color);//#4080cf;
@@ -110,6 +114,10 @@ p#alert{
     padding: 8px 10px;
     text-decoration: none;
     color: #FFF !important;
+	
+	background: #36e673;
+	font-size: 13px;
+	width: 160px;
 }
 .remember-me {
   float: left;

@@ -23,7 +23,7 @@
 						= invoice.employer.company_name 
 					.col.img_col
 						- if invoice.invoice_file.attached?
-							= image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"
+							= link_to (image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"), url_for(invoice.invoice_file)
 						- else
 							(Not Provided)
 					.col.img_col

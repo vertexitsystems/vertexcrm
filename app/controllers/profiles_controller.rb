@@ -1,7 +1,7 @@
 class ProfilesController < ApplicationController
   before_action :set_profile, only: %i[show edit update destroy]
   before_action :authenticate_user!
-  before_action :has_admin_access?, only: [:index, :new, :create, :update, :destroy]
+  before_action :has_admin_access?, only: [:index, :new, :create, :destroy]
   
   include ActionView::Helpers::UrlHelper
   

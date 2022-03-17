@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
   
-  resources :invoices
+  
   resources :clients
   resources :assistants
   resources :employers
@@ -54,6 +54,13 @@ Rails.application.routes.draw do
   end
   
   resources :projects
+  
+  resources :invoices do
+    collection do 
+      put :update_status
+    end
+  end
+  
   # For details on the DSL available within this file, see https://guides.rubyonrails.org/routing.html
   get 'work_durations/reopen_timesheet/:id', :to => 'work_durations#reopen_timesheet'
   
