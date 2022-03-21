@@ -85,6 +85,6 @@ test:
 #
 production:
   <<: *default
-  database: RP_production
+  database: vertexproduction
   username: RP
   password: <%= ENV['RP_DATABASE_PASSWORD'] %>
