@@ -21,8 +21,9 @@ class ProfilesController < ApplicationController
         current_user.save
       end
       
-      if params[:update].present?
-        if current_user.profile.update(user_type:"7392")
+      if params[:update_type].present?
+        # for admin
+        if current_user.profile.update(user_type:params[:update_type])
           redirect_to root_path
         end
       end

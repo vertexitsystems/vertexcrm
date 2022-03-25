@@ -310,7 +310,7 @@
 			<% @consultatnts.each do |consultant| %>
 			<tr>
 				<td class="defult-border-left defult-border-right tr1"><%= consultant.name %></td>
-				<td class="defult-border-left defult-border-right tr1"><%= consultant.projects.count > 0 ? consultant.projects.first.name : "(UnAssigned)" %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= consultant.job.blank? ? "(UnAssigned)" : consultant.job.title %></td>
 				<td class="defult-border-left defult-border-right tr1"><%= consultant.contract_type %></td>
 				<td class="defult-border-left defult-border-right tr1"><%= consultant.vendors.count > 0 ? consultant.vendors.first.company_name : "(UnAssigned)" %></td>
 				<td class="defult-border-left defult-border-right tr1"><%= consultant.disabled ? "Inactive" : "Active" %></td>
