@@ -53,7 +53,7 @@ class ProfilesController < ApplicationController
               redirect_to dashboard_employees_path#employee_url(@profile.employee.id)
             end
           when 2623 # Vendor
-            redirect_to vendor_url(@profile.vendor.id)
+            #redirect_to vendor_url(@profile.vendor.id)
           else
             puts 'Wrong type'
         end
