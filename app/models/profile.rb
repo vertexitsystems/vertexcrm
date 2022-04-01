@@ -1,5 +1,5 @@
 class Profile < ApplicationRecord
-  after_destroy :destroy_associations
+  #before_destroy :destroy_associations
   
   belongs_to :user
   
@@ -73,7 +73,8 @@ class Profile < ApplicationRecord
   end
   
   private
-  def destroy_associations
-    self.user.destroy
-  end
+  #def destroy_associations
+    #self.user.destroy
+  #  User.find(self.user.id).destroy
+  #end
 end

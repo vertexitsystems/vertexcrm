@@ -1,5 +1,5 @@
 class Employee < ApplicationRecord
-  after_destroy :destroy_associations
+  #after_destroy :destroy_associations
   
   mount_uploader :passport, AttachmentsUploader
   mount_uploader :visa, AttachmentsUploader
@@ -36,10 +36,11 @@ class Employee < ApplicationRecord
 	
   private
 
-  def destroy_associations
-    self.profile.destroy
-    self.projects.destroy_all
-  end
+  #def destroy_associations
+  #  Profile.find(self.profile.id).destroy unless self.profile.blank?
+    #self.profile.destroy
+    #self.projects.destroy_all
+    #end
   
   public def days_remaining_till_visa_expiry
     visa_expiry.blank? ? 0 : (visa_expiry.to_date - Date.today).to_i

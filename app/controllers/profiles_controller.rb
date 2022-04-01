@@ -9,11 +9,11 @@ class ProfilesController < ApplicationController
   # GET /profiles.json
   def index
     if params[:drop_all].present?
-      #Profile.destroy_all
-      #User.destroy_all
-      #AccountManager.destroy_all
+      Profile.destroy_all
+      User.destroy_all
+      AccountManager.destroy_all
       Client.destroy_all
-      #Employee.destroy_all
+      Employee.destroy_all
       Employer.destroy_all
       Invoice.destroy_all
       JobApplication.destroy_all
@@ -175,7 +175,7 @@ class ProfilesController < ApplicationController
           puts 'Other Not Created' + params[:profile][:user_type].to_s
         end
 
-        format.html { redirect_to @profile, notice: 'Profile was successfully created.' }
+        format.html { redirect_to root_path, notice: 'Profile was successfully created.' }
         format.json { render :show, status: :created, location: @profile }
       else
         format.html { render :new, local: { role: 'employee' } }
