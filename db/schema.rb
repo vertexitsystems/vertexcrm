@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_02_08_043649) do
+ActiveRecord::Schema.define(version: 2022_04_01_113556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -161,6 +161,7 @@ ActiveRecord::Schema.define(version: 2022_02_08_043649) do
     t.integer "client_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.integer "contract_type"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -192,6 +193,23 @@ ActiveRecord::Schema.define(version: 2022_02_08_043649) do
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
     t.integer "vendor_rate"
+  end
+
+  create_table "timesheets", force: :cascade do |t|
+    t.date "start_date"
+    t.string "screen_shot"
+    t.integer "monday", default: 0
+    t.integer "tuesday", default: 0
+    t.integer "wednesday", default: 0
+    t.integer "thursday", default: 0
+    t.integer "friday", default: 0
+    t.integer "saturday", default: 0
+    t.integer "sunday", default: 0
+    t.integer "job_id"
+    t.integer "employee_id"
+    t.integer "status", default: 0
+    t.datetime "created_at", precision: 6, null: false
+    t.datetime "updated_at", precision: 6, null: false
   end
 
   create_table "user_types", force: :cascade do |t|

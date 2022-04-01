@@ -25,11 +25,22 @@ class EmployeesController < ApplicationController
 
   # GET //employees/dashboard
   def dashboard
-    if current_user.is_employee? && !current_user.profile.employee.blank?
-      @employee = current_user.profile.employee
+    @profile = current_user.profile
+    
+    # Dashboard will not be accesible to anyone but the owner employee so there is no need to check if current_user is same or not
+    # IF logged in user has no employee object associated with it create one
+    if @profile.employee.blank?
+      Employee.new(profile_id: @profile.id).save
+      #@profile.create_employee()
+    end
+    
+    
+    @employee = @profile.employee
+    #if current_user.is_employee? && !current_user.profile.employee.blank?
+    #  @employee = current_user.profile.employee
     #else
     #  redirect_to root_path
-    end
+    #end
     
   end
   

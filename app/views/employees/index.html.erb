@@ -110,9 +110,13 @@
 		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
 		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> |
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
-		  <%# link_to 'Destroy', employee_path(employee), data: {:confirm => 'Are you sure?'}, :method => :delete %>
 		  <% if !employee.disabled %><!--disable_job_link-->
 		  <a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.name%>" class="disable_consultant_link">Disable</a>
+		  <% end %>
+		  
+
+		  <% if current_user.is_admin? %>
+		  | <%= link_to 'Destroy', employee_path(employee), data: {:confirm => 'Are you sure?'}, :method => :delete %>
 		  <% end %>
       </div>
     </div>

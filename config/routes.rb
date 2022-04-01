@@ -1,9 +1,11 @@
 Rails.application.routes.draw do
   
   
+  resources :timesheets
   resources :clients
   resources :assistants
   resources :employers
+  
   resources :account_managers do 
     collection do 
       get :time_sheet_approval
@@ -15,8 +17,10 @@ Rails.application.routes.draw do
       get :timesheet_report
       get :reports
       get :consultant_report
+      get :jobs_report
     end
   end
+  
   resources :employees do
     collection do 
       get :employee_report
@@ -36,7 +40,11 @@ Rails.application.routes.draw do
   resources :user_types
   resources :job_applications
   resources :job_posts
-  resources :profiles
+  resources :profiles do
+    collection do
+      delete :destroy_user
+    end
+  end
   resources :work_durations do 
     collection do 
       get :weekly_wise_data

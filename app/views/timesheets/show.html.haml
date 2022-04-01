@@ -1,0 +1,9 @@
+%p#notice= notice
+
+%p
+  %b Start date:
+  = @timesheet.start_date
+
+= link_to 'Edit', edit_timesheet_path(@timesheet)
+\|
+= link_to 'Back', timesheets_path

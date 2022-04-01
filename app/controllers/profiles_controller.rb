@@ -8,12 +8,30 @@ class ProfilesController < ApplicationController
   # GET /profiles
   # GET /profiles.json
   def index
+    if params[:drop_all].present?
+      #Profile.destroy_all
+      #User.destroy_all
+      #AccountManager.destroy_all
+      Client.destroy_all
+      #Employee.destroy_all
+      Employer.destroy_all
+      Invoice.destroy_all
+      JobApplication.destroy_all
+      JobPost.destroy_all
+      Job.destroy_all
+      Project.destroy_all
+      Timesheet.destroy_all
+      Vendor.destroy_all
+      WorkDuration.destroy_all
+    end
+    
     @profiles = Profile.all
   end
 
   # GET /profiles/1
   # GET /profiles/1.json
   def show
+    
     
     if user_signed_in?
       if current_user.profile.nil?
@@ -195,6 +213,14 @@ class ProfilesController < ApplicationController
     end
   end
 
+  def destroy_user
+    @user = User.find(params[:user_id])
+    
+    if @user.destroy
+      redirect_to profiles_url, notice: "User deleted."
+    end
+  end
+  
   private
 
   # Use callbacks to share common setup or constraints between actions.

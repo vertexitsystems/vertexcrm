@@ -11,7 +11,7 @@
 		
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading"> Project: </div>
-			<div class="flex_col"> <%= @employee.projects.count > 0 ? "(Not Assigned)" : @employee.projects.first.name %> </div>
+			<div class="flex_col"> <%= @employee.projects.count <= 0 ? "(Not Assigned)" : @employee.projects.first.name %> </div>
 		</div>
 		
 		<div class="flex_row info_row">
@@ -53,6 +53,10 @@
 	ignore_filters:true
 	%>
 </div>
+
+<% if @employee.work_durations.count <= 0 %>
+<div style="width:100%;text-align:center">Visit the <b>Timesheet Management</b> tab to access your timesheet data.</div>
+<% end %>
 
 <% if false %>
 

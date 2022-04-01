@@ -48,5 +48,6 @@ User <%= user.id %>: <%= user.email %>
 (Hanging) - 
 <%# link_to "Destroy", destroy_user_path(user), method: :delete, data: { confirm: "Are You sure?" } %>
 <% end %>
+<%= link_to "Destroy", destroy_user_profiles_url(user_id: user.id), method: :delete, data: { confirm: "You sure?" } %>
 <br />
 <% end %>

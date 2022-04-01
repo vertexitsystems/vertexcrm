@@ -266,6 +266,19 @@ class AccountManagersController < ApplicationController
     end
   end
   
+  def jobs_report
+    @jobs = Job.all.order(closing_date: :DESC)
+    respond_to do |format|
+      format.pdf do
+        render pdf: 'Jobs Report', page_size: 'A4',
+               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
+               encoding: 'UTF-8', 
+               show_as_html: params.key?('debug'),
+               footer: { :left => 'Vertex IT Systems, Inc', :right => '[page]/[topage]' }
+      end
+    end
+  end
+  
   # GET /account_managers/new
   def new
     @account_manager = AccountManager.new

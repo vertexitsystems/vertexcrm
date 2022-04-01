@@ -1,0 +1,582 @@
+<meta content="text/html; charset=utf-8" http-equiv="content-type"/>
+<%= wicked_pdf_stylesheet_link_tag "bootstrap.min" %>
+
+<style>
+  
+  @font-face {
+      font-family: Liberation;
+      src: url(LiberationSerif-Regular.ttf);
+  }
+  @font-face {
+      font-family: Liberation-bold;
+      src: url(LiberationSerif-bold.ttf);
+  }
+  @page { size: auto;  margin: 7mm; }
+  input[type="checkbox"]{
+    width:25px;
+    height:25px;
+  }
+  .extra-space{
+    margin:30px 0px !important
+  }
+  .consent_para{
+    margin:10px;
+    font-size:20px;
+  }
+  .custom-row-margin{
+    margin-left:5px;
+    margin-right:5px;
+  }
+  .margin-none{
+    margin:10px 0px;
+  }
+  .margin-top-minus{
+    margin-top:-75px;
+  }
+  .margin-top-minus-10{
+    margin-top:-10px;
+  }
+  .upper-name-block{
+    font-family: Liberation-bold;
+  }
+  .lab_log {
+    width: 130px !important;
+    height: 100px  !important;
+  }
+  .main-head{
+    font-size:18px;
+  }
+  .name-block{
+    margin:10px 20px;
+  }
+  .text-left{
+    text-align:left;
+  }
+  .vertex-logo img {
+    width: 180px;
+//    height: 40px;
+  }
+  .vertex-logo{
+    //padding-bottom:160px;
+  }
+  .bottom_barcode_pos span,h3{
+    text-align:right;
+    margin-left:15px;
+  }
+  .bottom_barcode_pos{
+    margin-top:-50px;
+  }
+  .bottom-name-block{
+    padding-left:30px;
+  }
+  .barcode_pos{
+    margin-top:-50px;
+  }
+  .no-bg-grey-color{
+    margin:5px;
+  }
+  .bg-grey-color{
+    border-bottom:1px solid #9d9d9d;
+    font-weight:bold;
+  }
+  .barcode_pos .barcode_img{
+    width: 100% !important;
+    height: 40px;
+  }
+  .barcode_pos span,h3{
+    text-align:right;
+    margin-left:15px;
+  }
+  .qrcode_img_up{
+    margin-left: -25px;
+    margin-top: -35px;
+    width: 100%;
+    heigt: 100%;
+    float:right;
+  }
+  .qrcode_img_down{
+    margin-left: -25px;
+    width: 110%;
+    float:right;  
+  }
+  .qrcode_img{
+    margin-left: -25px;
+    margin-top: -35px;
+    width: 90%;
+    float:right;
+  }
+  .small_qrcode_img{
+    margin-left: -25px;
+    margin-top: -10px;
+    width: 25%;
+  }
+  .instruction_img{
+    width:400px;
+  }
+  .instruction_big_img{
+    width:650px;
+  }
+  .margin-left-40 {
+    margin-left: -40px !important;
+  }
+  .margin-left-56 {
+    margin-left: -75px !important;
+  }
+  .margin-left-right-30 {
+    margin-left: 30px;
+    margin-right: 30px;
+  }
+  .height-70 {
+    height: 70px;
+  }
+  .margin-top-15 {
+    margin-top: 15px;
+  }
+  .line-height-30 {
+    line-height: 30px;
+  }
+  .line-height-20{
+    line-height:20px;
+  }
+  .margin-top-30 {
+    margin-top: 30px;
+  }
+  .underline {
+    text-decoration: underline;
+  }
+  .color-light-black {
+    color: #3f3f3f;
+  }
+  .font-size-18 {
+    font-size: 17px;
+  }
+  .font-size-12 {
+    font-size: 12px !important;
+  }
+  .font-size-14 {
+    font-size: 14px !important;
+  }
+  .padding-top-bottom-5 {
+    padding-bottom: 5px;
+    padding-top: 5px;
+  }
+  .padding-bottom-10 {
+    padding-bottom: 10px;
+  }
+  .color-black {
+    color: black;
+  }
+  .margin-left-18 {
+    margin-left: 18px;
+  }
+  .margin-left-31 {
+    margin-left: -31px !important;
+  }
+  
+  .grey_backgroud {
+      background:#A9A9A9;
+  }
+  
+  .border_line {
+      border: 1px solid #dddddd;
+  }
+  .nopadding {
+     margin-top: -10px !important;
+  }
+  .margin-top-minus-4 {
+     margin-top: -4px !important;
+  }
+  .margin-top-0 {
+     margin-top: -0px !important;
+     margin-left: -12px !important;
+  }
+  .margin-top-4 {
+     margin-top: 4px !important;
+  }
+  .padding-left-40 {
+    padding-left: 200px !important;
+  }
+  .margin-left-33 {
+    margin-left: 33% !important;
+  }
+  .margin-left-1 {
+    margin-left: 100px !important;
+  } 
+  
+  .font-size-10 {
+    font-size: 10px;
+  }
+  .margin-left-10{
+    margin-left: -10px !important;
+   }
+   .margin-left-30{
+    margin-left: -30px !important;
+   }
+  .margin-left-60{
+    margin-left: -60px
+  }
+  .bottom-right{
+    position: absolute;
+    bottom: 10px;
+    width: 50%;
+    margin-left:39%;
+  }
+  .defult-border-left{
+    border-left: 1px solid #ddd;
+  }
+  .text-align-right
+  {
+    text-align: right;
+  }
+  .padding-left-30{
+    padding-left: 100px !important;
+  }
+
+  .main_container {
+	  height:100px;
+	  width:100%;
+	  margin-bottom:50px;
+  }
+  .main_logo{
+  	  width:33%;
+	  height:100%;
+
+	  float:left;
+  }
+  .main_title{
+	  width:33%;
+	  height:100%;
+
+	  float:left;
+	  padding-top:60px;
+  }
+  .main_data{
+	  width:33%;
+	  height:100%;
+
+	  float:left;
+	  padding-top:20px;
+	  font-size:12px;
+	  text-align:right;
+  }
+  
+  .flex_row{
+  	display:flex;
+  	flex-direction:row;
+  	flex-grow:1;
+  	text-align:center;
+  }
+  .flex_col{
+  	flex-grow:1;
+  }
+</style>
+
+<div class="container">
+	<div class="main_container">
+		<div class="main_logo">
+	        <div class="vertex-logo">
+	        	<img src="https://i.ibb.co/sg4pBjv/Logo.png">
+	        </div>
+		</div>
+		<div class="main_title">
+	        <h4 style="color: black;text-align: center; font-weight:bold;">
+	          <strong>Vertex Job Portal KK </strong>
+	        </h4>
+	        <h4 class="color-black text-center" style="text-transform: uppercase;">
+	          <div>
+	            <strong>Weekly Timesheet</strong>
+	          </div>
+	        </h4>
+		</div>
+		<div class="clr"></div>
+	</div>
+	
+	<div style="margin-top:50px"> Jobs Reports </div>
+	
+	<div class="col-xs-12" style="margin-top:12px!important;">
+      <table class="table table-striped col-xs-3 font-size-12">
+        <tr class="panel panel-default border_line cell-border">
+          
+		  <th class="text-center col-xs-2"> Date Opened </th>
+		  <th class="text-center col-xs-2"> Title </th>
+		  <th class="text-center col-xs-2"> Location </th>
+          <th class="text-center"> Vendor </th>
+          <th class="text-center"> Client </th>
+		  <th class="text-center col-xs-2"> Job Type </th>
+		   <th class="text-center col-xs-2"> Status </th>
+		    <th class="text-center col-xs-2"> Close Date </th>
+		  
+	    </tr>
+		
+		<tbody class="border_line cell-border" style="text-align: center;">
+			
+			<% @jobs.each do |job| %>
+			<tr>
+				<td class="defult-border-left defult-border-right tr1"><%= job.start_date %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.title %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.location %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.vendor.name %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.client.company_name %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.type_string %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.status %></td>
+				<td class="defult-border-left defult-border-right tr1"><%= job.closing_date %></td>
+			</tr>
+		  	<% end %>
+			
+        </tbody>
+      </table>
+    </div>
+</div>
+
+<!-- OLD CODE BELOW -->
+<% if false %>
+<div class="container">
+	
+	<% start_date = params["from_date"].nil? ? DateTime.now - 7 : DateTime.parse(params["from_date"]) %>
+	<% end_date   = params["to_date"].nil? ? DateTime.now : DateTime.parse(params["to_date"]) %>
+	<% start_date = start_date.at_beginning_of_week %>
+	<% end_date   = end_date.at_beginning_of_week %>
+	
+	<div class="main_container">
+		<div class="main_logo">
+	        <div class="vertex-logo">
+	        	<img src="https://i.ibb.co/sg4pBjv/Logo.png">
+	        </div>
+		</div>
+		<div class="main_title">
+	        <h4 style="color: black;text-align: center; font-weight:bold;">
+	          <strong>Vertex Job Portal</strong>
+	        </h4>
+	        <h4 class="color-black text-center" style="text-transform: uppercase;">
+	          <div>
+	            <strong>Weekly Timesheet</strong>
+	          </div>
+	        </h4>
+		</div>
+		<div class="main_data">
+			<% if @employees.count > 1 %>
+			<b>Period:</b> <%= start_date.strftime("%B %d, %Y") %> - <%= end_date.strftime("%B %d, %Y") %> <br />
+			<b>Total Employees:</b> <%= @employees.count %>
+			<% end %>
+		</div>
+		<div class="clr"></div>
+	</div>
+	
+	<% if !@work_durations.blank? %>
+		<table border="0" style="width:80%;margin:0 auto">
+			<tr>
+				<td width="20%;"><strong>ID</strong></td>
+				<td width="30%"><%= @work_durations.first.display_id %></td>
+				<td width="20%;font-weight:bold"><strong>Consultant</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.name %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Period</strong></td>
+				<td width="30%"><%= @work_durations.first.work_day.strftime("%b %d, %Y") %> - <%= (@work_durations.first.work_day + 4).strftime("%b %d, %Y") %></td>
+				<td width="20%;font-weight:bold"><strong>Status</strong></td>
+				<td width="30%"><%= @work_durations.first.time_sheet_status %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Client</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.client.blank? ? "<Not Provided>" : @work_durations.first.employee.client.company_name %></td>
+				<td width="20%;font-weight:bold"><strong>Address</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.client.blank? ? "<Not Provided>" : @work_durations.first.employee.client.company_address %></td>
+			</tr>
+			<tr>
+				<td width="20%;"><strong>Employer</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.employer.blank? ? "<Not Provided>" : @work_durations.first.employee.employer.company_name %></td>
+				<td width="20%;font-weight:bold"><strong>Address</strong></td>
+				<td width="30%"><%= @work_durations.first.employee.employer.blank? ? "<Not Provided>" : @work_durations.first.employee.employer.company_address %></td>
+			</tr>
+		</table>
+	<% end %>
+	
+  <div>
+	
+	<% @employees.each do |emp|%>
+	
+		<% employee_hours = [] %>
+		
+		<% loop_index = 0 %>
+		<% week_date = end_date %>
+		
+		<div class="col-xs-12" style="margin-top:12px!important;">
+          <table class="table table-striped col-xs-3 font-size-12">
+            <tr class="panel panel-default border_line cell-border">
+              
+			  <th class="text-center col-xs-2">Date</th>
+			  <th class="text-center col-xs-2">Employee Name</th>
+              <% today = Date.today %>
+              <% for day in ((today.at_beginning_of_week - 1)..(today.at_end_of_week - 1)).map.each { |day| day } do %>
+                <th class="text-center">
+                  <%= day.strftime("%a") %>
+                </th>
+              <% end %>
+              <th class="text-center">Total Hours</th>
+              <th class="text-center col-xs-2">Time Sheet Status</th>
+			  
+		    </tr>
+			<tbody class="border_line cell-border" style="text-align: center;">
+				<% loop do %>
+				<% work_durations = emp.work_durations.where(:work_day => week_date..(week_date+6)).order(:work_day) %>
+              <tr>
+                <td class="defult-border-left tr1">
+					<% if work_durations.count > 0 %>
+					<%= (work_durations.first.work_day.at_beginning_of_week - 1).strftime("%b %d, %Y") %> -
+					<%= (work_durations.first.work_day.end_of_week - 1).strftime("%b %d, %Y") %>
+					<% else %>
+					<%= (week_date.at_beginning_of_week - 1).strftime("%b %d, %Y") %> -
+					<%= (week_date.end_of_week - 1).strftime("%b %d, %Y") %>
+					<% end %>
+				</td>
+                <td class="defult-border-left tr1">
+					<%= emp.profile.full_name %>
+				</td>
+	            
+				<% if work_durations.count > 0 && !work_durations.first.is_unsubmitted? && !work_durations.first.is_saved? %>
+		            <% work_durations.each do |wd| %>
+		              <td class="text-center">
+		                <%= wd.hours %>
+		              </td>
+		            <% end %>
+				<% else %>
+					<td colspan="7">
+						Hours not submitted
+					</td>
+				<% end %>
+	            <td class="text-center">
+					<% if work_durations.count > 0 && !work_durations.first.is_unsubmitted? && !work_durations.first.is_saved? %>
+						<% th = work_durations.map{|wd|wd.hours}.inject(:+)%>
+						<% employee_hours << th %>
+						<%= th %>
+					<% else %>
+						0
+					<% end %>
+				</th>
+	            <td class="text-center col-xs-2">
+					<% if work_durations.count > 0 %>
+						<% if work_durations.first.is_saved? %>
+							unsubmitted
+						<% else %>
+							<%= work_durations.first.time_sheet_status %>
+						<% end %>
+					<% else %>
+						unsubmitted
+					<% end %>
+				</td>
+				<% week_date = week_date - 7 %>
+				
+				<% break if week_date < start_date %>
+				<% end %>
+			  </tr>
+              <tr>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left"></td>
+                <td class="defult-border-left">
+                  <strong>Total</strong>
+                </td>
+                <td class="defult-border-left">
+                  <strong>
+                    <%= employee_hours.inject(:+).to_i %>
+                  </strong>
+                </td>
+                <td class="defult-border-left"></td>
+              </tr>
+	        </tbody>
+	      </table>
+	    </div>
+		
+		<h4>Accumulated Absences</h4>
+		<div class="col-xs-12" style="margin-top:12px!important;">
+          <table class="table table-striped col-xs-3 font-size-12">
+            <tr class="panel panel-default border_line cell-border">
+              <th class="text-center col-xs-2">Start Date</th>
+			  <th class="text-center col-xs-2">End Date</th>
+			  <th class="text-center col-xs-2">Number of days absences</th>
+			  <th class="text-center col-xs-2">Number of hours</th>
+			  <th class="text-center col-xs-2">Reason</th>
+			  <th class="text-center col-xs-2">comments</th>
+			  <th class="text-center col-xs-2">Entered By</th>
+			  <th class="text-center col-xs-2">Submit Date</th>
+		  	</tr>
+		  </table>
+	  </div>
+		<% if false %>
+			<div class="row color-black">
+      <div class="col-xs-12" style="margin-top:12px!important;">
+        <table class="table table-striped col-xs-3 font-size-12">
+          <tr class="panel panel-default border_line cell-border">
+            <th class="text-center col-xs-2">Date</th>
+            <th class="text-center col-xs-2">Employee Name</th>
+            <% today = Date.today %>
+            <% for day in (today.at_beginning_of_week..today.at_end_of_week).map.each { |day| day } do %>
+              <th class="text-center">
+                <%= day.strftime("%a") %>
+              </th>
+            <% end %>
+            <th class="text-center">Total Hours</th>
+            <th class="text-center col-xs-2">Time Sheet Status</th>
+          </tr>
+          <tbody class="border_line cell-border" style="text-align: center;">
+            <% total_hours = [] %>
+            <% work_durations.each_with_index do |work,index| %>
+              <tr>
+                <td class="defult-border-left tr1">
+                  <%# work.second.first.work_day.at_beginning_of_week.strftime("%B %d, %Y") %>
+				  <%= work_durations.first.work_day.at_beginning_of_week.strftime("%B %d, %Y") %>
+                </td>
+                <td class="defult-border-left tr1">
+                  <%# work.first.first %>
+				  <%=  emp.profile.full_name %>
+                </td>
+				
+                <% (today.at_beginning_of_week..today.at_end_of_week).map.each { |day| day }.each_with_index do |day, index| %>
+                  <% hw = work_durations.select{|w| w if w.work_day.strftime("%A") == day.strftime("%A")}  %>
+                  <td class="defult-border-left tr1">
+                    <%= hw.count > 0 ? hw.first.hours : 0 %>
+                  </td>
+                <% end %>
+                <td class="defult-border-left tr1">
+                  <% total_hours << work_durations.collect(&:hours).compact.inject(:+) %>
+                  <%= work_durations.collect(&:hours).compact.inject(:+) %>
+                </td>
+                <td class="defult-border-left tr1">
+                  <%# work.try(:second).try(:first).try(:time_sheet_status) %>
+				  Something
+                </td>
+              </tr>
+            <% end %>
+            <tr>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left"></td>
+              <td class="defult-border-left">
+                <strong>Total</strong>
+              </td>
+              <td class="defult-border-left">
+                <strong>
+                  <%= total_hours.inject(:+) %>
+                </strong>
+              </td>
+              <td class="defult-border-left"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+		<% end %>
+	<% end %>
+  </div>
+</div>
+<% end %>

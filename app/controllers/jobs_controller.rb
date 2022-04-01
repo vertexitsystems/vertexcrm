@@ -41,7 +41,7 @@ class JobsController < ApplicationController
   # POST /jobs or /jobs.json
   def create
     @job = Job.new(job_params)
-
+    
     respond_to do |format|
       if @job.save
         format.html { redirect_to @job, notice: "Job was successfully created." }
@@ -55,6 +55,7 @@ class JobsController < ApplicationController
 
   # PATCH/PUT /jobs/1 or /jobs/1.json
   def update
+    #byebug
     respond_to do |format|
       if @job.update(job_params)
         format.html { redirect_to @job, notice: "Job was successfully updated." }
@@ -94,7 +95,7 @@ class JobsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def job_params
-      params.require(:job).permit(:start_date,:end_date,:title,:rate,:job_description,:location,:job_type,:closing_date,:closing_remarks,:vendor_id,:client_id)
+      params.require(:job).permit(:start_date,:end_date,:title,:rate,:job_description,:location,:job_type,:contract_type,:closing_date,:closing_remarks,:vendor_id,:client_id).merge(:contract_type => params[:contract_type])
     end
 end
 

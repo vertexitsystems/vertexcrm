@@ -46,10 +46,34 @@
 			<b>Job Rate($/hr):</b>
 			<%= form.text_field :rate %>
 		</div>
-		<div class="flex_col">
-			<b>Job Type:*</b>
-			<%= form.select :job_type, 
+		
+	</div>
+	<div class="flex_row">
+		<div class="flex_col" >
+			<b>Job Type:*</b> <br />
+			<%# form.select :job_type, 
 				options_for_select(["Remote", "On-Site", "Initial Remote"], @job.job_type),
+				class: 'form-control', 
+				filter_name: "contract"
+				%>
+			
+			<%= form.radio_button :job_type, "Remote", :checked => true %>	
+			<%= form.label :job_type, "Remote", :value => 0  %>,
+			
+			
+			<%= form.radio_button :job_type, "OnSite" %>
+			<%= form.label :job_type, "On-Site", :value => 1 %>,
+			
+			<%= form.radio_button :job_type, "InitialRemote" %>
+			<%= form.label :job_type, "Initial Remote", :value => 2 %>
+			
+			
+			
+		</div>
+		<div class="flex_col">
+			<b>Contract Type:*</b>
+			<%= select_tag :contract_type,
+				options_for_select(Job.contract_types.map {|k, v| [k, k]}),
 				class: 'form-control', 
 				filter_name: "contract"
 				%>

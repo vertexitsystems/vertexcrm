@@ -44,8 +44,9 @@
 
 		<%elsif current_user.profile.role == "Consultant" %>
 
+		
 		<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
-
+		
 		<ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
 			<li class="option <%= (controller_name == "employees" && action_name=="show") ? "menu_item_selected" : "" %>">
 				<a href="/employees/<%=@employee.id%>?order=status"> Timesheet Management </a>
@@ -56,7 +57,9 @@
 		</ul>
 
 		<%if @employee.present?%>
-
+		
+		
+		
 		<ul style="<%= params["prv"] == "true" ? "" : "display:none"%>">
 			<li id="back" style="cursor:pointer;"><a>Back</a></li>
 

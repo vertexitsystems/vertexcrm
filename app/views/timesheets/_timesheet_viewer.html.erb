@@ -1,0 +1,91 @@
+<style>
+	.timesheet_row{
+		display:flex;
+		flex-style:row;
+	}
+	.timesheet_col{
+		padding:10px;
+		flex-grow: 1;
+		width:10%;
+		max-width: 100%;
+		text-align:center;
+	}
+	.timesheet_col img{
+		background:#EEE;
+		width:30px;
+		height:30px;
+		border-radius:15px;
+	}
+	.top{
+		font-weight: bold;
+		color: #FFF;
+		background: var(--main-color);
+		border-radius: 10px 10px 0px 0px;
+	}
+</style>
+<% if !defined?(allow_submition) %>
+<% allow_submition = false %>
+<% end %>
+
+
+<div class="timesheet_row top">
+	<div class="timesheet_col"> Submitted At </div>
+	<div class="timesheet_col"> Consultant </div>
+	<div class="timesheet_col"> Vendor </div>
+	<div class="timesheet_col"> Duration </div>
+	<div class="timesheet_col"> Contract Type </div>
+	<div class="timesheet_col"> Total Hours </div>
+	<div class="timesheet_col"> Job Title </div>
+	<div class="timesheet_col"> Screenshot </div>
+	<div class="timesheet_col"> Status </div>
+</div>
+<% if allow_submition %>
+	<% (0...2).each do |decriment| %>
+	
+	<% beginning_of_week = Date.today.beginning_of_week - decriment %>
+	
+	<% timesheet =  Timesheet.where(start_date: beginning_of_week) %>
+	
+	<% if timesheet.blank? %>
+	<% timesheet = Timesheet.new(start_date: beginning_of_week, employee_id: current_user.profile.employee.id) %>
+	<% end %>
+	
+	
+	<div class="timesheet_row row_hover_highlight">
+		<div class="timesheet_col">
+			<%= timesheet.updated_at.blank? ? "(Unsubmitted)" : timesheet.updated_at %>
+		</div>
+		<div class="timesheet_col">
+			<%= timesheet.employee.blank? ? current_user.profile.name : timesheet.employee.profile.name %>
+		</div>
+		<div class="timesheet_col">
+			<%= timesheet.job.blank? ? "(Not Provided)" : timesheet.job.vendor.name %>
+		</div>
+		<div class="timesheet_col">
+			<%= "#{timesheet.start_date.strftime("%d %b, %y")} - #{timesheet.last_work_day.strftime("%d %b, %y")}" %>
+		</div>
+		<div class="timesheet_col">
+			<%= timesheet.employee.contract_type.blank? ? "(Not Provided)" : timesheet.employee.contract_type %>
+		</div>
+		<div class="timesheet_col">
+			<%= timesheet.job.blank? ? current_user.profile.employee.job.title : timesheet.job.title %>
+		</div>
+		<div class="timesheet_col">
+			<%= timesheet.total_hours_worked %>
+		</div>
+		<div class="timesheet_col">
+			<img src="<%= timesheet.screen_shot.attached? ? url_for(timesheet.screen_shot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+		</div>
+		<div class="timesheet_col">
+			<%= timesheet.status %>
+		</div>
+	</div>
+	<div class="">
+		<% form_for timesheet, multipart: true, style: "margin:0px;width:100%;padding:0px;" do |f| %>
+		<% end %>
+	</div>
+
+
+	<% end %>
+	
+<% end %>

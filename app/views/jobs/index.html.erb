@@ -117,7 +117,7 @@
       </div>
 	  
 	  <div class="col col8">
-        <%= job.job_type %>
+        <%= job.job_type.blank? ? "(Unassigned)" : job.job_type %>
       </div>
 	  
 	  <div class="col col8">

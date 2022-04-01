@@ -3,11 +3,11 @@ class Profile < ApplicationRecord
   
   belongs_to :user
   
-  has_one :employee, dependent: :destroy
+  has_one :employee#, dependent: :destroy
   #has_one :vendor, dependent: :destroy
-  has_one :account_manager, dependent: :destroy
-  has_one :employer, dependent: :destroy
-  has_one :assistant, dependent: :destroy
+  has_one :account_manager#, dependent: :destroy
+  has_one :employer#, dependent: :destroy
+  has_one :assistant#, dependent: :destroy
   
   attr_accessor(:email, :password)
 
@@ -18,7 +18,9 @@ class Profile < ApplicationRecord
   
   def role
     return 'Applicant' if user_type.nil?
-
+    
+    return 'Consultant' if !employee.blank?
+    
     case user_type
     when 357_168
       'Admin'

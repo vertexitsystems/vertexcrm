@@ -43,7 +43,7 @@
 	<div class="report_stat_container">
 		<div class="report_stat_value"> <%= Project.all.count %> </div>
 		<div class="report_stat_title"> Active Projects </div>
-		<div class="report_stat_action"><a href="#">Generate Report</a></div>
+		<div class="report_stat_action"><a href="#"><%= link_to "Generate Report", jobs_report_account_managers_path(format: :pdf) %></a></div>
 	</div>
 </div>
 

@@ -28,8 +28,10 @@ class Employee < ApplicationRecord
     
     belongs_to :job
     
+    has_many :timesheets
+    
   def name
-    self.profile.name#full_name
+    self.profile.blank? ? "(Profile Missing)" : self.profile.name
   end
 	
   private
