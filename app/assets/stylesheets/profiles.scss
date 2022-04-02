@@ -124,7 +124,7 @@
 .profile_main{
 	display:flex;
 	flex-direction:row;
-	margin-top:20px;
+	margin-left:20px;
 }
 .profile_menu_left{
 	width:20%;
@@ -132,6 +132,7 @@
 .profile_container{
 	box-shadow :0 6px 6px rgba(0,0,0,0.2);
 	padding:10px 20px;
+	min-width:280px;
 }
 .profile_menu_right{
 }

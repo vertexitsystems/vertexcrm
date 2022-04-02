@@ -1,6 +1,6 @@
 <% if @job.present? and @job.try(:errors).any? %>
 <div id="error_explanation">
-  <h2><%= pluralize(@job.errors.count, "error") %> prohibited this profile from being saved:</h2>
+  <h2><%= pluralize(@job.errors.count, "error") %> prohibited this profile from being saved: </h2>
 
   <ul>
     <% @job.errors.full_messages.each do |message| %>
@@ -38,10 +38,15 @@
 			<b>Start Date:*</b>
 			<%= form.text_field :start_date, :class => 'date_select_field' %>
 		</div>
+		
+		<% if false %>
+		<!-- Usman wanted to remove it but This field was mentioned in files so hiding instead of deleting, maybe needed in future-->
 		<div class="flex_col">
 			<b>End Date:*</b>
 			<%= form.text_field :end_date, :class => 'date_select_field' %>
 		</div>
+		<% end %>
+		
 		<div class="flex_col">
 			<b>Job Rate($/hr):</b>
 			<%= form.text_field :rate %>

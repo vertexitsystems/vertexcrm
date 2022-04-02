@@ -72,7 +72,9 @@
 	</div>
 	<div class="flex_row">
 		<div class="flex_col">
-			<% show_field(form, :contact_number, "Contact Phone") %>
+			<b>Contact Phone:</b>
+			<%= form.telephone_field :contact_number, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number" %>
+			<%# show_field(form, :contact_number, "Contact Phone") %>
 		</div>
 		<div class="flex_col">
 			<% show_field(form, :contact_email, "Contact Email") %>

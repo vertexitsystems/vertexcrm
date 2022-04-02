@@ -26,7 +26,7 @@ class Employee < ApplicationRecord
     
     has_many :invoices
     
-    belongs_to :job
+    belongs_to :job, optional: true
     
     has_many :timesheets
     

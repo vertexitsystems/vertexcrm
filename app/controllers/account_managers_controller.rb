@@ -282,6 +282,7 @@ class AccountManagersController < ApplicationController
   # GET /account_managers/new
   def new
     @account_manager = AccountManager.new
+    @account_manager.build_profile
   end
 
   # GET /account_managers/1/edit
@@ -291,7 +292,20 @@ class AccountManagersController < ApplicationController
   # POST /account_managers.json
   def create
     @account_manager = AccountManager.new(account_manager_params)
-
+    
+    #@account_manager.build_profile(params[:account_manager][:profile])
+    @account_manager.profile.user_type = '7392'
+    
+    @account_manager.profile.user = User.new(email: user_params[:email], password: user_params[:password], password_confirmation: user_params[:password])
+    
+    if !@account_manager.profile.user.save
+      respond_to do |format|
+        format.html { render :new }
+        format.json { render json: @employee.profile.user, status: :unprocessable_entity }
+      end
+      return
+    end
+    
     respond_to do |format|
       if @account_manager.save
         format.html { redirect_to @account_manager, notice: 'Account manager was successfully created.' }
@@ -339,7 +353,10 @@ class AccountManagersController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def account_manager_params
-    params.require(:account_manager).permit(:name, :profile_id, :from_date, :to_date, :status_filter, :biweekly, :monthly,
-                                            :quartarly, :vendor_name)
+    params.require(:account_manager).permit(:name, :profile_id, :from_date, :to_date, :status_filter, :biweekly, :monthly, :quartarly, :vendor_name, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+  end
+  
+  def user_params
+    params[:account_manager][:profile_attributes]
   end
 end

@@ -10,7 +10,11 @@
       </ul>
     </div>
   <% end %>
-
+	
+	<%= render "profiles/embedable_form", profile:account_manager.profile, allow_submit:false, form:form %>
+	
+	<% if false %>
+	
   <div class="field">
     <%= form.label :name %>
     <%= form.text_field :name %>
@@ -20,7 +24,9 @@
     <%= form.label :profile_id %>
     <%= form.number_field :profile_id %>
   </div>
-
+  
+	<% end %>
+	
   <div class="actions">
     <%= form.submit %>
   </div>

@@ -8,6 +8,8 @@ class ProfilesController < ApplicationController
   # GET /profiles
   # GET /profiles.json
   def index
+    
+    #profiles/?drop_all=1
     if params[:drop_all].present?
       Profile.destroy_all
       User.destroy_all
@@ -27,7 +29,7 @@ class ProfilesController < ApplicationController
     
     @profiles = Profile.all
   end
-
+  
   # GET /profiles/1
   # GET /profiles/1.json
   def show
