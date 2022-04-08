@@ -26,7 +26,10 @@ class Employee < ApplicationRecord
     
     has_many :invoices
     
-    belongs_to :job, optional: true
+    has_many :postings
+    has_many :jobs, through: :postings
+    #accepts_nested_attributes_for :postings
+    #belongs_to :job, optional: true
     
     has_many :timesheets
     
@@ -44,6 +47,17 @@ class Employee < ApplicationRecord
   
   public def days_remaining_till_visa_expiry
     visa_expiry.blank? ? 0 : (visa_expiry.to_date - Date.today).to_i
+  end
+  
+  public def active_postings
+    postings.where(:end_date => nil)
+  end
+  public def active_job
+    active_postings.first.job unless active_postings.count <= 0
+  end
+  
+  public def posting_for_job(job_id)
+    postings.where(job_id: job_id).first
   end
     
 end

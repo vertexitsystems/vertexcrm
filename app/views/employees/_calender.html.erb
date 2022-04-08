@@ -419,7 +419,8 @@
 			
 			<% if show_project_name %>
 		    <div class="col col8 mt-3">
-			  <%= wd.employee.job.blank? ? "(Not Assigned)" : wd.employee.job.title %>
+			  <%# wd.employee.job.blank? ? "(Not Assigned)" : wd.employee.job.title %>
+			  <%= wd.employee.active_postings.count <= 0? "(Not Assigned)" : wd.employee..active_postings.job.title %>
 		    </div>
 			<% end %>
 			

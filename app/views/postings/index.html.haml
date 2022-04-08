@@ -1,0 +1,19 @@
+%h1 Listing postings
+
+%table
+  %thead
+    %tr
+      %th
+      %th
+      %th
+
+  %tbody
+    - @postings.each do |posting|
+      %tr
+        %td= link_to 'Show', posting
+        %td= link_to 'Edit', edit_posting_path(posting, :job_id => params[:job_id])
+        %td= link_to 'Destroy', posting, method: :delete, data: { confirm: 'Are you sure?' }
+
+%br
+
+= link_to 'New Posting', new_posting_path

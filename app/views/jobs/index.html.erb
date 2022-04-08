@@ -134,6 +134,7 @@
 		  <%= link_to 'Destroy', job_path(job), data: {:confirm => 'Are you sure?'}, :method => :delete %>
 		  <% if job.status == "Open" %>
 		   | <a href="#" job_id="<%=job.id%>" job_title="<%= job.title %>" class="close_job_link">Close</a>
+		   | <%= link_to "Add Consultant", new_posting_path(:job_id => job.id) %>
 		  <% end %>
       </div>
 	  <% end %>

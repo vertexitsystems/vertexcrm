@@ -91,7 +91,8 @@
       </div>
       
 	  <div class="col col25">
-         <%= employee.job.blank? ? "(UnAssigned)" : employee.job.title  %>
+         <%# employee.job.blank? ? "(UnAssigned)" : employee.job.title  %>
+		 <%= employee.jobs.count <= 0 ? "(UnAssigned)" : employee.active_job.title  %>
       </div>
 	  
       <div class="col col8">

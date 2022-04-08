@@ -1,0 +1,63 @@
+<%= form_with(model: @posting, local: true) do |form| %>
+	<% if @posting.errors.any? %>
+	<div id="error_explanation">
+		<h2><%= pluralize(@posting.errors.count, "error") %> prohibited this project from being saved:</h2>
+		
+		<ul>
+			<% @posting.errors.full_messages.each do |message| %>
+			<li><%= message %></li>
+			<% end %>
+		</ul>
+	</div>
+	<% end %>
+	<% def show_field(f, field, title, required=false) %>
+		<b><%= title %>:</b>
+		<%= f.text_field field, :required => required %>
+	<% end %>
+	
+	<% if !@job.blank? && @job.persisted? && !params[:closing].blank? %>
+	
+	<div class="page_title"> Closing Consultant Posting </div>
+	
+	<div class="flex_row">
+		
+		<div class="flex_col">
+			<b>Job:</b> <%= @job.title %> <br />
+			<b>Consultant:</b> <%= @posting.employee.name %> <br />
+			<b>Start Date:</b> <%= @posting.start_date %> <br />
+			<b>Closing Date:</b>
+			<%= form.text_field :end_date, :class => 'date_select_field' %>
+		</div>
+	</div>
+	
+	<% else %>
+		
+	<div class="page_title"> <%= @posting.persisted? ? "Edit Consultant Posting" : "Add Consultant to #{@job.blank? ? "Job" : @job.title} " %> </div>
+	
+	<div class="flex_row">
+		<div class="flex_col" style="<%= @job.blank? ? "display:block" : "display:none" %>">
+			<b>Job:</b>
+			<%= form.collection_select(:job_id, Job.all, :id, :title,@job.blank? ? {} : {selected:@job.id}, { class: "form-control" } ) %>
+		</div>
+		
+		<div class="flex_col">	
+			<b>Start Date:</b>
+			<%= form.text_field :start_date, :class => 'date_select_field' %>
+		</div>
+		
+		<div class="flex_col">
+			<b>Consultant:</b>
+			<%= form.collection_select(:employee_id, Employee.all, :id, :name) %>
+		</div>
+	</div>
+	
+	<% end %>
+	
+	
+	<div class="flex_row">
+		<div class="flex_col" style="text-align:right">
+			<%= form.submit "Submit", :class=>"submit_button" %>
+		</div>
+	</div>
+	
+<% end %>

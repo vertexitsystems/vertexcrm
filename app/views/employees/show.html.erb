@@ -28,21 +28,37 @@
 		
 	</div>
 	<div class="flex_col">
+		<% if @employee.contract_type != "w2"%>
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading" style="width:30%"> Employer: </div>
 			<div class="flex_col"> <%= @employee.employer.blank? ? "(Not Assigned)" : @employee.employer.company_name %> </div>
 		</div>
-	
+		
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading"> Employer Address: </div>
 			<div class="flex_col"> <%= @employee.employer.blank? ? "(Not Assigned)" : @employee.employer.company_address %> </div>
 		</div>
 		
 		<div class="" style="height:10px"></div>
+		<% end %>
 		
 		<div class="flex_row info_row">
-			<div class="flex_col col_heading"> Active Job: </div>
-			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.title %> </div>
+			<div class="flex_col col_heading"> Contract Type: </div>
+			<div class="flex_col">
+				<%= @employee.contract_type %>
+			</div>
+		</div>
+		<div class="flex_row info_row">
+			<div class="flex_col col_heading"> Active Jobs: </div>
+			<div class="flex_col">
+				<% if @employee.active_postings.count <= 0 %>
+					(UnAssigned)
+				<% else %>
+					<% @employee.active_postings.each do |posting| %>
+					<%= "#{posting.job.title} (Started: #{posting.start_date})" %> <br />
+					<% end %>
+				<% end %>
+			</div>
 		</div>
 	
 		

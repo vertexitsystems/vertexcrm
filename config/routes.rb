@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   
   
+  resources :postings
   resources :timesheets
   resources :clients
   resources :assistants

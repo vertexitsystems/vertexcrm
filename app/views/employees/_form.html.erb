@@ -1,3 +1,16 @@
+<script>
+	$(document).ready(function(){
+		$('input[type=radio][name="employee[contract_type]"]').change(function() {
+			//alert("" + );
+			if (this.value == "w2"){
+				$("#employer_field").hide();
+			} else {
+				$("#employer_field").show();
+			}
+		});
+	});
+</script>
+	
 <% if employee.present? and employee.try(:errors).any? %>
 <div id="error_explanation">
   <h2><%= pluralize(employee.errors.count, "error") %> prohibited this profile from being saved:</h2>
@@ -66,7 +79,7 @@
 			<%= form.collection_select(:client_id, Client.all, :id, :company_name) %>
 			<%# form.select :client, Client.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.client.blank? ? false : employee.client.id %>
 		</div>
-		<div class="flex_col">
+		<div class="flex_col" style="display:<%= @employee.contract_type == "w2" ? "none" : "block" %>" id="employer_field">
 			<b>Employer:</b>
 			<%# form.select :employer, Employer.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.employer.blank? ? false : employee.employer.id %>
 			<%= form.collection_select(:employer_id, Employer.all, :id, :company_name) %>

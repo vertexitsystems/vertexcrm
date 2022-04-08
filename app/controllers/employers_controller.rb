@@ -78,9 +78,14 @@ class EmployersController < ApplicationController
   # PATCH/PUT /employers/1.json
   def update
     respond_to do |format|
-      if @employer.update(employee_params.except("profile_attributes").except("id"))#@employer.update(employer_params)
-        format.html { redirect_to @employer, notice: 'Employer was successfully updated.' }
-        format.json { render :show, status: :ok, location: @employer }
+      if @employer.update(employer_params.except("profile_attributes").except("id"))
+        if @employer.profile.update(employer_params["profile_attributes"])
+          format.html { redirect_to @employer, notice: 'Employer was successfully updated.' }
+          format.json { render :show, status: :ok, location: @employer }
+        else
+          format.html { render :edit }
+          format.json { render json: @employer.errors, status: :unprocessable_entity }
+        end  
       else
         format.html { render :edit }
         format.json { render json: @employer.errors, status: :unprocessable_entity }

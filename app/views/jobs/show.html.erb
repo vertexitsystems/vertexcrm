@@ -33,13 +33,13 @@
 		<div class="job_title_container flex_row">
 			<%= @job.title %>
 		</div>
-		<div class="job_desc_container flex_row">
+		<div class="job_desc_container flex_row" style="text-align:left">
 			<%= @job.job_description %>
 		</div>
 	</div>
 	<div class="job_info_container flex_col">
 		<div class="flex_row job_info_header">
-			Job Overview
+			Job Overview <%= link_to "(Edit)", edit_job_path(@job), :style => "color:white !important;margin-left:10px;font-size:12px" %>
 		</div>
 		<div class="flex_row">
 			<div class="flex_col job_info_title">Rate:</div>
@@ -82,6 +82,26 @@
 			<div class="flex_col job_info_title">Closing Remarks: </div>
 			<div class="flex_col"><%= @job.closing_remarks %></div>
 		</div>
+		<% end %>
+		
+		<div class="flex_row job_info_header">
+			Consultants <%= link_to "(Add New Consultant)", new_posting_path(:job_id => @job.id), :style => "color:white !important;margin-left:10px;font-size:12px" %>
+		</div>
+		
+		<%# @job.postings.employees.order(end_date: :ASC).each do |employee| %>
+		<% @job.postings.order(end_date: :DESC).each do |posting| %>
+			<div class="flex_row">
+				<div class="flex_col"><%= link_to posting.employee.name, posting.employee %></div>
+				<div class="flex_col">
+					<%= posting.end_date == nil ? "Active " : "(closed)" %>
+					<% if  posting.end_date == nil %>
+					(
+					<%= link_to "Edit", edit_posting_path(posting) %>
+					|<%= link_to "Close", edit_posting_path(posting, :closing => 1) %>
+					)
+					<% end %>
+				</div>
+			</div>
 		<% end %>
 	</div>
 </div>

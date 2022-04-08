@@ -315,7 +315,7 @@
 						<%= @wds.first.work_day.strftime("%b %d, %Y") %> - <%= @wds.last.work_day.strftime("%b %d, %Y") %>
 					</td>
 					<td width="20%;font-weight:bold"><strong>Project</strong></td>
-					<td width="30%"><%= @wds.first.employee.job.blank? ? "(Not Assigned)" : @wds.employee.job.title %></td>
+					<td width="30%"><%= @wds.first.employee.active_postings.count <= 0 ? "(Not Assigned)" : @wds.employee.active_postings.first.title %></td>
 				</tr>
 				<tr>
 					<td width="20%;"><strong>Client</strong></td>
@@ -367,7 +367,7 @@
 		</tr>
 		<% if @wds.to_a.count == 1 %>
 		<tr>
-			<td colspan="11" style="text-align:left"> Job: <%= @wds.first.employee.job.blank? ? "(Not Assigned)" : @wds.employee.job.title %> </td>
+			<td colspan="11" style="text-align:left"> Job:<%= @wds.first.employee.active_postings.count <= 0 ? "(Not Assigned)" : @wds.employee.active_postings.first.title %> </td>
 		</tr>
 		<% end %>
 		<tbody class="border_line cell-border" style="text-align: center;">
