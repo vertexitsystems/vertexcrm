@@ -5,11 +5,15 @@ document.addEventListener("turbolinks:load", () => {
 
 	flatpickr("#close_consultant_field_date", {
 		mode: "single",
-		dateFormat: "Y-m-d"
+		dateFormat: "Y-m-d",
+		allowInput: true,
+		monthSelectorType: "static"
 	}),
     flatpickr("#date-range-work,#date-range-work-report", {
       mode: "range",
-      dateFormat: "Y-m-d"
+      dateFormat: "Y-m-d",
+		allowInput: true,
+		monthSelectorType: "static"
     }),
     $("#previous_weeks").on("click", function(event) {
       $(this).parents('ul').hide();

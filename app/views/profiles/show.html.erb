@@ -140,6 +140,7 @@
 						</div>
 					</div>
 					
+					<% if @profile.employee.contract_type != "w2" %>
 					<div class="flex_col">
 						<div class="flex_row info_row">
 							<div class="flex_col col_heading"> Employer: </div>
@@ -151,6 +152,7 @@
 							<div class="flex_col"> <%= @profile.employee.employer.blank? ? "(Not Assigned)" : @profile.employee.employer.company_address %> </div>
 						</div>
 					</div>
+					<% end %>
 					
 				</div>
 			</div>

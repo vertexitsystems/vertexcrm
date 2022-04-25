@@ -95,7 +95,7 @@ class JobsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def job_params
-      params.require(:job).permit(:start_date,:end_date,:title,:rate,:job_description,:location,:job_type,:contract_type,:closing_date,:closing_remarks,:vendor_id,:client_id).merge(:contract_type => params[:contract_type])
+      params.require(:job).permit(:start_date,:end_date,:title,:rate,:job_description,:location,:job_type,:contract_type,:closing_date,:closing_remarks,:vendor_id,:client_id,:content).merge(:contract_type => params[:contract_type])
     end
 end
 

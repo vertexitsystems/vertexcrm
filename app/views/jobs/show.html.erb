@@ -30,11 +30,12 @@
 
 <div class="job_container flex_row">
 	<div class="job_body_container flex_col">
-		<div class="job_title_container flex_row">
+		<div class="job_title_container flex_row" style="margin-top:0px;background:#EEE;padding:5px 20px">
 			<%= @job.title %>
 		</div>
-		<div class="job_desc_container flex_row" style="text-align:left">
-			<%= @job.job_description %>
+		<div class="job_desc_container flex_row" style="text-align:left;padding:0px 40px">
+			<% @job.job_description %>
+			<%= @job.content %>
 		</div>
 	</div>
 	<div class="job_info_container flex_col">

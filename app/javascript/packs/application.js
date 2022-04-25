@@ -20,6 +20,8 @@ import("styles/tabs.css")
 //
 // const images = require.context('../images', true)
 // const imagePath = (name) => images(name, true)
+//import "trix"
+//import "@rails/actiontext"
 
 document.addEventListener("turbolinks:load", function() {
 	bind_filters();
@@ -44,8 +46,11 @@ function bind_date_selectors(){
 	flatpickr(".date_select_field", {
 		mode: "single",
 		dateFormat: "Y-m-d",
-		defaultDate: new Date()
+		defaultDate: new Date(),
+		allowInput: true,
+		monthSelectorType: "static"
 	});
+	//$(".date_select_field").datepicker();
 }
 function bind_popup_image(){
 	$(document).ready(function() {
@@ -118,3 +123,5 @@ function loadURL(with_params){
 	return false
 
 }
+require("trix")
+require("@rails/actiontext")
