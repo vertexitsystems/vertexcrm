@@ -34,8 +34,12 @@
 			<%= @job.title %>
 		</div>
 		<div class="job_desc_container flex_row" style="text-align:left;padding:0px 40px">
-			<% @job.job_description %>
+			
+			<% if @job.content.blank? %>
+			<%= @job.job_description %>
+			<% else %>
 			<%= @job.content %>
+			<% end %>
 		</div>
 	</div>
 	<div class="job_info_container flex_col">
