@@ -46,7 +46,7 @@ function bind_date_selectors(){
 	flatpickr(".date_select_field", {
 		mode: "single",
 		dateFormat: "Y-m-d",
-		defaultDate: new Date(),
+		defaultDate:'null',
 		allowInput: true,
 		monthSelectorType: "static"
 	});

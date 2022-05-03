@@ -406,9 +406,14 @@
 		    <% end %>
 			
 			<div class="col col-5 mt-3">
-				<%= link_to wd do %>
-				<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
-			  	<% end %>
+				<% if wd.time_sheet_status  == "unsubmitted" && !wd.is_past_due_date? %>
+					<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
+				<% else %>
+					<%= link_to wd do %>
+						<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
+			  		<% end %>
+				<% end %>
+				
 		    </div>
 			
 			<% if show_contract_type %>
@@ -420,7 +425,7 @@
 			<% if show_project_name %>
 		    <div class="col col8 mt-3">
 			  <%# wd.employee.job.blank? ? "(Not Assigned)" : wd.employee.job.title %>
-			  <%= wd.employee.active_postings.count <= 0? "(Not Assigned)" : wd.employee..active_postings.job.title %>
+			  <%= wd.employee.active_postings.count <= 0? "(Not Assigned)" : wd.employee.active_postings.first.job.title %>
 		    </div>
 			<% end %>
 			

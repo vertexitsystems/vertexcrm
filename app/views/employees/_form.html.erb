@@ -64,12 +64,17 @@
 			<b>Vendor:</b>
 			<%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendors.blank? ? false : employee.vendors.first.id) %>
 		</div>
+		
+		<% if false%>
+		<!-- Hidden because requested by QA.. not removed because there is still some confusion if it needs to be removed permanently -->
 		<div class="flex_col">
 			<b>Vendor Rate:</b>
 			<%= form.text_field :vendor_rate %>
 		</div>
+		<% end %>
+		
 		<div class="flex_col">
-			<b>Employee Rate:</b>
+			<b>Consultant Rate:</b>
 			<%= form.text_field :employee_rate %>
 		</div>
 	</div>
