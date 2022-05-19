@@ -32,6 +32,7 @@ gem 'postgresql'
 gem 'whenever', require: false
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
+gem 'poppler'
 # Reduces boot times through caching; required in config/boot.rb
 gem 'bootsnap', '>= 1.4.2', require: false
 

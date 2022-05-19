@@ -25,7 +25,11 @@
 				  <% end %>
 			  </button>
 			  <div class="dropdown-content">
-			    <%= link_to 'Edit Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %>
+				  <% if current_user.profile.role.downcase == "employer" %>
+				  <%= link_to 'Edit Profile', edit_employer_path(current_user.profile.employer) %>
+				  <% else %>
+				  <%= link_to 'Edit Profile', edit_profile_path(current_user.profile.id,role:current_user.profile.role.downcase) %>
+				  <% end %>
 	            <a rel="nofollow" data-method="delete" href="/users/sign_out">
 	              Logout
 	            </a>

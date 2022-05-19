@@ -19,7 +19,7 @@
 			- @invoices.each do |invoice|
 				.row.row_hover_highlight
 					.col.img_col
-						= invoice.created_at.strftime("%d %b, %Y")
+						= invoice.payment_date.blank? ? "<Not Provided>" : invoice.payment_date.strftime("%d %b, %Y")
 					.col.img_col
 						= invoice.employee.profile.name 
 					.col.img_col
@@ -27,6 +27,7 @@
 					.col.img_col
 						- if invoice.invoice_file.attached?
 							= link_to (image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"), url_for(invoice.invoice_file)
+							= image_tag invoice.invoice_file.preview(resize_to_limit: [100, 100])
 						- else
 							(Not Provided)
 					.col.img_col

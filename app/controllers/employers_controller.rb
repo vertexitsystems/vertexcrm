@@ -1,7 +1,8 @@
 class EmployersController < ApplicationController
   before_action :set_employer, only: [:show, :edit, :update, :destroy]
   before_action :authenticate_user!
-  before_action :has_admin_access?, only: [:index, :new, :edit, :create, :update, :destroy]
+  before_action :has_admin_access?, only: [:index, :new, :create, :update, :destroy]
+
   
   # GET /employers
   # GET /employers.json
@@ -12,6 +13,10 @@ class EmployersController < ApplicationController
   # GET /employers/1
   # GET /employers/1.json
   def show
+    if !(current_user.is_admin? || current_user.profile.id.to_i == @employer.profile.id.to_i)
+      redirect_to current_user.profile.employer
+    end
+    
     @invoice = Invoice.new
   end
 
@@ -23,6 +28,10 @@ class EmployersController < ApplicationController
 
   # GET /employers/1/edit
   def edit
+    if !(current_user.is_admin? || current_user.profile.id.to_i == @employer.profile.id.to_i)
+      redirect_to current_user.profile.employer
+    end
+    
     if @employer.profile.blank?
       @employer.build_profile
     end

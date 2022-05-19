@@ -16,7 +16,7 @@
 			- @employer.invoices.each do |invoice|
 				.row.row_hover_highlight
 					.col.img_col
-						= invoice.created_at.strftime("%d %b, %Y")
+						= invoice.payment_date.blank? ? "<Not Provided>" : invoice.payment_date.strftime("%d %b, %Y")
 					.col.img_col
 						= invoice.employee.profile.name 
 					.col.img_col
@@ -27,7 +27,7 @@
 						- else
 							(Not Provided)
 					.col.img_col
-						= invoice.payment_date.blank? ? "Pending" : "Complete"
+						= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Complete"
 						
 						
 	.flex_col{:style=>"width:10%;min-width:350px"}

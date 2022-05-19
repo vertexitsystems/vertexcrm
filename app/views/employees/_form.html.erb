@@ -89,10 +89,12 @@
 			<%# form.select :employer, Employer.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.employer.blank? ? false : employee.employer.id %>
 			<%= form.collection_select(:employer_id, Employer.all, :id, :company_name) %>
 		</div>
+		<%if false%>
 		<div class="flex_col">
 			<b>Job:</b>
 			<%= form.collection_select(:job_id, Job.all, :id, :title) %>
 		</div>
+		<% end %>
 	</div>
 </div>
 <div class="page_title"> Documents </div>
