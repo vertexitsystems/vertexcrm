@@ -52,26 +52,29 @@
 				  
 				  <% if !devise_controller? %>
 				  <div class="top_info flex_row">
-					  <% if user_signed_in? && current_user.is_employee? %>
-					      <% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>
-						  <% wd_notifications.each do |wd| %>
-						  <% if !(wd.is_rejected? || wd.is_approved?) %>
-						  <% next %>
-						  <% end %>
-						  <div class="notification_container flex_col">
-						  <div style="float:left">
-							  Timesheet for period <b>(<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>)</b> has been 
-							  <b style="color: <%= wd.time_sheet_status.upcase == 'REJECTED' ? 'red' : 'green' %>"> <%= wd.time_sheet_status.upcase %> </b>
-							  <% if wd.time_sheet_status.upcase == "REJECTED" %>
-							  <br /><b>message:</b> <%= wd.rejection_message %>
+					  <div style="flex-grow:1;">
+						  <% if user_signed_in? && current_user.is_employee? %>
+						      <% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>
+							  <% wd_notifications.each do |wd| %>
+							  	<% if !(wd.is_rejected? || wd.is_approved?) %>
+							  		<% next %>
+							  	<% end %>
+							  <div class="notification_container flex_col" style="margin-bottom:6px;box-shadow: 4px 4px 8px #CCC;">
+							  <div style="float:left">
+								  Timesheet for period <b>(<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>)</b> has been 
+								  <b style="color: <%= wd.time_sheet_status.upcase == 'REJECTED' ? 'red' : 'green' %>"> <%= wd.time_sheet_status.upcase %> </b>
+								  <% if wd.time_sheet_status.upcase == "REJECTED" %>
+								  <br /><b>message:</b> <%= wd.rejection_message %>
+								  <% end %>
+							  </div>
+					  
+							  <div style="float:right"><%= link_to "ok", {:controller => "work_durations", :action => "update_notification_read", :wd_id => wd.id }, :method => :put %></div>
+							  
+							  <div class="clr"></div>
+							  </div>
 							  <% end %>
-						  </div>
-						  
-						  <div style="float:right"><%= link_to "ok", {:controller => "work_durations", :action => "update_notification_read", :wd_id => wd.id }, :method => :put %></div>
-						  
-						  </div>
 						  <% end %>
-					  <% end %>
+					  </div>
 				  </div>
 				  <% end %>
 			  </div>

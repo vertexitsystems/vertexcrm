@@ -81,11 +81,41 @@ class WorkDurationsController < ApplicationController
   def reopen_timesheet
     @work_duration = WorkDuration.find(params[:id])
     
-    if @work_duration.update(time_sheet_status:"reopened")
-      redirect_back(fallback_location: root_path)
+    if @work_duration.blank?
+
+      if (params[:emp].present? && !params[:emp].blank?) && (params[:date].present? && !params[:date].blank?)
+
+        emp = Employee.find(params[:emp].to_i)
+        emp.work_durations.new(work_day: params[:date].to_date, time_sheet_status:"reopened")
+
+        if emp.save
+          flash[:notice] = "Timesheet Reopened"
+          redirect_back(fallback_location: root_path)
+        else
+          flash[:error] = "Failed to update timesheet."
+          redirect_back(fallback_location: root_path)
+        end
+
+      else
+        flash[:error] = "Incorrect Parameters"
+        redirect_back(fallback_location: root_path)
+      end
+
     else
-      redirect_back(fallback_location: root_path)
+
+      if @work_duration.update(time_sheet_status:"reopened")
+        flash[:notice] = "Timesheet Reopened"
+        print("=================> old Timesheet Reopened.")
+        redirect_back(fallback_location: root_path)
+      else
+        flash[:error] = "Failed to update timesheet."
+        print("=================> Failed to update old timesheet.")
+        redirect_back(fallback_location: root_path)
+      end
+
     end
+    
+    
     
   end
   
@@ -116,6 +146,7 @@ class WorkDurationsController < ApplicationController
   def create
     
     all_saved = true
+    
     save_for_later = params[:save_for_later].present?
     
     #params["wds"].first.keys.map{|m| params["wds"].first[m]}
@@ -155,9 +186,28 @@ class WorkDurationsController < ApplicationController
           work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot])
         end
       else
-        ## else
-        ### create new work duration with date, hours from param value, and status according to save_for_later
-        ## end if
+        
+        work_duration = employee.projects.first.work_durations.create(work_day: date)
+        
+        work_duration.hours = params["wds"].first[date.strftime("%b,%d,%Y")].to_i
+        
+        work_duration.created_at = DateTime.now
+        
+        # we want to set the status of all created dates same as monday to maintain cohearence
+        if date.monday?
+          # so we check if the date being created is monday? if it is then we simply check if its being saved or submitted and set the status accordingly
+          # if monday did not already exits then it is not possible for it be resubmitted currently because timesheet is created in update_duration_status if doesnt exist
+          work_duration.time_sheet_status = save_for_later ? 'saved' : 'pending'
+        else
+          # if its not monday then we fetch monday and set the same status it has
+          work_duration.time_sheet_status = employee.projects.first.work_durations.where(work_day: date.beginning_of_week).first.time_sheet_status
+        end
+        
+        
+        if params[:timesheet_screenshot] != nil && date.strftime('%A') == 'Monday'
+          work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot])
+        end
+        
       end
       # save work duration
       if !work_duration.save
@@ -259,7 +309,25 @@ class WorkDurationsController < ApplicationController
 
   def update_duration_status
     
-    wd = WorkDuration.find(params["action_id"])
+    if !params["action_id"].present? || params["action_id"].blank?
+      
+      employee = Employee.find(params[:emp]) if params[:emp].present? && !params[:emp].blank?
+      date = params[:date].to_date if params[:date].present? && !params[:date].blank?
+      
+      if employee.blank? || date.blank?
+        reditect_back ()
+      end
+      
+      #wd = employee.work_durations.create(work_day: date, project_id: employee.projects.first.id)
+      wd = employee.projects.first.work_durations.create(work_day: date.beginning_of_week)
+      employee.projects.first.work_durations.create(work_day: date.beginning_of_week + 1) #create tuesday
+      employee.projects.first.work_durations.create(work_day: date.beginning_of_week + 2) #create wednesday
+      employee.projects.first.work_durations.create(work_day: date.beginning_of_week + 3) #create thursday
+      employee.projects.first.work_durations.create(work_day: date.beginning_of_week + 4) #create friday
+    else
+      wd = WorkDuration.find(params["action_id"])
+    end
+    
     wd.time_sheet_status = params["status"]
     wd.rejection_message = params["reason"]
     wd.status_read = true # IF this value is true consultatnt will see notification for status change
@@ -270,9 +338,16 @@ class WorkDurationsController < ApplicationController
         WorkDurationMailer.with(work_duration: wd).work_duration_status_changed_email.deliver_now
       end
       
-      render json: {result:true, id: params["action_id"], status:wd.time_sheet_status}
+      respond_to do |format|
+        format.html { redirect_to time_sheet_approval_account_managers_path, notice: 'Work duration was successfully updated.' }
+        format.json { render json: {result:true, id: params["action_id"], status:wd.time_sheet_status} }
+      end
+      
     else
-      render json: {result:false, id: params["action_id"], status:wd.time_sheet_status}
+      respond_to do |format|
+        format.html { redirect_to time_sheet_approval_account_managers_path, alert: "Failed to update Timesheet status. #{wd.errors.full_messages.to_sentence}" }
+        format.json { render json: {result:false, id: params["action_id"], status:wd.time_sheet_status} }
+      end
     end
   end
   

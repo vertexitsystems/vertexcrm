@@ -171,30 +171,34 @@ document.addEventListener("turbolinks:load", () => {
     $("#wizard-picture").change(function(){
         readURL(this);
     }),
-    $(".parent-toggle").on("click",function(event){
-      if ($(event.target).is("div")){
-        var id = this.dataset.index;
-        $(".labeled-toggle-"+id).toggle(); 
-        $(".field-toggle-"+id).toggle();
-        var total_hours = 0;
-        if(flag){
-          $(".emp-duration-"+id).each(function(index,input){
-            total_hours += parseInt(input.value || '0');
-          });
-          flag = false;
-        }
-        else{
-          $(".label-duration-"+id).each(function(index,input){
-            total_hours += parseInt(input.text || '0');
-          });
-          flag = true;
-        }
-
-        $("#total-hours-"+id).html(total_hours);
-        
-        $("#"+this.lastElementChild.attributes.id.nodeValue).slideToggle(500);
-      }
-    })
+	
+	$(".parent-toggle").on("click",function(event){
+		if ($(event.target).is("div")){
+			
+			
+			var id = this.dataset.index;
+			$(".labeled-toggle-"+id).toggle();
+			$(".field-toggle-"+id).toggle();
+			
+			var total_hours = 0;
+			if(flag){
+				$(".emp-duration-"+id).each(function(index,input){
+					total_hours += parseInt(input.value || '0');
+				});
+				
+				flag = false;
+			}
+			else{
+				$(".label-duration-"+id).each(function(index,input){
+					total_hours += parseInt(input.text || '0');
+				});
+				flag = true;
+			}
+			
+			$("#total-hours-"+id).html(total_hours);
+			$("#"+this.lastElementChild.attributes.id.nodeValue).slideToggle(500);
+		}
+	})
 
 function readURL(input) {
     if (input.files && input.files[0]) {

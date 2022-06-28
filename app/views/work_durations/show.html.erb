@@ -107,7 +107,7 @@
 	</div>
 </div>
 <%= link_to "Generate Printable Report", 
-	timesheet_report_account_managers_url(eid:@work_duration.employee.id,from_date:@work_duration.work_day,to_date:@work_duration.work_day + 5,format:"pdf"), 
+	timesheet_report_account_managers_url(emp:@work_duration.employee.id,from_date:@work_duration.work_day,to_date:@work_duration.work_day + 5,format:"pdf"), 
 	class: "button_link", style: "float:right" %>
 
 

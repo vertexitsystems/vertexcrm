@@ -10,6 +10,8 @@ class WorkDuration < ApplicationRecord
   #mount_uploader :timesheet_screenshot, AttachmentsUploader
   has_one_attached :timesheet_screenshot
   
+  
+    
   def period
     "#{work_day.strftime("%b %d, %Y")} - #{(work_day + 4).strftime("%b %d, %Y")}"
   end
@@ -50,7 +52,13 @@ class WorkDuration < ApplicationRecord
     days = []
     start_day = work_day.beginning_of_week
   	(0...5).each do |diff|
-      days << WorkDuration.select {|dur| dur.work_day == (start_day + diff) && dur.project_id == project_id }.first
+      day = WorkDuration.select {|dur| dur.work_day == (start_day + diff) && dur.project_id == project_id }.first
+      if day.blank?
+        days << WorkDuration.new(:employee => employee, :work_day => (work_day + diff), :time_sheet_status => :unsubmitted)
+      else
+        days << day
+      end
+      
     end
     return days
   end

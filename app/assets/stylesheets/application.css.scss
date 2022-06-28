@@ -22,7 +22,7 @@
 body {
 	margin:0px;
 	padding:0px;
-    background: #E6EBEB;
+    background: #E6EBEB !important;
 	height: 100vh;
 }
 html,
@@ -796,4 +796,12 @@ height:40px;
 
 .trix-button-group--file-tools {
   display: none !important;
+}
+.cal_sub_heading{
+	background:#CCC;
+	color:#FFF;
+    width: 100%;
+	margin-left: -16px;
+	margin-bottom:3px;
+	padding:4px 16px;
 }
