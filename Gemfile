@@ -34,9 +34,9 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 
-gem 'glib2', '~> 3.5', '>= 3.5.1'
-gem 'gobject-introspection', '~> 3.5', '>= 3.5.1'
-gem 'poppler'
+#gem 'glib2', '~> 3.5', '>= 3.5.1'
+#gem 'gobject-introspection', '~> 3.5', '>= 3.5.1'
+#gem 'poppler'
 
 
 # Reduces boot times through caching; required in config/boot.rb

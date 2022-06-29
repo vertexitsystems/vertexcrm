@@ -52,6 +52,9 @@
   .text-left{
     text-align:left;
   }
+  .text-center{
+    text-align:center;
+  }
   .vertex-logo img {
     width: 180px;
 //    height: 40px;
@@ -376,32 +379,32 @@
 			
 			<%# 62201AA04.3 - START %>
 			<% @employees.each do |emp|%>
-			<% wd = emp.work_durations.where(:work_day => date).first %>
-			
+			<% wd = emp.work_durations.where(work_day: date).first %>
+			<% wd = WorkDuration.new(work_day: date, project_id: emp.projects.first) if wd.blank? %>
 			<tr>
-				<td class="defult-border-left defult-border-right tr1">
-					<%= wd.updated_at.blank? ? "-" : wd.updated_at.strftime("%b %d, %Y") %>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= wd.created_at.blank? ? "-" : wd.created_at.strftime("%b %d, %Y") %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= emp.profile.name %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= wd.vendor.blank? ? "-" : wd.vendor.company_name %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= emp.contract_type %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= emp.active_job.blank? ? "-" : emp.active_job.title %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= wd.id.blank? ? "0" : wd.all_days.inject(0){|sum,e| sum + e.hours } %>
 				</td>
-				<td class="defult-border-left defult-border-right tr1">
-					Data
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%= wd.time_sheet_status %>
 				</td>
 			</tr>
 			<!-- 62201AB - START - columns changed - below will be removed in next patch -->
