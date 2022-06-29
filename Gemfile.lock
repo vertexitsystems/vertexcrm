@@ -303,6 +303,8 @@ DEPENDENCIES
   capybara (>= 2.15)
   carrierwave (~> 2.0)
   devise
+  glib2 (~> 3.5, >= 3.5.1)
+  gobject-introspection (~> 3.5, >= 3.5.1)
   groupdate
   haml-rails
   jbuilder (~> 2.7)
