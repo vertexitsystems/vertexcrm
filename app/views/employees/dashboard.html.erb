@@ -40,7 +40,7 @@
   <%= render "calender", 
     show_unsubmitted:(@employee.profile.id == current_user.profile.id),
   	work_durations:@employee.work_durations.where("work_day >= ?", 10.days.ago.at_beginning_of_week), 
-  	can_update_all:false, 
+  	can_update_all:true, 
   	can_update:current_user.profile.id == @employee.profile.id, 
   	can_act:current_user.is_admin? || current_user.is_account_manager?, 
   	show_employee_info:current_user.is_admin? || current_user.is_account_manager?,

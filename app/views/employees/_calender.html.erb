@@ -341,7 +341,7 @@
 	if show_actionables_actmgr
 		actionable_work_durations = WorkDuration.where("extract(dow from work_day) = ?", 1).where(time_sheet_status: ["pending", "resubmitted"])
 	elsif show_actionables_consultant
-		actionable_work_durations = WorkDuration.where("extract(dow from work_day) = ?", 1).where(time_sheet_status: ["reopened"])
+		actionable_work_durations = work_durations.where("extract(dow from work_day) = ?", 1).where(time_sheet_status: ["reopened"])
 	end
 %>
 

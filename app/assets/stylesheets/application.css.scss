@@ -342,8 +342,12 @@ height:40px;
 }
 
 .ap_container .main {
-    float:left; 
+    //float:left; 
     width:100%;
+	
+	background: #FFF;
+	padding: 20px 40px;
+	border-radius: 10px;
 }
 
 .ap_container .main .heading {

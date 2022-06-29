@@ -75,7 +75,7 @@
   	can_update_all:true, 
   	can_update:current_user.profile.id == @employee.profile.id, 
   	can_act:current_user.is_admin? || current_user.is_account_manager?, 
-  	show_employee_info:current_user.is_admin? || current_user.is_account_manager?,
+  	show_employee_info:true,
 	show_each_day:true,
 	show_submitted_date:false,
 	show_filters:true,

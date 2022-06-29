@@ -34,6 +34,7 @@ gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
 
+# 62202HF2AA:
 #gem 'glib2', '~> 3.5', '>= 3.5.1'
 #gem 'gobject-introspection', '~> 3.5', '>= 3.5.1'
 #gem 'poppler'
