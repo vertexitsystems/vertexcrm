@@ -4,4 +4,8 @@ module ApplicationHelper
     ["1099","c2c","w2"]
   end
   
+  def merge_params(p={})
+    params.merge(p).delete_if{|k,v| v.blank?}
+  end
+  
 end

@@ -5,6 +5,7 @@ Rails.application.routes.draw do
   resources :timesheets
   resources :clients
   resources :assistants
+  
   resources :employers
   
   resources :account_managers do 
@@ -67,6 +68,9 @@ Rails.application.routes.draw do
   resources :invoices do
     collection do 
       put :update_status
+      
+      get :approve
+      put :approve_submit
     end
   end
   

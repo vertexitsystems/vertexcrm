@@ -47,6 +47,18 @@ class EmployeesController < ApplicationController
   # GET /employees/1
   # GET /employees/1.json
   def show
+    # Make sure the page is being accessed by those who have the rights to view this page
+    if !(current_user.is_admin? || current_user.is_account_manager? || current_user.profile.id.to_i == @employee.profile.id.to_i) 
+      flash[:alert] = "Access Denied"
+      redirect_to root_path
+    end
+    
+    # Make sure the employee does not see data that they arent suppose to by applying filters 
+    if current_user.is_employee? && params[:emp].present?
+      flash[:alert] = "Access Denied: Bad Filter"
+      redirect_to root_path
+    end
+    
     # Make sure when employee accesses this page they have work_durations for current and previous week
     
     @employee.vendors.each do |vendor|
@@ -214,7 +226,7 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, :job_id, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, :employer_rate, :job_id, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
   end
   
   def user_params

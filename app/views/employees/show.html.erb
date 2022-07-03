@@ -69,20 +69,21 @@
 <% today = Date.today # Today's date %>
 <% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 <div class="section" id="calender">
+	<% vieweing_self = @employee.profile.id == current_user.profile.id %>
   <%= render "calender", 
-    show_unsubmitted:(@employee.profile.id == current_user.profile.id),
-  	work_durations:@employee.work_durations, 
-  	can_update_all:true, 
-  	can_update:current_user.profile.id == @employee.profile.id, 
+    show_unsubmitted:vieweing_self,
+  	work_durations:@employee.work_durations,
+  	can_update_all:true,
+  	can_update:vieweing_self, 
   	can_act:current_user.is_admin? || current_user.is_account_manager?, 
-  	show_employee_info:true,
+  	show_employee_info:false,
 	show_each_day:true,
 	show_submitted_date:false,
-	show_filters:true,
+	show_filters:vieweing_self,
 	show_contract_type:false,
 	show_project_name:false,
 	employee:@employee,
-	show_actionables_consultant:true
+	show_actionables_consultant:vieweing_self
 	%>
 </div>
 

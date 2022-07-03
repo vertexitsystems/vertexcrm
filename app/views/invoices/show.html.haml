@@ -1,15 +1,60 @@
 %p#notice= notice
 
 %p
-  %b Invoice file:
-  = @invoice.invoice_file
-%p
   %b Emplyee:
-  = @invoice.emplyee
+  = @invoice.employee.profile.name
 %p
   %b Employer:
-  = @invoice.employer
+  = @invoice.employer.profile.name
+%p
+  %b Invoice Period
+  = "#{@invoice.end_date.strftime("%b,%d,%Y")}" 
+  %b
+    to
+  = "#{@invoice.start_date.strftime("%b,%d,%Y")}"
 
-= link_to 'Edit', edit_invoice_path(@invoice)
-\|
-= link_to 'Back', invoices_path
+.ap_container 
+  .main 
+    .section
+      .row.top
+        .col.col8
+          Submitted Date
+        .col.col8
+          Work Week
+        .col.col8
+          Project
+        .col.col8
+          Total Hours
+        .col.col8
+          Timesheet / Screenshot
+        .col.col8
+          Status
+      - @invoice.all_work_durations.each do |wd|
+        .row.row_hover_highlight
+          .col.col8
+            = wd.created_at.blank? ? "-" : wd.created_at.strftime("%b,%d,%Y")
+          .col.col8
+            = "#{wd.work_day.beginning_of_week.strftime("%b,%d,%Y")} to #{wd.work_day.end_of_week.strftime("%b,%d,%Y")}"
+          .col.col8
+            = wd.employee.active_job.title
+          .col.col8
+            = wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+)
+          .col.col8
+            .calendar-picture{:style => "width:60px;height:60px"}
+              = image_tag (wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""), :style => "max-width:100px;max-height:100px"
+          .col.col8
+            = wd.time_sheet_status
+
+
+  %center
+    - if !@invoice.invoice_file.blank?
+      %b Invoice file:
+      %br
+      - if @invoice.blank?
+        "-"
+      - else
+        = link_to url_for(@invoice.invoice_file) do image_tag(url_for(@invoice.invoice_file)) end
+    - else
+      (Not Provided)
+=# link_to 'Edit', edit_invoice_path(@invoice)
+=# link_to 'Back', invoices_path

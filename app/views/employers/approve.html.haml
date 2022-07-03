@@ -1,0 +1,8 @@
+.flex_col{:style=>"width:10%;min-width:350px"}
+	- if current_user.is_employer?
+		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
+			.flex_row{:style=>"margin:0px"}
+				.flex_col.info_section_title
+					Upload Invoice
+				.flex_row{:style=>"margin:0px"}
+					= render "invoices/form", employees:@employer.employees

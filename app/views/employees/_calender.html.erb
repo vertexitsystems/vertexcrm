@@ -195,6 +195,10 @@
 <% if !defined?(show_actionables_consultant) %>
 	<% show_actionables_consultant = false %>
 <% end %>
+
+<% if !defined?(record_limit) %>
+	<% record_limit = 10 %>
+<% end %>
 	
 	
 <% today = Date.today %>
@@ -341,6 +345,7 @@
 	if show_actionables_actmgr
 		actionable_work_durations = WorkDuration.where("extract(dow from work_day) = ?", 1).where(time_sheet_status: ["pending", "resubmitted"])
 	elsif show_actionables_consultant
+		# 62203BB : changed "WorkDuration.where" to "work_durations.where"
 		actionable_work_durations = work_durations.where("extract(dow from work_day) = ?", 1).where(time_sheet_status: ["reopened"])
 	end
 %>
@@ -560,35 +565,69 @@
 
 <%
 	# Fetch the work day for the last work_duration, This will be used as end_date is end_date is not specified through filter
-	last_record = WorkDuration.order(:created_at).first
-	
-	curr_date = (params[:from_date].present? ? params[:from_date].to_date : Date.today.beginning_of_week)
+	#last_record = WorkDuration.order(:created_at).first
 	
 	employees = (params[:emp].blank? || params[:emp] == "") ? (employee.blank? ? Employee.all : [employee] ) : [Employee.find(params[:emp].to_i)]
 	
-	def fetch_records(employees, date, starting_array, limit_rows)
-		result_arr = starting_array
-		employees.each do |emp|
-			wd = emp.work_durations.where(:work_day => date.beginning_of_week).first
-			if wd.blank?
-				result_arr << WorkDuration.new(:employee => emp, :work_day => date, :time_sheet_status => :unsubmitted)
-			else
-				result_arr << wd
-			end
-		end
-		
-		if result_arr.count < limit_rows
-			return fetch_records(employees, (date - 6), result_arr, limit_rows)
-		else
-			return result_arr
-		end
+	# Start date is the higher of two dates ... may 30 is higher then may 2 but lower then june 2
+	start_date = (params[:to_date].present? ? params[:to_date].to_date : Date.today.beginning_of_week)
+	
+	curr_date = (params[:curr_date].present? ? params[:curr_date].to_date : start_date)
+	
+	curr_end = (employees.count > 1 ? curr_date : (curr_date - (record_limit * 6)) )
+	
+	end_date = params[:from_date].present? ? params[:from_date].to_date : WorkDuration.order(:work_day).pluck(:work_day).first
+	if curr_end < end_date
+		curr_end = end_date
 	end
 	
-	work_durations = fetch_records(employees, curr_date, [], show_filters ? 10 : 2)
+	if employees.count > 1
+		work_durations = employees.map {|e|
+			wd = e.work_durations.where(:work_day => curr_date.beginning_of_week).first 
+			if wd.blank?
+				WorkDuration.new(:employee => e, :work_day => curr_date.beginning_of_week, :time_sheet_status => :unsubmitted)
+			else
+				wd
+			end
+		}
+	else
+		work_durations = (curr_date.beginning_of_week.downto(curr_end)).to_a.select {|k| k.wday == 1 }.map {|d|
+			wd = employees.first.work_durations.where(:work_day => d).first 
+			if wd.blank?
+				WorkDuration.new(:employee => employees.first, :work_day => d.beginning_of_week, :time_sheet_status => :unsubmitted)
+			else
+				wd
+			end
+		}
+	end
+	
+	
+	
+	
+	# def fetch_records(employees, date, end_date, starting_array, limit_rows)
+	# 	result_arr = starting_array
+	# 	employees.each do |emp|
+	# 		wd = emp.work_durations.where(:work_day => date.beginning_of_week).first
+	# 		if wd.blank?
+	# 			result_arr << WorkDuration.new(:employee => emp, :work_day => date, :time_sheet_status => :unsubmitted)
+	# 		else
+	# 			result_arr << wd
+	# 		end
+	# 	end
+	#
+	# 	if result_arr.count < limit_rows && (end_date == nil || end_date < date.last_week.end_of_week)
+	# 		return fetch_records(employees, (date.last_week),end_date, result_arr, limit_rows)
+	# 	else
+	# 		return result_arr
+	# 	end
+	# end
+	#
+	# work_durations = fetch_records(employees, curr_date, end_date, [], record_limit)
+	
 %>
 
 <% work_durations.each_with_index do |wd, loop_index| %>
-	
+
 	<% allow_update = can_update_all &&  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
 		<div class="<%= allow_update ? "parent-toggle" : "" %> gg" data-index="<%=loop_index%>">
@@ -788,6 +827,53 @@
 
 <% if show_filters %>
 	<div style="text-align:right;padding:10px 20px">
+		<% if start_date > curr_date %>
+			<% prev_start = (curr_date.beginning_of_week + (record_limit * 6)) %>
+			
+			<% prev_start = prev_start > start_date ? start_date : prev_start %>
+			<% if params[:from_date].present? %>
+				<%= link_to "<next", url_for(to_date: start_date, from_date: end_date, curr_date: prev_start) %>
+			<% else %>
+				<%= link_to "<next", url_for(to_date: start_date, curr_date: prev_start) %>
+			<% end %>
+			-
+		<% end %>
+
+		<% if curr_end > end_date %>
+			<% if params[:from_date].present? %>
+				<%= link_to "prev>", url_for(to_date: start_date, from_date: end_date, curr_date: curr_end.last_week) %>
+			<% else %>
+				<%= link_to "prev>", url_for(to_date: start_date, curr_date: curr_end.last_week) %>
+			<% end %>
+		<% end %>
+	</div>
+<% end %>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<% if false %>
+ED: <%= end_date %>
+	<div style="text-align:right;padding:10px 20px">
 	
 		<% if params[:from_date].present? && (params[:from_date].to_date < Date.today.beginning_of_week) %>
 			<%= link_to "<<", time_sheet_approval_account_managers_path() %>
@@ -804,7 +890,7 @@
 		<% end %>
 	
 		<% if params[:emp].present? || !@employee.blank? %>
-			<% sd = ((params[:from_date].present? ? params[:from_date].to_date : Date.today.beginning_of_week) - (5 * 9)).beginning_of_week %>
+			<% sd = ((params[:from_date].present? ? params[:from_date].to_date : Date.today.beginning_of_week) - (6 * (record_limit - 1))).beginning_of_week %>
 			<%# link_to "#{sd.strftime("%b %d, %Y")}>", time_sheet_approval_account_managers_path(:from_date => sd) %>
 			<%= link_to "#{sd.strftime("%b %d, %Y")}>", url_for(:from_date => sd) %>
 		<% else %>

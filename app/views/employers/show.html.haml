@@ -3,41 +3,30 @@
 		.section
 			.row.top
 				.col
-					Invoice Date
+					Consultant Name
 				.col
-					Employee
+					Job Title
 				.col
-					Employer
+					Submitted Hours
 				.col
-					File
+					Total Amount
 				.col
-					Payament Status
+					Actions
 			
-			- @employer.invoices.each do |invoice|
+			- @employer.employees.each do |employee|
 				.row.row_hover_highlight
 					.col.img_col
-						= invoice.payment_date.blank? ? "<Not Provided>" : invoice.payment_date.strftime("%d %b, %Y")
+						= employee.profile.name
 					.col.img_col
-						= invoice.employee.profile.name 
+						= employee.active_job.title
 					.col.img_col
-						= invoice.employer.company_name 
+						= employee.work_durations.limit(100).sum(:hours)
 					.col.img_col
-						- if invoice.invoice_file.attached?
-							= link_to (image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"), url_for(invoice.invoice_file)
-						- else
-							(Not Provided)
+						= employee.profile.name
 					.col.img_col
-						= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Complete"
-						
-						
-	.flex_col{:style=>"width:10%;min-width:350px"}
-		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
-			.flex_row{:style=>"margin:0px"}
-				.flex_col.info_section_title
-					Upload Invoice
-			.flex_row{:style=>"margin:0px"}
-				= render "invoices/form", employees:@employer.employees
-			
+						= link_to "Manager Invoices", invoices_path(emp: employee.id)
+					
+	.flex_col{:style=>"width:10%;min-width:350px"}			
 		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
 			.flex_row
 				.flex_col.info_section_title
