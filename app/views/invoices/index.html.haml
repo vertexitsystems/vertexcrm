@@ -50,7 +50,7 @@
 							- else
 								= link_to "#{dr.e.strftime("%b %d, %Y")} - #{dr.s.strftime("%b %d, %Y")}", invoice_path(invoice.id)
 						.col.img_col
-							= invoice.approved_hours#.first.blank? ? "-" : invoice.approved_hours.first.map{|wd|wd.work_day}
+							= invoice.approved_hours.blank? ? "0" : invoice.approved_hours #.first.blank? ? "-" : invoice.approved_hours.first.map{|wd|wd.work_day}
 							=# invoice.approved_work_durations.count#.map{|wd|wd.employer.employer.profile.name}
 							=# invoice.approved_hours.first.blank? ? "-" : invoice.approved_hours.first.count
 						.col.img_col
