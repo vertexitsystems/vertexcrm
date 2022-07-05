@@ -3,7 +3,7 @@
 		.section
 			.row.top
 				.col
-					Consultant
+					Consultant Name
 				.col
 					Invoice Period
 				.col
@@ -24,7 +24,9 @@
 						.col.img_col
 							= link_to "#{invoice.end_date.strftime("%b %d, %Y")} - #{invoice.start_date.strftime("%b %d, %Y")}", invoice_path(invoice.id)
 						.col.img_col
-							= invoice.employer.profile.name
+							= invoice.approved_hours
+						.col.img_col
+							= invoice.approved_amount
 						.col.img_col
 							- if !invoice.invoice_file.blank?
 								.calendar-picture{:style => "width:60px;height:60px"}
@@ -32,9 +34,19 @@
 							- else
 								(Not Provided)
 						.col.img_col
-							= invoice.status
+							=# invoice.status
+							= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
 						.col.img_col
-							
+							- if current_user.is_admin? || current_user.is_account_manager?
+								- if !invoice.payment_status && invoice.payment_rejection_message.blank?
+									= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
+									|
+									-# if invoice.payment_rejection_message.blank?
+									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
+									|
+									= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete
+								- else
+									= link_to "Reopen", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "O"), :method => :put
 			- else
 			
 				- @date_ranges.each do |dr|
@@ -85,10 +97,10 @@
 / 							(Not Provided)
 / 					.col.img_col
 / 						= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Complete"
-/ 					- if current_user.is_admin? || current_user.is_account_manager?
-/ 						.col
-/ 							- if !invoice.payment_status
-/ 								= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
-/ 								- if invoice.payment_rejection_message.blank?
-/ 									|
-/ 									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
+/					- if current_user.is_admin? || current_user.is_account_manager?
+/						.col
+/							- if !invoice.payment_status
+/								= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
+/								- if invoice.payment_rejection_message.blank?
+/									|
+/									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put

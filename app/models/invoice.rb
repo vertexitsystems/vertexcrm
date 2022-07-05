@@ -5,8 +5,9 @@ class Invoice < ApplicationRecord
   has_one_attached :invoice_file
   
   def start_date
-    start_date = (payment_date.day > 15) ? payment_date.end_of_month : (payment_date.beginning_of_month + 14)
-    
+    if payment_date
+      start_date = (payment_date.day > 15) ? payment_date.end_of_month : (payment_date.beginning_of_month + 14)
+    end
   end
   def end_date
     end_date = (start_date - 14)

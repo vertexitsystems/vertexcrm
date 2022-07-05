@@ -6,7 +6,7 @@ class JobsController < ApplicationController
   def index
     records_per_page = 10
     
-  	@page = (!params[:page].present? || params[:page] == "") ? 0 : params[:page]
+  	@page = (!params[:page].present? || params[:page] == "") ? 0 : params[:page].to_i
     
     @jobs = Job.all
     
@@ -19,6 +19,10 @@ class JobsController < ApplicationController
     @jobs = @jobs.where(params[:status] != "Open" ? "closing_date IS NOT NULL" : "closing_date IS NULL") if params[:status].present? && params[:status] != ""
     @jobs = @jobs.where("vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
     @jobs = @jobs.where("client_id = ?" , params[:client]) if params[:client].present? && params[:client] != ""
+    
+    @jj = @jobs
+    
+    @total_pages = (@jobs.count.to_f / 10.0).floor.to_i + (((@jobs.count.to_f / 10.0).modulo(1) > 0) ? 1 : 0)
     
     @jobs = @jobs.limit(records_per_page).offset(@page * records_per_page)
     

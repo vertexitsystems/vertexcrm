@@ -166,7 +166,8 @@
 <div class="recorc_bottom flex_row">
 	<div class="flex_row"></div>
 	<div class="pagination_container flex_row" style="flex-grow:0;width:160px">
-		<% total_pages = (@jobs.count.to_f / 10.0).floor.to_i + (((@jobs.count.to_f / 10.0).modulo(1) > 0) ? 1 : 0) %>
+		<%# total_pages = (@jobs.count.to_f / 10.0).floor.to_i + (((@jobs.count.to_f / 10.0).modulo(1) > 0) ? 1 : 0) %>
+		
 		<% if @page > 0 %>
 		<div class="flex_col" style="padding:0px">
 			<a href="" class="pagination_link" new_page="0">
@@ -174,7 +175,7 @@
 				skip_previous
 				</span>
 			</a>
-			<a href="" class="pagination_link" new_page="<%= page - 1 %>">
+			<a href="" class="pagination_link" new_page="<%= @page - 1 %>">
 				<span class="material-icons">
 				navigate_before
 				</span>
@@ -182,16 +183,16 @@
 		</div> 
 		<% end %>
 		<div class="flex_col" style="padding:0px;text-align:center">
-		<%= "#{@page + 1} / #{total_pages}" %> 
+		<%= "#{@page + 1} / #{@total_pages}" %> 
 		</div>
-		<% if @page < total_pages - 1 %>
+		<% if @page < @total_pages - 1 %>
 		<div class="flex_col" style="padding:0px">
 		<a href="" class="pagination_link" new_page="<%= @page + 1 %>">
 			<span class="material-icons">
 			navigate_next
 			</span>
 		</a>
-		<a href="" class="pagination_link" new_page="<%= total_pages - 1%>">
+		<a href="" class="pagination_link" new_page="<%= @total_pages - 1%>">
 			<span class="material-icons">
 			skip_next
 			</span>

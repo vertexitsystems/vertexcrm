@@ -132,7 +132,12 @@ class InvoicesController < ApplicationController
       redirect_to invoices_path
     else
       invoice = Invoice.find(params["invoice_id"])
-      if invoice.update(:payment_status => (params["payment_status"] == "1"), :payment_rejection_message => (params["payment_status"] == "0") ? "Unable to verify validity" : "")
+      if params["payment_status"] == "O"
+        if invoice.update(:payment_status => false, :payment_rejection_message => nil)
+          flash[:notice] = "Updated Invoice status"
+          redirect_to invoices_path
+        end
+      elsif invoice.update(:payment_status => (params["payment_status"] == "1"), :payment_rejection_message => (params["payment_status"] == "0") ? "Unable to verify validity" : "")
         flash[:notice] = "Updated Invoice status"
         redirect_to invoices_path
       else

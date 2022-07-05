@@ -7,9 +7,13 @@
 				.col
 					Job Title
 				.col
-					Submitted Hours
+					Prime Vendor
 				.col
-					Total Amount
+					Client Name
+				.col
+					Total Hours Submitted
+				.col 
+					Total Invoiced Hours
 				.col
 					Actions
 			
@@ -20,9 +24,13 @@
 					.col.img_col
 						= employee.active_job.title
 					.col.img_col
+						= employee.active_job.vendor.company_name
+					.col.img_col
+						= employee.active_job.client.company_name
+					.col.img_col
 						= employee.work_durations.limit(100).sum(:hours)
 					.col.img_col
-						= employee.profile.name
+						= employee.invoices.where.not(payment_date:nil).limit(100).map{|i|i.approved_hours}.inject(:+)
 					.col.img_col
 						= link_to "Manager Invoices", invoices_path(emp: employee.id)
 					
