@@ -32,7 +32,7 @@
 					.col.img_col
 						= employee.invoices.where.not(payment_date:nil).limit(100).map{|i|i.approved_hours}.inject(:+)
 					.col.img_col
-						= link_to "Manager Invoices", invoices_path(emp: employee.id)
+						= link_to "Manage Invoices", invoices_path(emp: employee.id)
 					
 	.flex_col{:style=>"width:10%;min-width:350px"}			
 		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}

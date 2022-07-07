@@ -88,6 +88,7 @@ class InvoicesController < ApplicationController
 
   # GET /invoices/1/edit
   def edit
+    @invoice = Invoice.find(params[:id])
   end
 
   # POST /invoices or /invoices.json
@@ -95,7 +96,7 @@ class InvoicesController < ApplicationController
     @invoice = Invoice.new(invoice_params)
     respond_to do |format|
       if @invoice.save
-        format.html { redirect_to @invoice.employer, notice: "Invoice was successfully created." }
+        format.html { redirect_to @invoice, notice: "Invoice was successfully created." }
         format.json { render :show, status: :created, location: @invoice }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -108,7 +109,7 @@ class InvoicesController < ApplicationController
   def update
     respond_to do |format|
       if @invoice.update(invoice_params)
-        format.html { redirect_to @invoice.employer, notice: "Invoice was successfully updated." }
+        format.html { redirect_to @invoice, notice: "Invoice was successfully updated." }
         format.json { render :show, status: :ok, location: @invoice }
       else
         format.html { render :edit, status: :unprocessable_entity }
@@ -132,19 +133,23 @@ class InvoicesController < ApplicationController
       redirect_to invoices_path
     else
       invoice = Invoice.find(params["invoice_id"])
-      if params["payment_status"] == "O"
-        if invoice.update(:payment_status => false, :payment_rejection_message => nil)
+      if params["payment_status"] == "O"  # Reopen
+        if invoice.update(:approval_status => 2)#invoice.update(:payment_status => false, :payment_rejection_message => nil)
           flash[:notice] = "Updated Invoice status"
           redirect_to invoices_path
         end
-      elsif invoice.update(:payment_status => (params["payment_status"] == "1"), :payment_rejection_message => (params["payment_status"] == "0") ? "Unable to verify validity" : "")
-        flash[:notice] = "Updated Invoice status"
-        redirect_to invoices_path
       else
-        flash[:notice] = "Failed to update Status"
-        redirect_to invoices_path
+        
+        #elsif invoice.update(:payment_status => (params["payment_status"] == "1"), :payment_rejection_message => (params["payment_status"] == "0") ? "Unable to verify validity" : "")
+        if invoice.update(approval_status: params["payment_status"] == "1" ? 3 : 4)
+          flash[:notice] = "Updated Invoice status"
+          redirect_to invoices_path
+        
+        else
+          flash[:notice] = "Failed to update Status"
+          redirect_to invoices_path
+        end
       end
-      
     end
     
   end

@@ -1,0 +1,303 @@
+.flex_row
+	.flex_col
+		= link_to "Time Sheet List", time_sheet_approval_account_managers_path()
+		.div{:style=>"font-size:28px"}
+			= @work_duration.employee.profile.name
+		.div{:style=>"font-weight:bold;font-size:12px"}
+			TIME SHEET
+	.flex_col{:style=>"flex-shrink:30"}
+		-# if  (!@work_duration.is_past_due_date? && @work_duration.is_pending?) || @work_duration.is_resubmitted?
+			
+.flex_row
+	.flex_col
+		.flex_row.top_header_title
+			Status
+		.flex_row.top_header_value
+			= @work_duration.time_sheet_status.capitalize
+	.flex_col
+		.flex_row.top_header_title
+			Time Sheet ID
+		.flex_row.top_header_value
+			= @work_duration.display_id
+	.flex_col
+		.flex_row.top_header_title
+			Period
+		.flex_row.top_header_value
+			= @work_duration.period
+	.flex_col
+		.flex_row.top_header_title
+			Buyer
+		.flex_row.top_header_value
+			Name1
+	.flex_col
+		.flex_row.top_header_title
+			Supplier
+		.flex_row.top_header_value
+			Name1
+	.flex_col{:style=>"flex-grow:10"}
+%hr
+.div{:style=>"border-bottom:1px solid var(--main-color);color:var(--main-color);width:60px;text-align:center;margin-bottom: -16px;"}
+	Details
+%hr
+.time_sheet_details_container
+	Worker ID
+	%br
+	= @work_duration.id
+	.tsd_container
+		.tsd_section_header
+			Time Worked
+		.flex_row.tsd_row
+			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
+				%b
+					Day
+			.flex_col.tsd_col{:style=>"text-align:right"}
+				= @work_duration.sun.strftime("%m/%d")
+				%br
+				= @work_duration.sun.strftime("%a")
+			.flex_col.tsd_col_right
+				= @work_duration.mon.strftime("%m/%d")
+				%br
+				= @work_duration.mon.strftime("%a")
+			.flex_col.tsd_col_right
+				= @work_duration.tue.strftime("%m/%d")
+				%br
+				= @work_duration.tue.strftime("%a")
+			.flex_col.tsd_col_right
+				= @work_duration.wed.strftime("%m/%d")
+				%br
+				= @work_duration.wed.strftime("%a")
+			.flex_col.tsd_col_right
+				= @work_duration.thu.strftime("%m/%d")
+				%br
+				= @work_duration.thu.strftime("%a")
+			.flex_col.tsd_col_right
+				= @work_duration.fri.strftime("%m/%d")
+				%br
+				= @work_duration.fri.strftime("%a")
+			.flex_col.tsd_col_right
+				= @work_duration.sat.strftime("%m/%d")
+				%br
+				= @work_duration.sat.strftime("%a")
+			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
+				Total
+		.flex_row.tsd_row
+			.flex_col.tsd_col
+				%b
+					Billable
+		.flex_row.tsd_row
+			.flex_col.tsd_col
+				Digital Self Mobil
+		.flex_row.tsd_row{:style=>"background:#fff;display:flex"}
+			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
+				ST/Hr
+			.flex_col.tsd_col_right
+				0.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				0.0
+			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
+				40.0
+		.flex_row.tsd_row{:style=>"background:#f5fafe"}
+			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
+				Total
+			.flex_col.tsd_col_right
+				0.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				8.0
+			.flex_col.tsd_col_right
+				0.0
+			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
+				40.0
+		.tsd_section_header
+			Position Information
+			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
+				.flex_col{:style=>"flex-shrink:3"}
+					Submit Date
+				.flex_col
+					= @work_duration.created_at
+			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
+				.flex_col{:style=>"flex-shrink:3"}
+					Contingent Type
+				.flex_col
+					Charter
+			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
+				.flex_col{:style=>"flex-shrink:3"}
+					Work Order/Work Order Revision Owner
+				.flex_col
+					Ahmad Ahmad
+			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
+				.flex_col{:style=>"flex-shrink:3"}
+					Site
+				.flex_col
+					= @work_duration.employee.active_job.location
+			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
+				.flex_col{:style=>"flex-shrink:3"}
+					Business Unit
+				.flex_col
+					Self Service Product Platform (709)
+		
+
+/ <% if false %>
+/
+/ <p id="notice"><%= notice %></p>
+/
+/ <h1><%= @work_duration.employee.profile.name %></h1>
+/ <b>Weekly Timesheet</b>
+/ <div class="flex_row">
+/ 	<div class="flex_col">
+/ 		<div class="flex_row info_header">
+/ 		STATUS
+/ 		</div>
+/ 		<div class="flex_row info_details">
+/ 		<%= @work_duration.time_sheet_status %>
+/ 		</div>
+/ 	</div>
+/ 	<div class="flex_col">
+/ 		<div class="flex_row info_header">
+/ 		TIMESHEET ID
+/ 		</div>
+/ 		<div class="flex_row info_details">
+/ 		<%= @work_duration.display_id %>
+/ 		</div>
+/ 	</div>
+/
+/ 	<div class="flex_col">
+/ 		<div class="flex_row info_header">
+/ 		PERIOD
+/ 		</div>
+/ 		<div class="flex_row info_details">
+/ 			<%= @work_duration.work_day.strftime("%b %d, %Y") %> - <%= (@work_duration.work_day + 4).strftime("%b %d, %Y") %>
+/ 		</div>
+/ 	</div>
+/
+/ 	<div class="flex_col">
+/ 		<div class="flex_row info_header">
+/ 		VENDOR
+/ 		</div>
+/ 		<div class="flex_row info_details">
+/ 		<%= @work_duration.vendor.blank? ? "<Not Available>" : @work_duration.vendor.name %>
+/ 		</div>
+/ 	</div>
+/
+/ 	<div class="flex_col">
+/ 		<div class="flex_row info_header">
+/ 		PROJECT ID
+/ 		</div>
+/ 		<div class="flex_row info_details">
+/ 		<%= @work_duration.project.display_id %>
+/ 		</div>
+/ 	</div>
+/ </div>
+/ <% if @work_duration.time_sheet_status == "rejected"%>
+/ <div class="notification_container flex_col" style="margin:20px;width:90%">
+/ 	<b>Rejected with reason:</b> <%= @work_duration.rejection_message %>
+/ </div>
+/ <% end %>
+/ <div class="flex_col">
+/ 	<div class="flex_row info_row" style="border-top:2px solid #DDD">
+/ 		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF">
+/ 			DAY
+/ 		</div>
+/ 		<% @work_duration.all_days.each do |day| %>
+/ 		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF;text-align:right">
+/ 			<%= day.work_day.strftime("%b %d") %>
+/ 			<br /><%= day.work_day.strftime("%a") %>
+/ 		</div>
+/ 		<% end %>
+/ 		<div class="flex_col info_col" style="background-color:var(--main-color);color:#FFF">
+/ 			Total
+/ 		</div>
+/ 	</div>
+/ 	<div class="flex_row info_row">
+/ 		<div class="flex_col info_col" style="padding:5px; text-align:left">
+/ 			<b>Billable</b>
+/ 		</div>
+/ 	</div>
+/ 	<div class="flex_row info_row">
+/ 		<div class="flex_col info_col" style="padding:5px; text-align:left">
+/ 			<b>Project ID:</b> <%= @work_duration.project.display_id %>
+/ 		</div>
+/ 	</div>
+/ 	<div class="flex_row info_row">
+/ 		<div class="flex_col info_col">
+/ 			ST /Hr
+/ 		</div>
+/ 		<% @work_duration.all_days.each do |day| %>
+/ 		<div class="flex_col info_col">
+/ 			<%= day.hours.to_f %>
+/ 		</div>
+/ 		<% end %>
+/ 		<div class="flex_col info_col">
+/ 			<%= @work_duration.all_days.map{|wd|wd.hours}.inject(0, :+).to_f %>
+/ 		</div>
+/ 	</div>
+/
+/ 	<div class="flex_row info_row" style="background:#FFC">
+/ 		<div class="flex_col info_col">
+/ 			Total
+/ 		</div>
+/ 		<% @work_duration.all_days.each do |day| %>
+/ 		<div class="flex_col info_col">
+/ 			<%= day.hours.to_f %>
+/ 		</div>
+/ 		<% end %>
+/ 		<div class="flex_col info_col">
+/ 			<%= @work_duration.all_days.map{|wd|wd.hours}.inject(0, :+).to_f %>
+/ 		</div>
+/ 	</div>
+/ </div>
+/ <%= link_to "Generate Printable Report",
+/ 	timesheet_report_account_managers_url(emp:@work_duration.employee.id,from_date:@work_duration.work_day,to_date:@work_duration.work_day + 5,format:"pdf"),
+/ 	class: "button_link", style: "float:right" %>
+/
+/
+/ <div class="" style="font-size:24px;margin-top:50px">Posting Information</div>
+/ <div class="flex_col">
+/ 	<div class="flex_row info_row">
+/ 		<div class="flex_col" style="width:30%">
+/ 			Submit Date:
+/ 		</div>
+/ 		<div class="flex_col">
+/ 			<%= @work_duration.updated_at %>
+/ 		</div>
+/ 	</div>
+/
+/ 	<div class="flex_row info_row">
+/ 		<div class="flex_col" style="width:30%">
+/ 			Client:
+/ 		</div>
+/ 		<div class="flex_col">
+/ 			<% client = @work_duration.employee.client %>
+/ 			<%= client.blank? ? "(Not Assigned)" : client.company_name %>
+/ 		</div>
+/ 	</div>
+/
+/ 	<div class="flex_row info_row">
+/ 		<div class="flex_col" style="width:30%">
+/ 			Client Address:
+/ 		</div>
+/ 		<div class="flex_col">
+/ 			<%= client.blank? ? "(Not Assigned)" : client.company_address %>
+/ 		</div>
+/ 	</div>
+/ </div>
+/
+/
+/ <% end %>

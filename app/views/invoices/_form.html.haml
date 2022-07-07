@@ -30,10 +30,12 @@
 			.flex_col
 				%b File
 				= f.file_field :invoice_file, accept: 'image/*,application/pdf', :required => true, :style=>"width:100%;border:1px solid #CCC;height:45px"
-			.flex_col
-				%b Update Status
-				- @statuses = [{"name"=>"Approved", "id"=>"1"}, {"name"=>"Rejected", "id"=>"0"}]
-				= f.select :approval_status, options_for_select(@statuses.collect {|p| [ p['name'], p['id'] ] })
+				= f.hidden_field :approval_status, :value => 1
+			- if false
+				.flex_col
+					%b Update Status
+					- @statuses = [{"name"=>"Approved", "id"=>"1"}, {"name"=>"Rejected", "id"=>"0"}]
+					= f.select :approval_status, options_for_select(@statuses.collect {|p| [ p['name'], p['id'] ] })
 		.flex_row
 			.flex_col{:style=>"text-align:right"}
 				= f.submit 'Upload Invoice', :class=>"submit_button"

@@ -50,19 +50,63 @@ class Invoice < ApplicationRecord
     return "$#{approved_hours * employee.employer_rate}"
   end
   
-  #Payment Status:
-  # 0: not selected
-  # 1: Accepted
-  # 2: Rejected
+  
+  def available?() (approval_status.blank? || approval_status == 0) && approved_work_durations.count > 0 end
+  def pending?() approval_status == 1 end
+  def rejected?() approval_status == 4 end
+  
   def status
-    if !approval_status.blank?
-      return approval_status == 1 ? "Approved" : "Rejected" 
-    elsif approved_work_durations.count > 0
-      "Available"
+    case approval_status
+    when nil, 0 # available / unsubmitted
+      return approved_work_durations.count > 0 ? "available" : "unsubmitted"
+    when 1 # Pending
+      return "pending"
+    when 2 # Reopened
+      return "reopened"
+    when 3 # Approved
+      return "approved"
+    when 4 # Rejected
+      return "rejected"
     else
-      "Unsubmitted"
     end
-    
+      
+    # # Invoice payment_status is false can mean two things, the sheet is either unsubmitted/reopened or its rejected
+    # # If payment_rejection_message is blank then its the first option "unsubmitted/reopened" otherwise its rejected
+    # if !payment_status && payment_rejection_message.blank?
+    #   # the sheet is either unsubmitted or it was reopned
+    #   return approved_work_durations.count > 0 ? "Available" : "Unsubmitted"
+    # else
+    #   # the sheet is submitted
+    #   if payment_status && payment_rejection_message.blank?
+    #     # timesheet is approved
+    #     return "Approved"
+    #   elsif !payment_status && !payment_rejection_message.blank?
+    #     # timesheet is reject
+    #     return "Rejected"
+    #   else # payment_status => true/false,
+    #     # timesheet is still pending
+    #     return "Pending"
+    #   end
+    # end
   end
+  
+  # buyer: client
+  # supplier: vendor
+  # contingent : charter
+  
+  # #Payment Status:
+  # # 0: not selected
+  # # 1: Accepted
+  # # 2: Rejected
+  # def status
+  #   if !approval_status.blank?
+  #     return approval_status == 1 ? "Approved" : "Rejected"
+  #   elsif approved_work_durations.count > 0
+  #     "Available"
+  #   else
+  #     "Unsubmitted"
+  #   end
+  #
+  # end
   
 end

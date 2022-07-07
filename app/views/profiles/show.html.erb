@@ -203,14 +203,37 @@
 					<% end %>
 				</div>
 				<% end %>
-				<% show_document("Passport", @profile.employee.passport) %>
-				<% show_document("Visa", @profile.employee.visa) %>
-				<% show_document("State ID", @profile.employee.state_id) %>
-				<% show_document("i9", @profile.employee.i9) %>
-				<% show_document("E-Verify", @profile.employee.e_verify) %>
-				<% show_document("W9", @profile.employee.w9) %>
-				<% show_document("PSA", @profile.employee.psa) %>
-				<% show_document("Void Check", @profile.employee.voided_check_copy) %>
+				
+				
+				<div class="flex_row">
+					<div class="flex_col">
+						<% show_document("Resume", @profile.employee.resume) %>
+						<% show_document("State ID", @profile.employee.state_id) %>
+						<% show_document("Passport", @profile.employee.passport) %>
+						<% show_document("Work Auth/Visa", @profile.employee.visa) %>
+				
+						<% show_document("i9", @profile.employee.i9) %>
+						<% show_document("E-Verify", @profile.employee.e_verify) %>
+						<% show_document("Void Check", @profile.employee.voided_check_copy) %>
+					</div>
+					<div class="flex_col">
+						<% if @profile.employee.contract_type == "w2" %>
+							<% show_document("Offer Letter", @profile.employee.offer_letter) %>
+							<% show_document("W2 Contract", @profile.employee.w2_contract) %>
+							<% show_document("W4", @profile.employee.w4) %>
+							<% show_document("Direct Deposit Details", @profile.employee.direct_deposit_detail) %>
+							<% show_document("Emergency Contact Form", @profile.employee.emergency_contact_form) %>
+						<% else %>
+							<% show_document("W9", @profile.employee.w9) %>
+							<% show_document("PSA", @profile.employee.psa) %>
+							<% show_document("New Hire Package", @profile.employee.new_hire_package) %>
+							<% show_document("PO", @profile.employee.po) %>
+						<% end %>
+					</div>
+				</div>
+				
+				
+				
 			</div>
 		</div>
 		<% end %>

@@ -11,7 +11,7 @@ class WorkDuration < ApplicationRecord
   has_one_attached :timesheet_screenshot
   
   
-    
+  
   def period
     "#{work_day.strftime("%b %d, %Y")} - #{(work_day + 4).strftime("%b %d, %Y")}"
   end
@@ -76,5 +76,15 @@ class WorkDuration < ApplicationRecord
         id ASC
       SQL
   }
+  
+  
+  def sun() work_day - 1 end
+  def mon() work_day end
+  def tue() work_day + 1 end
+  def wed() work_day + 2 end
+  def thu() work_day + 3 end
+  def fri() work_day + 4 end
+  def sat() work_day + 5 end
+  
     
 end

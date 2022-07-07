@@ -300,7 +300,7 @@
 	<% if @wds.to_a.count > 0 %>
 	
 	<!-- This is Employee info section that can only be shown if we are displaying data for only one employee -->
-	<% if @wds.to_a.count == 1 %>
+	<% if @employees.count <= 1 %>
 	<table border="0" style="width:80%;margin:0 auto">
 		<tr>
 			<td width="20%;"><strong>ID</strong></td>
@@ -377,10 +377,13 @@
 			
 			<!-- DATA LOGIC -->
 			
+			<% total_hours = 0 %>
+			
 			<%# 62201AA04.3 - START %>
 			<% @employees.each do |emp|%>
 			<% wd = emp.work_durations.where(work_day: date).first %>
 			<% wd = WorkDuration.new(work_day: date, project_id: emp.projects.first) if wd.blank? %>
+			
 			<tr>
 				<td class="defult-border-left defult-border-right tr1 text-center">
 					<%= wd.created_at.blank? ? "-" : wd.created_at.strftime("%b %d, %Y") %>
@@ -401,79 +404,42 @@
 					<%= emp.active_job.blank? ? "-" : emp.active_job.title %>
 				</td>
 				<td class="defult-border-left defult-border-right tr1 text-center">
-					<%= wd.id.blank? ? "0" : wd.all_days.inject(0){|sum,e| sum + e.hours } %>
+					<%= th = wd.id.blank? ? 0 : wd.all_days.inject(0){|sum,e| sum + e.hours } %>
+					<% total_hours += th %>
 				</td>
 				<td class="defult-border-left defult-border-right tr1 text-center">
 					<%= wd.time_sheet_status %>
 				</td>
 			</tr>
-			<!-- 62201AB - START - columns changed - below will be removed in next patch -->
-			<% if false %>
-			<tr>
-					<% if @wds.to_a.count > 1 %>
-					<td class="defult-border-left defult-border-right tr1">
-						<%= date.strftime("%b %d, %Y") %> - <%= (date + 4).strftime("%b %d, %Y") %>
-					</td>
-					<% else %>
-					<td class="defult-border-left tr1">
-						ST /Hr
-					</td>
-					<% end %>
-					
-					<% if @wds.to_a.count > 1 %>
-					<td class="defult-border-left tr1">
-						<center><%= emp.profile.name %></center>
-					</td>
-					<% end %>
-					
-					<% added_hours = 0 %>
-					<% if !wd.blank? && (!wd.is_unsubmitted? && !wd.is_saved?) %>
-					
-					<td class="text-center"> 0.0 </td> <!-- Sunday -->
-					
-					<% wd.all_days.each do |day| %>
-					
-					<td class="text-center">
-						<%# total_hours += day.hours %>
-						<%# added_hours += day.hours %>
-						<%= day.hours.to_f %>
-					</td>
-					<% end %>
-					
-					<td class="text-center"> 0.0 </td> <!-- Saturday -->
-					
-					<td class="text-center">
-						<%= added_hours.to_f %>
-					</td>
-					
-					<% if @wds.to_a.count > 1 %>
-					
-					<td class="text-center col-xs-2">
-						<%= wd.time_sheet_status %>
-					</td>
-					
-					<% end %>
-					
-					<% else %>
-					
-					<td colspan="7">
-						<center>Hours not submitted</center>
-					</td>
-					<td class="text-center">0</td>
-					<% if @wds.to_a.count > 1 %>
-					<td class="text-center col-xs-2">(Not Available)</td>
-					<% end %>
-					
-					<% end %>
-					
-					
-				
-				</tr>
-				<% end %>
-				<!-- 62201AB - END --->
-				
 			<% end %> <!-- End looping over all employees -->
 			<%# 62201AA04.3 - END %>
+			<tr style="background-color:#EEE">
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# wd.created_at.blank? ? "-" : wd.created_at.strftime("%b %d, %Y") %>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# emp.profile.name %>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# wd.vendor.blank? ? "-" : wd.vendor.company_name %>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# wd.work_day.strftime("%b %d, %Y") %> - <%# (wd.work_day + 4).strftime("%b %d, %Y") %>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# emp.contract_type %>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# emp.active_job.blank? ? "-" : emp.active_job.title %>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<b><%= total_hours %></b>
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center">
+					<%# wd.time_sheet_status %>
+				</td>
+			</tr>
+			
 		</table>
 	</div>
 	

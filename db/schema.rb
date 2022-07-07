@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_03_192614) do
+ActiveRecord::Schema.define(version: 2022_07_06_203120) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -109,6 +109,14 @@ ActiveRecord::Schema.define(version: 2022_07_03_192614) do
     t.string "disable_notes"
     t.integer "job_id"
     t.integer "employer_rate"
+    t.string "resume"
+    t.string "new_hire_package"
+    t.string "po"
+    t.string "w2_contract"
+    t.string "offer_letter"
+    t.string "w4"
+    t.string "direct_deposit_detail"
+    t.string "emergency_contact_form"
   end
 
   create_table "employers", force: :cascade do |t|

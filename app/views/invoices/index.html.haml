@@ -34,19 +34,22 @@
 							- else
 								(Not Provided)
 						.col.img_col
-							=# invoice.status
-							= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
+							= invoice.status.capitalize
+							=# !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
 						.col.img_col
 							- if current_user.is_admin? || current_user.is_account_manager?
-								- if !invoice.payment_status && invoice.payment_rejection_message.blank?
+								- if invoice.pending?#if !invoice.payment_status && invoice.payment_rejection_message.blank?
 									= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
 									|
 									-# if invoice.payment_rejection_message.blank?
 									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
 									|
 									= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete
+									|
+									= link_to "Edit", edit_invoice_path(invoice.id)
 								- else
-									= link_to "Reopen", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "O"), :method => :put
+									=# link_to "Reopen", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "O"), :method => :put
+									
 			- else
 			
 				- @date_ranges.each do |dr|
@@ -74,12 +77,13 @@
 							- else
 								(Not Provided)
 						.col.img_col
-							= invoice.status
+							= invoice.status.capitalize
 						.col.img_col
-							- if invoice.status == "Available"
-								= link_to "Accept/Reject", new_invoice_path(emp: invoice.employee.id, elr:invoice.employer.id, s: invoice.payment_date)
-							- elsif !invoice.id.blank?
-								= link_to "Edit", edit_invoice_path(invoice.id)
+							- if invoice.available?  || invoice.rejected?
+								- if invoice.persisted?
+									= link_to "Submit Invoice", edit_invoice_path(invoice.id)
+								-else
+									= link_to "Submit Invoice", new_invoice_path(emp: invoice.employee.id, elr:invoice.employer.id, s: invoice.payment_date)
 						
 /			- @invoices.each do |invoice|
 / 				.row.row_hover_highlight

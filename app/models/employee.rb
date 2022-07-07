@@ -10,6 +10,17 @@ class Employee < ApplicationRecord
   mount_uploader :psa, AttachmentsUploader
   mount_uploader :voided_check_copy, AttachmentsUploader
   
+  mount_uploader :resume, AttachmentsUploader
+  
+  mount_uploader :new_hire_package, AttachmentsUploader
+  mount_uploader :po, AttachmentsUploader
+  mount_uploader :offer_letter, AttachmentsUploader
+  mount_uploader :w2_contract, AttachmentsUploader
+  mount_uploader :w4, AttachmentsUploader
+  mount_uploader :direct_deposit_detail, AttachmentsUploader
+  mount_uploader :emergency_contact_form, AttachmentsUploader
+  
+  
 	belongs_to :profile
   accepts_nested_attributes_for :profile
   #attr_accessor :profile

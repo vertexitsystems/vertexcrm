@@ -1,4 +1,5 @@
-%p#notice= notice
+%p
+  = link_to "<#{@invoice.employee.profile.name}'s Invoices", invoices_path(emp: @invoice.employee.id)
 
 %p
   %b Emplyee:
