@@ -47,7 +47,7 @@ class Invoice < ApplicationRecord
   end
   
   def approved_amount
-    return "$#{approved_hours * employee.employer_rate}"
+    return "$#{approved_hours.to_i * employee.employer_rate.to_i}"
   end
   
   
