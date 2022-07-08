@@ -22,11 +22,11 @@
 					.col.img_col
 						= employee.profile.name
 					.col.img_col
-						= employee.active_job.title
+						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.title
 					.col.img_col
-						= employee.active_job.vendor.company_name
+						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.vendor.company_name
 					.col.img_col
-						= employee.active_job.client.company_name
+						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.client.company_name
 					.col.img_col
 						= employee.work_durations.limit(100).sum(:hours)
 					.col.img_col

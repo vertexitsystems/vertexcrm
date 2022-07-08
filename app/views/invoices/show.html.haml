@@ -37,7 +37,7 @@
           .col.col8
             = "#{wd.work_day.beginning_of_week.strftime("%b,%d,%Y")} to #{wd.work_day.end_of_week.strftime("%b,%d,%Y")}"
           .col.col8
-            = wd.employee.active_job.title
+            = wd.employee.active_job.blank? ? "(Not Available)" : employee.active_job.title
           .col.col8
             = wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+)
           .col.col8
