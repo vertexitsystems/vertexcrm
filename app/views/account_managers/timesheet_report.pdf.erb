@@ -328,14 +328,19 @@
 			<td width="20%;font-weight:bold"><strong>Address</strong></td>
 			<td width="30%"><%= @wds.first.employee.employer.blank? ? "<Not Provided>" : @wds.first.employee.employer.company_address %></td>
 		</tr>
-		<tr>
-			<td width="20%;font-weight:bold"><strong>Status</strong></td>
-			<td width="30%"><%= @wds.first.time_sheet_status %></td>
-			<td width="20%;font-weight:bold"><strong>Submitted Date</strong></td>
-			<td width="30%"><%= @wds.first.updated_at.strftime("%B %d, %Y") %></td>
-		</tr>
+		<% if @iteration_dates.count <= 1 %>
+			<tr>
+				<td width="20%;font-weight:bold"><strong>Status</strong></td>
+				<td width="30%"><%= @wds.first.time_sheet_status %></td>
+				<td width="20%;font-weight:bold"><strong>Submitted Date</strong></td>
+				<td width="30%"><%= @wds.first.updated_at.strftime("%B %d, %Y") %></td>
+			</tr>
+		<% end %>
 	</table>
 	<% end %> <!-- End of employee info -->
+	
+	<%# 72204AB %>
+	<% total_sheet_hours = 0 %>
 	
 	<%# 62201AA04.2 - START %>
 	
@@ -434,6 +439,7 @@
 				</td>
 				<td class="defult-border-left defult-border-right tr1 text-center">
 					<b><%= total_hours %></b>
+					<% total_sheet_hours += total_hours %>
 				</td>
 				<td class="defult-border-left defult-border-right tr1 text-center">
 					<%# wd.time_sheet_status %>
@@ -444,6 +450,21 @@
 	</div>
 	
 	<% end %> <!-- End iterating over @iteration_dates -->
+	
+	<div class="col-xs-12" style="margin-top:12px!important;">
+		<table class="table table-striped col-xs-3 font-size-12">
+			<tr style="background-color:#EEE">
+				
+				<td class="defult-border-left defult-border-right tr1" style="text-align:right"  col-span="6">
+					Total Sheet Hours: 
+				</td>
+				<td class="defult-border-left defult-border-right tr1 text-center"   col-span="2">
+					<b><%= total_sheet_hours %>
+				</td>
+			</tr>
+			
+		</table>
+	</div>
 	<%# 62201AA04.2 - END %>
 	
 		<%

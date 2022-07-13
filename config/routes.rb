@@ -6,7 +6,11 @@ Rails.application.routes.draw do
   resources :clients
   resources :assistants
   
-  resources :employers
+  resources :employers do
+    collection do
+      get :time_sheet_viewer
+    end
+  end
   
   resources :account_managers do 
     collection do 

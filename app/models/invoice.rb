@@ -3,19 +3,25 @@ class Invoice < ApplicationRecord
   belongs_to :employer
   
   has_one_attached :invoice_file
-  
+    
+  # start_date is always the higher date
   def start_date
     if payment_date
       start_date = (payment_date.day > 15) ? payment_date.end_of_month : (payment_date.beginning_of_month + 14)
     end
   end
   def end_date
-    end_date = (start_date - 14)
+    end_date = (payment_date.day > 15) ? payment_date.change(:day => 16) : payment_date.beginning_of_month#(start_date - 14)
   end
   
   
   def all_work_durations
     wds = []
+    
+    if start_date.blank?
+      return wds
+    end
+    
     curr_day = start_date.beginning_of_week
     while curr_day.beginning_of_week  >= end_date.beginning_of_week 
       #byebug

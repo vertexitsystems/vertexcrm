@@ -1,0 +1,17 @@
+<div class="page_heading">Timesheet Management</div>
+<div class="section" id="calender">
+  <%= render "employees/calender", 
+    show_unsubmitted:false,
+  	can_update_all:true,
+  	can_update:false, 
+  	can_act:false, 
+  	show_employee_info:true,
+	show_each_day:false,
+	show_submitted_date:false,
+	show_filters:true,
+	show_contract_type:true,
+	show_project_name:true,
+	employee:@employer.employees,
+	show_actionables_consultant:false
+	%>
+</div>

@@ -567,7 +567,7 @@
 	# Fetch the work day for the last work_duration, This will be used as end_date is end_date is not specified through filter
 	#last_record = WorkDuration.order(:created_at).first
 	
-	employees = (params[:emp].blank? || params[:emp] == "") ? (employee.blank? ? Employee.where(disabled:nil).or(Employee.where(disabled:false)) : [employee] ) : [Employee.find(params[:emp].to_i)]
+	employees = (params[:emp].blank? || params[:emp] == "") ? (employee.blank? ? Employee.where(disabled:nil).or(Employee.where(disabled:false)) : employee ) : [Employee.find(params[:emp].to_i)]
 	
 	# Start date is the higher of two dates ... may 30 is higher then may 2 but lower then june 2
 	start_date = (params[:to_date].present? ? params[:to_date].to_date : Date.today.beginning_of_week)
@@ -577,12 +577,21 @@
 	curr_end = (employees.count > 1 ? curr_date : (curr_date - (record_limit * 6)) )
 	
 	end_date = params[:from_date].present? ? params[:from_date].to_date : WorkDuration.order(:work_day).pluck(:work_day).first
+	
 	if curr_end < end_date
 		curr_end = end_date
 	end
 	
 	if employees.count > 1
 		work_durations = employees.map {|e|
+			
+			if e.active_postings.count > 0
+				posting_start_date = e.active_postings.first.start_date.beginning_of_week
+				if curr_end.beginning_of_week < posting_start_date
+					next
+				end
+			end
+			
 			wd = e.work_durations.where(:work_day => curr_date.beginning_of_week).first 
 			if wd.blank?
 				WorkDuration.new(:employee => e, :work_day => curr_date.beginning_of_week, :time_sheet_status => :unsubmitted)
@@ -591,6 +600,11 @@
 			end
 		}
 	else
+		posting_start_date = employees.first.active_postings.first.start_date.beginning_of_week
+		if curr_end.beginning_of_week < posting_start_date
+			curr_end = posting_start_date
+			end_date = posting_start_date
+		end
 		work_durations = (curr_date.beginning_of_week.downto(curr_end)).to_a.select {|k| k.wday == 1 }.map {|d|
 			wd = employees.first.work_durations.where(:work_day => d).first 
 			if wd.blank?
@@ -626,7 +640,7 @@
 	
 %>
 
-<% work_durations.each_with_index do |wd, loop_index| %>
+<% work_durations.compact().each_with_index do |wd, loop_index| %>
 
 	<% allow_update = can_update_all &&  (can_update && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
 	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
@@ -634,7 +648,7 @@
 			<div class="row row_hover_highlight">
 				<% if show_submitted_date %>
 					<div class="col col8 mt-3">
-						<%= wd.updated_at.blank? ? "-" : wd.updated_at.strftime("%b %d, %Y") %>
+						<%= (wd.updated_at.blank? || wd.unsubmitted?) ? "-" : wd.updated_at.strftime("%b %d, %Y") %>
 					</div>
 				<% end %>
 			
@@ -643,16 +657,16 @@
 						<%= wd.employee.profile.name %>
 					</div>
 					<div class="col col8 mt-3">
-						<%= wd.vendor.blank? ? "<Not Provided>" : wd.vendor.name %>
+						<%= (wd.vendor.blank? || wd.unsubmitted?) ? "<Not Provided>" : wd.vendor.name %>
 					</div>
 				<% end %>
 				
 				<div class="col col-5 mt-3">
 					<% if wd.time_sheet_status  == "unsubmitted" %>
-						<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %> AAA
+						<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
 					<% else %>
 						<%= link_to wd do %>
-							<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %> BBB
+							<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>
 						<% end %>
 					<% end %>
 				</div>

@@ -26,14 +26,9 @@
 			= @work_duration.period
 	.flex_col
 		.flex_row.top_header_title
-			Buyer
-		.flex_row.top_header_value
-			Name1
-	.flex_col
-		.flex_row.top_header_title
 			Supplier
 		.flex_row.top_header_value
-			Name1
+			Vertex IT Systems
 	.flex_col{:style=>"flex-grow:10"}
 %hr
 .div{:style=>"border-bottom:1px solid var(--main-color);color:var(--main-color);width:60px;text-align:center;margin-bottom: -16px;"}
@@ -87,44 +82,47 @@
 		.flex_row.tsd_row
 			.flex_col.tsd_col
 				Digital Self Mobil
+		- def get_hours_for_day(day)
+			- wday = @work_duration.select_day(day)
+			- return wday.blank? ? "0.0" : wday.hours.to_f
 		.flex_row.tsd_row{:style=>"background:#fff;display:flex"}
 			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
 				ST/Hr
 			.flex_col.tsd_col_right
 				0.0
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.mon)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.tue)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.wed)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.thu)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.fri)
 			.flex_col.tsd_col_right
 				0.0
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
-				40.0
+				= @work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
 		.flex_row.tsd_row{:style=>"background:#f5fafe"}
 			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
 				Total
 			.flex_col.tsd_col_right
 				0.0
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.mon)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.tue)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.wed)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.thu)
 			.flex_col.tsd_col_right
-				8.0
+				= get_hours_for_day(@work_duration.fri)
 			.flex_col.tsd_col_right
 				0.0
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
-				40.0
+				= @work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
 		.tsd_section_header
 			Position Information
 			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
@@ -134,24 +132,14 @@
 					= @work_duration.created_at
 			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
 				.flex_col{:style=>"flex-shrink:3"}
-					Contingent Type
-				.flex_col
-					Charter
-			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
-				.flex_col{:style=>"flex-shrink:3"}
 					Work Order/Work Order Revision Owner
 				.flex_col
-					Ahmad Ahmad
+					(Not Provided)
 			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
 				.flex_col{:style=>"flex-shrink:3"}
 					Site
 				.flex_col
 					= @work_duration.employee.active_job.location
-			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}
-				.flex_col{:style=>"flex-shrink:3"}
-					Business Unit
-				.flex_col
-					Self Service Product Platform (709)
 		
 
 / <% if false %>

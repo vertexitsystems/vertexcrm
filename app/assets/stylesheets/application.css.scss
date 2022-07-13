@@ -64,6 +64,12 @@ a:hover {
 	padding:20px 30px 5px 30px;
 	border-bottom:1px solid var(--main-color);
 }
+.page_title a{
+    float: right;
+    font-size: 12px;
+    margin-top: 20px;
+	cursor:pointer;
+}
 
 .clr { clear:both; }
 p#notice{

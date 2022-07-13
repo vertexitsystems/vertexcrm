@@ -112,6 +112,14 @@ class EmployersController < ApplicationController
     end
   end
 
+  def time_sheet_viewer
+    if !current_user.is_employer? 
+      flash[:alert] = "Access Denied"
+    end
+    
+    @employer = current_user.profile.employer
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_employer

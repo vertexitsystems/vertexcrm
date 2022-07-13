@@ -78,6 +78,10 @@ class WorkDuration < ApplicationRecord
   }
   
   
+  def select_day(check_day)
+    all_days.select{|x|x.work_day == check_day}.first
+  end
+  
   def sun() work_day - 1 end
   def mon() work_day end
   def tue() work_day + 1 end

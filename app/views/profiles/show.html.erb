@@ -47,6 +47,25 @@
 				<%= @profile.employee.contract_type %>
 			</div>
 		</div>
+			<div class="profile_menu_left_row">
+				<div class="profile_menu_left_col profile_menu_title">
+					Cons Rate:
+				</div>
+				<div class="profile_menu_left_col">
+					<%= @profile.employee.rate.to_f %>
+				</div>
+			</div>
+			<% if @profile.employee.contract_type == "w2" %>
+				<div class="profile_menu_left_row">
+					<div class="profile_menu_left_col profile_menu_title">
+						Employer Rate:
+					</div>
+					<div class="profile_menu_left_col">
+						<%= @profile.employee.employer_rate.to_f %>
+					</div>
+				</div>
+			<% end %>
+			
 		<% end %>
 		
 		<div class="profile_menu_left_row">
@@ -236,6 +255,37 @@
 				
 			</div>
 		</div>
+		<% end %>
+		
+		<% if (current_user.is_employee? && current_user.employee.contract_type == "w2") %>
+			<div class="profile_right_section">
+				<div class="section_title"> Documents </div>
+			
+				<div class="section_details">
+					<% def show_document(title, document) %>
+					<div class="employee_info_item" style="padding: 0px 20px;">
+						<b><%= title %>: </b> 
+						<% if document.present? %>
+						<%= link_to "Show", document.url, target:"_blank" %>
+						<% else %>
+						(Not Provided)
+						<% end %>
+					</div>
+					<% end %>
+				
+				
+					<div class="flex_row">
+						<div class="flex_col">
+							<% if @profile.employee.contract_type == "w2" %>
+								<% show_document("W2 Contract", @profile.employee.w2_contract) %>
+							<% end %>
+						</div>
+					</div>
+				
+				
+				
+				</div>
+			</div>
 		<% end %>
 		
 		<% if @profile.employee.disabled%>

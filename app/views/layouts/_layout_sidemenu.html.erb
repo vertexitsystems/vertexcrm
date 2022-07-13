@@ -22,6 +22,14 @@
 			</li>
 		</ul>
 		<% end %>
+		
+		<%if current_user.is_employer? %>
+		<ul>
+			<li class="option <%= action_name=="time_sheet_approval" ? "menu_item_selected" : "" %>">
+				<a href="/employers/time_sheet_viewer"> Timesheet Management </a>
+			</li>
+		</ul>
+		<% end %>
 
 		<%if current_user.is_admin? || current_user.is_account_manager? %>
 

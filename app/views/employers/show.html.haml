@@ -11,13 +11,14 @@
 				.col
 					Client Name
 				.col
-					Total Hours Submitted
-				.col 
 					Total Invoiced Hours
+				.col 
+					Total Invoiced Amount
 				.col
 					Actions
 			
 			- @employer.employees.each do |employee|
+				- invoiced_hours = employee.invoices.where(approval_status: 3).map{|i|i.approved_hours}.inject(:+)
 				.row.row_hover_highlight
 					.col.img_col
 						= employee.profile.name
@@ -28,9 +29,11 @@
 					.col.img_col
 						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.client.company_name
 					.col.img_col
-						= employee.work_durations.limit(100).sum(:hours)
+						= #employee.work_durations.sum(:hours)
+						= invoiced_hours
 					.col.img_col
-						= employee.invoices.where.not(payment_date:nil).limit(100).map{|i|i.approved_hours}.inject(:+)
+						= "#{invoiced_hours.to_i * employee.employer_rate.to_i}$"
+						= #employee.invoices.where(payment_status:"approved").map{|i|i.approved_hours}.inject(:+)
 					.col.img_col
 						= link_to "Manage Invoices", invoices_path(emp: employee.id)
 					
