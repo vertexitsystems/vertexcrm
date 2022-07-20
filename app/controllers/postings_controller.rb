@@ -68,6 +68,6 @@ class PostingsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def posting_params
-      params.fetch(:posting, {}).permit(:start_date, :end_date, :job_id, :employee_id)
+      params.fetch(:posting, {}).permit(:start_date, :end_date, :job_id, :employee_id, :designation, :posting_rate)
     end
 end

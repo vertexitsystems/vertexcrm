@@ -1,0 +1,71 @@
+<% if show_filters %>
+
+	<div class="info_print_employee flex_row">
+		<div class="flex_col">
+			<%= link_to "Generate Report", timesheet_report_account_managers_url(eid:@employee.blank? ? nil : @employee.id,format:"pdf"), class: "button_link", id:"generate_report_button" %>
+		</div>
+		<div class="flex_col">
+			
+		</div>
+		
+		<% if show_employee_info %>
+			<div class="flex_col" style="padding:0px 10px">
+				<%# select_tag 'employee_filter',
+					options_from_collection_for_select(Employee.all, "id", "name", params["emp"]),
+					class: 'form-control filter_field',
+					id: "employee_filter",
+					filter_name: "emp",
+					prompt: "Consultant" 
+				%>
+				<%= select_tag 'employee_filter',
+					options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
+					class: 'form-control filter_field',
+					id: "employee_filter",
+					filter_name: "emp",
+					prompt: "Consultant" 
+				%>
+				
+			</div>
+		<% end %>
+		
+		<% if show_contract_type %>
+			<div class="flex_col" style="padding:0px 10px">
+				<%= select_tag 'employee_filter',
+					options_for_select(contract_types, params["contract"]),
+					class: 'form-control filter_field',
+					id: "contract_filter",
+					filter_name: "contract",
+					prompt: "Contract Type" 
+				%>
+			</div>
+		<% end %>
+		
+		<% if false #show_employee_info %>
+			<div class="flex_col" style="padding:0px 10px">
+				<%= select_tag 'vendor_filter',  
+					options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
+					class: 'form-control filter_field', 
+					id: "vendor_filter",
+					filter_name: "vendor",
+					prompt: "Vendor" 
+				%>
+			</div>
+		<% end %>
+			
+		<div class="flex_col" style="padding:0px 10px">
+			<%= text_field_tag 'time_sheet_date_range',
+				@date,
+				class: 'form-control daterange',
+				id:"date-range-work",
+				placeholder: "Date Filter",
+				value: params["from_date"].present? ? "#{params["from_date"]} to #{params["to_date"]}" : "Select Date"
+			%>
+		</div>
+		
+		<div class="flex_col" style="padding:0px 10px;max-width: 100px;">
+			<% sheet_link = current_user.is_employee? ? "/employees/#{current_user.profile.employee.id}?order=status" : "/account_managers/time_sheet_approval?order=status" %>
+			<a href="<%= sheet_link %>" style="background:transparent;line-height:36px"> clear filters </a>
+		</div>
+	</div>
+	
+<% end %>

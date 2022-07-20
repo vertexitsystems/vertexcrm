@@ -1,0 +1,324 @@
+<script>
+	$(document).ready(function() {
+		
+		$('#generate_report_button').click(function(event){
+			event.preventDefault();
+			//do whatever
+			var searchString = window.location.search.substring(1);
+			var params = searchString.split("?");
+			
+			var final_string = "";
+			
+			final_string = $(this).attr("href") + "?" + params;
+			location.href = final_string;
+		});
+		
+		/* Update total hours when value of hours field is changed */
+		$( ".hours_value" ).keyup(function(){
+        	update_hours(this);
+		});
+		
+		/*
+			This event enables/disables submit buttons based on file is selected or not
+		*/
+		$(".timesheet_field").change(function (){
+			var fileName = $(this).val();
+			if (fileName != null || fileName != ""){
+				$("#submit_options_" + $(this).attr("index") ).show();
+				$("#submit_message_" + $(this).attr("index") ).hide();
+			} else {
+				$("#submit_options_" + $(this).attr("index") ).hide();
+				$("#submit_message_" + $(this).attr("index") ).show();
+			}
+		});
+		
+		/* Alert if user tries to change value of saturday or sunday */
+		$(".hour_field_sun").change(function(){
+			non_weekday_alert(this)
+		});
+		$(".hour_field_sat").change(function(){
+			non_weekday_alert(this)
+		});
+		
+		/*
+			This is the ajax call that dynamically submits and updated the aprroved or rejected status
+		*/
+		$('.time_sheet_action_link').click(function(e) {
+		    e.preventDefault();
+			
+			
+			var link = $(this).prop("href");
+			var status = $(this).attr("action");
+			var id = $(this).attr("action_id");
+			var status_div = $(this).attr("status_div");
+			
+			var reason_text = "";
+			if (status == "rejected") {
+				reason_text = prompt("Provide Reason for Rejection", "");
+			}
+			
+			//alert(link + " - " + status + " - " + id);
+			$("#action_buttons_container_"+id).hide();
+			$("#action_loader_container_"+id).show();
+			
+			$.ajax({
+ 			  url: link,
+ 			  type: 'PUT',
+			  beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+ 			  data: "status="+status+"&action_id="+id+"&reason="+reason_text,
+ 			  success: function(data) {
+ 			    
+				  				
+				if($.trim(data["result"]) == "true"){
+	  				$("#action_buttons_container_"+data["id"]).hide();
+	  				$("#action_loader_container_"+data["id"]).hide();
+					
+					//alert("status div: status-div-"+data["id"]);
+					
+					$("#status-div-"+data["id"]).html(data["status"].toUpperCase());
+					$("#status-div-"+data["id"]).removeClass('pending');
+					$("#status-div-"+data["id"]).addClass(data["status"]);
+				} else {
+					alert("Failed to update status. Please try again.");
+					$("#action_buttons_container_"+data["id"]).show();
+					$("#action_loader_container_"+data["id"]).hide();
+				}
+				
+ 			  },
+			  error: function (data) {
+   			    alert('Failed to update status.' + JSON.stringify(data));
+  				$("#action_buttons_container_"+data["id"]).show();
+  				$("#action_loader_container_"+data["id"]).hide();
+              }
+			  
+			});
+		});
+		
+		
+	});
+	
+	/*
+		This method calculates the total number of hours as the the user is typing them in the textfields
+		this even will be triggerd for any textfield with class .hours_value (using class because name is being generated dynamically)
+		when triggered it will look for attribute "siblings" in text field and fetch value for all textfields having class name as value provided in "siblings" attribute
+		(Meaning fields that need to be summed will have the same class added to them and each field will have that class accessible through attribute "siblings")
+		Then we fetch the attribute value for "result_id" and update the value of div with id same as the one given by "result_id" with sum that was calculated earlier
+	*/
+	function update_hours(obj){
+    	query = $(obj).val();
+	
+		jip = $.map($("."+$(obj).attr("siblings")) , function( val, i ) {
+			return parseInt($(val).val())
+		});
+	
+		sum = 0
+		$.each(jip, function(i, v) {
+	        sum += parseInt(v) || 0;
+	    });
+	
+		$("#"+$(obj).attr("result_id")).html(sum);
+	}
+	
+	function non_weekday_alert (obj) {
+		if (confirm('Are you sure you want to add hours outside of weekdays?')) {
+		} else {
+		    $(obj).val(0)
+			update_hours(obj);
+		}
+	}
+</script>
+
+
+<% if !defined?(show_filters) %>
+	<% show_filters = true %>
+<% end %>
+
+<% if !defined?(show_actionables_actmgr) %>
+	<% show_actionables_actmgr = false %>
+<% end %>
+
+<% if !defined?(show_actionables_consultant) %>
+	<% show_actionables_consultant = false %>
+<% end %>
+
+<% if !defined?(can_submit_timesheet) %>
+	<% can_submit_timesheet = false %>
+<% end %>
+
+<% if !defined?(show_each_day) %>
+	<% show_each_day = true %>
+<% end %>
+	
+<% if !defined?(show_submitted_date) %>
+	<% show_submitted_date = true %>
+<% end %>
+
+<% if !defined?(show_contract_type) %>
+	<% show_contract_type = true %>
+<% end %>
+
+<% if !defined?(show_employee_info) %>
+	<% show_employee_info = true %>
+<% end %>
+	
+<% if !defined?(show_project_name) %>
+	<% show_project_name = true %>
+<% end %>
+
+<% if !defined?(can_act) %>
+	<% can_act = true %>
+<% end %>
+
+<% if !defined?(record_limit) %>
+	<% record_limit = 10 %>
+<% end %>
+
+<% if !defined?(show_pagination) %>
+	<% show_pagination = true %>
+<% end %>
+
+
+<!-- MARK: Timesheet Logic -->
+
+<%
+	# Fetch the work day for the last work_duration, This will be used as end_date is end_date is not specified through filter
+	#last_record = WorkDuration.order(:created_at).first
+	
+	employees = (params[:emp].blank? || params[:emp] == "") ? (employees.blank? ? Employee.where(disabled:nil).or(Employee.where(disabled:false)) : employees ) : [Employee.find(params[:emp].to_i)]
+	
+	# Start date is the higher of two dates ... may 30 is higher then may 2 but lower then june 2
+	start_date = (params[:to_date].present? ? params[:to_date].to_date : Date.today.beginning_of_week)
+	
+	curr_date = (params[:curr_date].present? ? params[:curr_date].to_date : start_date)
+	
+	curr_end = (employees.count > 1 ? curr_date : (curr_date - (record_limit * 6)) )
+	
+	end_date = params[:from_date].present? ? params[:from_date].to_date : WorkDuration.order(:work_day).pluck(:work_day).first
+	
+	if curr_end < end_date
+		curr_end = end_date
+	end
+	
+	if employees.count > 1
+		work_durations = employees.map {|e|
+			
+			if e.active_postings.count > 0
+				posting_start_date = e.active_postings.first.start_date.beginning_of_week
+				if curr_end.beginning_of_week < posting_start_date
+					next
+				end
+			end
+			
+			wd = e.work_durations.where(:work_day => curr_date.beginning_of_week).first 
+			if wd.blank?
+				WorkDuration.new(:employee => e, :work_day => curr_date.beginning_of_week, :time_sheet_status => :unsubmitted)
+			else
+				wd
+			end
+		}
+	else
+		
+		first_posting = employees.first.active_postings.first
+		posting_start_date = first_posting.blank? ? end_date : first_posting.start_date.beginning_of_week
+		
+		if curr_end.beginning_of_week < posting_start_date
+			curr_end = posting_start_date
+			end_date = posting_start_date
+		end
+		work_durations = (curr_date.beginning_of_week.downto(curr_end)).to_a.select {|k| k.wday == 1 }.map {|d|
+			wd = employees.first.work_durations.where(:work_day => d).first 
+			if wd.blank?
+				WorkDuration.new(:employee => employees.first, :work_day => d.beginning_of_week, :time_sheet_status => :unsubmitted)
+			else
+				wd
+			end
+		}
+	end
+	
+	
+%>
+
+<!-- MARK: Filters -->
+<%= render "_partials/tv_filters", show_filters: show_filters,
+										show_employee_info: show_employee_info,
+										show_contract_type: false %>
+										
+<!-- MARK: Table Header -->
+<%= render "_partials/tv_table_header", show_submitted_date: show_submitted_date, 
+										show_employee_info: show_employee_info,
+										show_contract_type: show_contract_type,
+										show_project_name: show_project_name,
+										show_each_day: show_each_day,
+										can_act: can_act %>
+
+
+<!-- MARK: List of Actionable Timesheets -->
+<%
+	if show_actionables_actmgr
+		actionable_work_durations = WorkDuration.where("extract(dow from work_day) = ?", 1).where(time_sheet_status: ["pending", "resubmitted"])
+	elsif show_actionables_consultant # As a convention if we are looking at consultants actionables then the employees array will have only one value
+		employee = employees.first
+		# We want to get actionable timesheets from today all the way back to when the consultant started their current posting
+		ap = employee.active_postings.first
+		end_date = ap.blank? ? employee.created_at : ap.start_date
+		#actionable_work_durations = employee.work_durations_for_period(Date.today, end_date).where(time_sheet_status: ["reopened"])
+		actionable_work_durations = work_durations.select{|wd| wd.time_sheet_status == "reopened" || wd.time_sheet_status == "rejected" }
+	end
+%>
+
+<% if (show_actionables_actmgr || show_actionables_consultant) && actionable_work_durations.count > 0 %>
+<div class="cal_sub_heading"> Actionable Timesheets </div>
+<% actionable_work_durations.each_with_index do |wd, index| %>
+<%= render "_partials/tv_table_row_template", wd: wd,
+											  unique_id:"_act_#{index}",
+											  show_submitted_date: show_submitted_date,
+											  show_employee_info: show_employee_info,
+											  show_contract_type: show_contract_type,
+											  show_project_name: show_project_name,
+											  show_each_day: show_each_day,
+											  can_act: can_act,
+											  can_submit_timesheet: can_submit_timesheet %>
+<% end %>
+
+<div class="cal_sub_heading"> All Timesheets </div>
+<% end %>
+
+
+<!-- MARK: Complete List of Timesheets -->
+<% work_durations.each_with_index do |wd, index| %>
+<%= render "_partials/tv_table_row_template", wd: wd,
+											  unique_id:"_all_#{index}",
+											  show_submitted_date: show_submitted_date,
+											  show_employee_info: show_employee_info,
+											  show_contract_type: show_contract_type,
+											  show_project_name: show_project_name,
+											  show_each_day: show_each_day,
+											  can_act: can_act,
+											  can_submit_timesheet: can_submit_timesheet %>
+<% end %>
+
+<!-- MARK: Pagination -->
+<% if show_pagination %>
+	<div style="text-align:right;padding:10px 20px">
+		<% if start_date > curr_date %>
+			<% prev_start = (curr_date.beginning_of_week + (record_limit * 6)) %>
+			
+			<% prev_start = prev_start > start_date ? start_date : prev_start %>
+			<% if params[:from_date].present? %>
+				<%= link_to "<next", url_for(to_date: start_date, from_date: end_date, curr_date: prev_start) %>
+			<% else %>
+				<%= link_to "<next", url_for(to_date: start_date, curr_date: prev_start) %>
+			<% end %>
+			-
+		<% end %>
+
+		<% if curr_end > end_date %>
+			<% if params[:from_date].present? %>
+				<%= link_to "prev>", url_for(to_date: start_date, from_date: end_date, curr_date: curr_end.last_week) %>
+			<% else %>
+				<%= link_to "prev>", url_for(to_date: start_date, curr_date: curr_end.last_week) %>
+			<% end %>
+		<% end %>
+	</div>
+<% end %>
+

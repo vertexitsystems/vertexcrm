@@ -35,11 +35,15 @@
           .col.col8
             = wd.created_at.blank? ? "-" : wd.created_at.strftime("%b,%d,%Y")
           .col.col8
-            = "#{wd.work_day.beginning_of_week.strftime("%b,%d,%Y")} to #{wd.work_day.end_of_week.strftime("%b,%d,%Y")}"
+            - if !wd.persisted? || ( wd.time_sheet_status  == "unsubmitted" && !wd.is_past_due_date? )
+              = wd.period
+            - else
+              = link_to wd.period, wd
+            =# "#{wd.work_day.beginning_of_week.strftime("%b,%d,%Y")} to #{wd.work_day.end_of_week.strftime("%b,%d,%Y")}"
           .col.col8
             = wd.employee.active_job.blank? ? "(Not Available)" : wd.employee.active_job.title
           .col.col8
-            = wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+)
+            = wd.id.blank? ? "0" : wd.fetch_hours_array.inject(:+)#wd.all_days.map{|wd|wd.hours}.inject(0, :+)
           .col.col8
             .calendar-picture{:style => "width:60px;height:60px"}
               = image_tag (wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""), :style => "max-width:100px;max-height:100px"

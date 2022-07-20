@@ -46,7 +46,7 @@ class Invoice < ApplicationRecord
     active_days = 0
     approved_work_durations.each do |ad|
       # 72202HF1 : Fix app crashing
-      result = ad.all_days.select{|d| d.work_day >= end_date && d.work_day <= start_date}.map{|w|w.hours}.reduce(:+)
+      result = ad.fetch_hours_array.reduce(:+)#.all_days.select{|d| d.work_day >= end_date && d.work_day <= start_date}.map{|w|w.hours}.reduce(:+)
       active_days += result.blank? ? 0 : result
     end
     return active_days

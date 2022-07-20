@@ -6,22 +6,27 @@
 	<%# Any thing with class "filter_field" will get .onChanged attached to it where the "filter_name" attribute will be turned into parameter name and the current url will be called %>
 	
 	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'employee_filter',  
-			options_from_collection_for_select(Employee.all, "id", "name", params["emp"]),
+		<%# select_tag 'employee_filter',  
+			options_from_collection_for_select(Employee.include(:profile).all, "id", "name", params["emp"]),
 			class: 'form-control filter_field',
 			id: "filter_field",
 			filter_name: "emp",
 			prompt: "Consultant" 
 			%>
+		<%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
+			class: 'form-control filter_field',
+			id: "filter_field",
+			filter_name: "emp",
+			prompt: "Consultant"%>
 	</div>
 	
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'contract_filter',
-			options_from_collection_for_select(Project.all, "id", "name", params["proj"]), 
+			options_from_collection_for_select(Job.all, "id", "title", params["proj"]), 
 			class: 'form-control filter_field',
 			id: "filter_field",
 			filter_name: "proj",
-			prompt: "Project" 
+			prompt: "Jobs" 
 			%>
 	</div>
 	
@@ -112,7 +117,7 @@
 		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> |
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
 		  <% if !employee.disabled %><!--disable_job_link-->
-		  <a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.name%>" class="disable_consultant_link">Disable</a>
+		  <a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.profile.name%>" class="disable_consultant_link">Disable</a>
 		  <% end %>
 		  
 

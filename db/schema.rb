@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_06_203120) do
+ActiveRecord::Schema.define(version: 2022_07_14_183631) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -191,6 +191,8 @@ ActiveRecord::Schema.define(version: 2022_07_06_203120) do
     t.integer "job_id"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.decimal "posting_rate"
+    t.string "designation"
   end
 
   create_table "profiles", force: :cascade do |t|
@@ -289,6 +291,20 @@ ActiveRecord::Schema.define(version: 2022_07_06_203120) do
     t.string "timesheet_screenshot"
     t.string "rejection_message"
     t.boolean "status_read"
+    t.integer "job_id"
+    t.integer "sun", default: -1
+    t.integer "mon", default: -1
+    t.integer "tue", default: -1
+    t.integer "wed", default: -1
+    t.integer "thu", default: -1
+    t.integer "fri", default: -1
+    t.integer "sat", default: -1
+    t.string "contract_type"
+    t.integer "employer_rate"
+    t.integer "consultant_rate"
+    t.integer "job_rate"
+    t.integer "posting_id"
+    t.integer "account_manager_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

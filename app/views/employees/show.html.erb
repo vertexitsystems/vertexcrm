@@ -1,4 +1,4 @@
-
+<% vieweing_self = @employee.profile.id == current_user.profile.id %>
 <div class="page_heading">Timesheet Management</div>
 <div class="flex_row">
 	<div class="flex_col">
@@ -66,10 +66,24 @@
 	
 </div>
 
-<% today = Date.today # Today's date %>
-<% @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
+<%# today = Date.today # Today's date %>
+<%# @days_from_this_week = (today.at_beginning_of_week..today.at_end_of_week).map %> 
 <div class="section" id="calender">
-	<% vieweing_self = @employee.profile.id == current_user.profile.id %>
+	
+	
+	
+	<%= render "_partials/timesheet_viewer", employees:[@employee],
+											 show_unsubmitted:vieweing_self,
+											 show_actionables_consultant: vieweing_self,
+											 can_submit_timesheet: vieweing_self,
+											 can_act: false,
+											 show_employee_info: false,
+											 show_contract_type: false %>
+	<% if false %>
+	
+	
+	<!-- OLD TIMESHEET -- not removed yet for reference-->
+	
   <%= render "calender", 
     show_unsubmitted:vieweing_self,
   	work_durations:@employee.work_durations,
@@ -85,6 +99,7 @@
 	employee:[@employee],
 	show_actionables_consultant:vieweing_self
 	%>
+	<% end %>
 </div>
 
 <% if false %>

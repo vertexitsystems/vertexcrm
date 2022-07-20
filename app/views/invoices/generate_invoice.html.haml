@@ -1,0 +1,115 @@
+- total_quants = @values.map{|v|v[:quant].to_i}.inject(:+)
+- total_amount  = @values.map{|v|v[:rate].to_f * v[:quant].to_f}.inject(:+)
+- total_amount_string = "$#{number_with_precision(total_amount, :precision => 2, :delimiter => ',')}"
+
+.container-fluid
+	.row.my-5.page_title
+		.col
+			Generated Invoice
+		.col-2
+			= link_to "Generate Report", generate_invoice_invoices_path(employees: params[:employees].to_unsafe_h, client: params[:client], net: params[:net], :format => 'pdf'), target: :_blank, class: "button_link", style: "margin:0px"
+	.row
+		.col-2.mr-2
+			.row.rounded-top{style:"background-color:#EEE"}
+				.col
+					%b Customer
+			.row.rounded-bottom{style:"background-color:#EEE"}
+				.col.pl-4
+					= @client.company_name
+		.col-2
+			.row.rounded-top{style:"background-color:#EEE"}
+				.col 
+					%b Customer Email
+			.row.rounded-bottom{style:"background-color:#EEE"}
+				.col.pl-4
+					= @client.company_email
+		.col
+		.col
+			.row
+				.col.text-right.text-muted
+					%b Balance Due
+			.row.text-right
+				.col{style:"font-size:34px"}
+					= total_amount_string
+	.row
+		.col-3.rounded{style:"background-color:#EEE"}
+			.row
+				.col
+					%b Billing Address
+			.row
+				.col.pl-4
+					= @client.company_address.blank? ? "(Not Provided)" : @client.company_address
+		.col
+		.col-2
+			.row
+				.col.text-right
+					%b Billing Date
+				.col
+					= Date.today
+			.row
+				.col.text-right
+					%b Due Date
+				.col
+					= Date.today + (15 * (["Net15", "Net30", "Net45"].index(params[:net]) + 1) )
+	.row.mt-5{style:"font-variant: petite-caps;"}
+		.col-1.border
+			%b #
+		.col-3.border
+			%b Consultant Name
+		.col.border
+			%b Description
+		.col-1.border
+			%b Qty
+		.col-1.border
+			%b Rate
+		.col-1.border
+			%b Amount
+	- if params["employees"].blank?
+		.row
+			.col.text-center
+				No Consultants Added
+	- else
+		- @values.each_with_index do |p,i|
+			.row.py-2.border{style:("background-color:#EEE" if i%2==0)}
+				.col-1.border-right
+					= i
+				.col-3.border-left.border-right
+					- emp = @employees.select{|e|e.id == p[:emp_id].to_i}.first
+					= emp.blank? ? "(Not Found)" : emp.profile.name
+				.col.border-left.border-right
+					= "Working hours from #{p[:start_date].to_date.strftime("%a %b #{p[:start_date].to_date.day.ordinalize}")} to #{p[:end_date].to_date.strftime("%a %b #{p[:end_date].to_date.day.ordinalize}")}"
+				.col-1.border-left.border-right
+					= p[:quant].to_f
+				.col-1.border-left.border-right
+					= p[:rate].to_f
+				.col-1.border-left
+					= "$#{p[:quant].to_f * p[:rate].to_f}"
+	.row.py-2.border.bg-secondary.text-light
+		.col-1
+		.col-3
+		.col.border-left.border-right.text-right
+			%b Total
+		.col-1.border-left.border-right
+			%b
+				= total_quants.to_f
+		.col-1
+		.col-1.border-left
+			%b
+				= total_amount_string
+	.row.mb-5.mt-3
+		.col
+		.col-2
+			.row
+				.col.text-right
+					%b Total:
+				.col
+					= "$#{total_amount.to_f}"
+			.row
+				.col.text-right
+					%b Balance Due:
+				.col
+					= total_amount_string
+
+
+		
+	

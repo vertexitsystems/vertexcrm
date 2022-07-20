@@ -19,6 +19,14 @@
 	--main-color:rgb(222, 3, 7);
 	--main-hover-color:rgb(188, 3, 7);;
 }
+.bg-main-color{
+	background-color:var(--main-color);
+	color:white;
+}
+.bg-sec-highlight{
+	background-color:#EEE;
+}
+
 body {
 	margin:0px;
 	padding:0px;
@@ -365,7 +373,7 @@ height:40px;
 
 .ap_container .main .section {
     margin:10px;
-    margin-left: 36px;
+    //margin-left: 36px;
 }
 .forgot-h2 {
   margin-top: 3%;
@@ -376,15 +384,17 @@ height:40px;
     font-size: 12px;
     border-bottom: 1px solid #DDD;
     flex-wrap: nowrap;
-    background: #FFF;
-    padding-right: 10px;
+    margin-left: 0px;
+	
 }
+
 .ap_container .main .section .row.top { 
     font-weight: bold;
     color: #FFF;
     background: var(--main-color);//rgb(73, 137, 207);
     border-radius: 10px 10px 0px 0px;
     padding-right: 28px;
+	margin-left:0px;
 }
 
 .ap_container .main .section .row.bottom { 
@@ -812,7 +822,6 @@ height:40px;
 	background:#CCC;
 	color:#FFF;
     width: 100%;
-	margin-left: -16px;
 	margin-bottom:3px;
 	padding:4px 16px;
 }

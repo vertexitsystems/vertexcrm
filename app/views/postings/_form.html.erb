@@ -40,14 +40,26 @@
 			<%= form.collection_select(:job_id, Job.all, :id, :title,@job.blank? ? {} : {selected:@job.id}, { class: "form-control" } ) %>
 		</div>
 		
+		<% if !@posting.persisted? %>
+		<div class="flex_col">
+			<b>Consultant:</b>
+			<%= form.collection_select(:employee_id, Employee.all, :id, :name) %>
+		</div>
+		<% end %>
+
 		<div class="flex_col">	
 			<b>Start Date:</b>
 			<%= form.text_field :start_date, :class => 'date_select_field' %>
 		</div>
-		
-		<div class="flex_col">
-			<b>Consultant:</b>
-			<%= form.collection_select(:employee_id, Employee.all, :id, :name) %>
+
+		<div class="flex_col">	
+			<b>Designation:</b>
+			<%= form.text_field :designation, :class => '' %>
+		</div>
+
+		<div class="flex_col">	
+			<b>Rate:</b>
+			<%= form.number_field :posting_rate, :class => '' %>
 		</div>
 	</div>
 	
@@ -61,3 +73,4 @@
 	</div>
 	
 <% end %>
+

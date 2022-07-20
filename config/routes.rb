@@ -56,7 +56,7 @@ Rails.application.routes.draw do
       get :weekly_wise_data
       put :weekly_update
       put :update_duration_status
-      #get :reopen_timesheet
+      get :reopen_timesheet
       put :update_notification_read
     end
   end
@@ -75,6 +75,12 @@ Rails.application.routes.draw do
       
       get :approve
       put :approve_submit
+      
+      get :create_new_invoice
+      post :generate_invoice
+      get :generate_invoice
+      
+      put :json_employee_info
     end
   end
   

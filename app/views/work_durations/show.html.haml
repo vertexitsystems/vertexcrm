@@ -5,6 +5,8 @@
 			= @work_duration.employee.profile.name
 		.div{:style=>"font-weight:bold;font-size:12px"}
 			TIME SHEET
+			- if current_user.is_admin? || current_user.is_account_manager?
+				= link_to "(edit)", edit_work_duration_path(@work_duration)
 	.flex_col{:style=>"flex-shrink:30"}
 		-# if  (!@work_duration.is_past_due_date? && @work_duration.is_pending?) || @work_duration.is_resubmitted?
 			
@@ -46,33 +48,33 @@
 				%b
 					Day
 			.flex_col.tsd_col{:style=>"text-align:right"}
-				= @work_duration.sun.strftime("%m/%d")
+				= @work_duration.sunday.strftime("%m/%d")
 				%br
-				= @work_duration.sun.strftime("%a")
+				= @work_duration.sunday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.mon.strftime("%m/%d")
+				= @work_duration.monday.strftime("%m/%d")
 				%br
-				= @work_duration.mon.strftime("%a")
+				= @work_duration.monday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.tue.strftime("%m/%d")
+				= @work_duration.tuesday.strftime("%m/%d")
 				%br
-				= @work_duration.tue.strftime("%a")
+				= @work_duration.tuesday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.wed.strftime("%m/%d")
+				= @work_duration.wednesday.strftime("%m/%d")
 				%br
-				= @work_duration.wed.strftime("%a")
+				= @work_duration.wednesday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.thu.strftime("%m/%d")
+				= @work_duration.thursday.strftime("%m/%d")
 				%br
-				= @work_duration.thu.strftime("%a")
+				= @work_duration.thursday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.fri.strftime("%m/%d")
+				= @work_duration.friday.strftime("%m/%d")
 				%br
-				= @work_duration.fri.strftime("%a")
+				= @work_duration.friday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.sat.strftime("%m/%d")
+				= @work_duration.saturday.strftime("%m/%d")
 				%br
-				= @work_duration.sat.strftime("%a")
+				= @work_duration.saturday.strftime("%a")
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
 				Total
 		.flex_row.tsd_row
@@ -85,44 +87,23 @@
 		- def get_hours_for_day(day)
 			- wday = @work_duration.select_day(day)
 			- return wday.blank? ? "0.0" : wday.hours.to_f
+		- hours_array = @work_duration.fetch_hours_array
 		.flex_row.tsd_row{:style=>"background:#fff;display:flex"}
 			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
 				ST/Hr
-			.flex_col.tsd_col_right
-				0.0
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.mon)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.tue)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.wed)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.thu)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.fri)
-			.flex_col.tsd_col_right
-				0.0
+			- hours_array.each do |hours|
+				.flex_col.tsd_col_right
+					= hours
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
-				= @work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
+				= hours_array.inject(:+)#@work_duration.total_hours_worked#@work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
 		.flex_row.tsd_row{:style=>"background:#f5fafe"}
 			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
 				Total
-			.flex_col.tsd_col_right
-				0.0
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.mon)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.tue)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.wed)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.thu)
-			.flex_col.tsd_col_right
-				= get_hours_for_day(@work_duration.fri)
-			.flex_col.tsd_col_right
-				0.0
+			- hours_array.each do |hours|
+				.flex_col.tsd_col_right
+					= hours
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
-				= @work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
+				= hours_array.inject(:+)#@work_duration.total_hours_worked#@work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
 		.tsd_section_header
 			Position Information
 			.flex_row.tsd_row{:style=>"background:#fff;padding:6px"}

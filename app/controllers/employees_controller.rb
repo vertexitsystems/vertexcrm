@@ -5,44 +5,32 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
-    @employees = Employee.joins(:profile).order("profiles.full_name")
-    
-    params.each do |key, value|
-      if key == "emp"
-        @employees = @employees.select{|emp|emp.id == value.to_i}
-      end
-      if key == "proj"
-        @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.id == value.to_i}
-      end
-      if key == "contract"
-        @employees = @employees.select{|emp|emp.contract_type == value}
-      end
-      if key == "vendor"
-        @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.vendor.id == value.to_i}
-      end
-    end
+    @employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
+    @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
+    @employees = @employees.where('jobs.id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
+    @employees = @employees.where(contract_type: params[:contract]) if params[:contract].present? && !params[:contract].blank?
+    @employees = @employees.where('vendors.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
+    # @employees = Employee.joins(:profile).order("profiles.full_name")
+    #
+    # params.each do |key, value|
+    #   if key == "emp"
+    #     @employees = @employees.select{|emp|emp.id == value.to_i}
+    #   end
+    #   if key == "proj"
+    #     @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.id == value.to_i}
+    #   end
+    #   if key == "contract"
+    #     @employees = @employees.select{|emp|emp.contract_type == value}
+    #   end
+    #   if key == "vendor"
+    #     @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.vendor.id == value.to_i}
+    #   end
+    # end
+
+    #@employees = Employee.includes(:profile, :vendors, :projects, :jobs)#.joins(:profile).order("profiles.full_name")
   end
 
-  # GET //employees/dashboard
-  def dashboard
-    @profile = current_user.profile
-    
-    # Dashboard will not be accesible to anyone but the owner employee so there is no need to check if current_user is same or not
-    # IF logged in user has no employee object associated with it create one
-    if @profile.employee.blank?
-      Employee.new(profile_id: @profile.id).save
-      #@profile.create_employee()
-    end
-    
-    
-    @employee = @profile.employee
-    #if current_user.is_employee? && !current_user.profile.employee.blank?
-    #  @employee = current_user.profile.employee
-    #else
-    #  redirect_to root_path
-    #end
-    
-  end
+
   
   # GET /employees/1
   # GET /employees/1.json
@@ -59,58 +47,9 @@ class EmployeesController < ApplicationController
       redirect_to root_path
     end
     
-    # Make sure when employee accesses this page they have work_durations for current and previous week
-    
-    @employee.vendors.each do |vendor|
-      project = @employee.projects.where(vendor_id: vendor.id).first
-      last_week_date = Date.today - Date.today.wday
-      (last_week_date.at_beginning_of_week..Date.today.at_end_of_week).to_a.map.each_with_index do |day, _index|
-        day_entry = project.work_durations.where(work_day: day)
-        project.work_durations.create(hours: 0, work_day: day, time_sheet_status:1) unless day_entry.present?
-      end
-    end
-    
-    # unless params[:from_date].present?
-#       @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(work_day: 3.month.ago.beginning_of_week..Date.today.end_of_week).where(
-#         'projects.employee_id =?', @employee.id
-#       ).references(:project)
-#     end
-#     if params[:from_date].present?
-#       @work_durations = WorkDuration.includes(project: %i[employee vendor]).where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week).where(
-#         'projects.employee_id =?', @employee.id
-#       ).references(:project)
-#     end
-#     if @work_durations.present?
-#       @work_durations = @work_durations.order(work_day: :desc).group_by do |w|
-#         [w.project.employee.name, w.project.vendor.name, w.project.id,
-#          w.work_day.beginning_of_week]
-#       end
-#     end
-#     @from_date = params[:from_date] if params[:from_date].present?
-#     @to_date = params[:to_date] if params[:to_date].present?
-#     @date = @from_date.present? ? "#{@from_date} to #{@to_date}" : 'Date Range'
     respond_to do |format|
       format.html
-      format.js
-    end
-  end
-
-  def employee_report
-    @employee = Employee.find(params[:eid])
-                     
-    @work_durations = @employee.work_durations
-    @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
-    @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|
-       [w.project.employee.name, w.work_day.beginning_of_week]
-    end
-    respond_to do |format|
-      format.html
-      format.pdf do
-        render pdf: 'Employee Wise Report', page_size: 'A4',
-               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
-               encoding: 'UTF-8', 
-               show_as_html: params.key?('debug')
-      end
+      format.json { render json: @employee }
     end
   end
 
@@ -126,8 +65,6 @@ class EmployeesController < ApplicationController
       redirect_to edit_profile_path(current_user.profile)
     end
   end
-
-  def add_vendor; end
 
   # POST /employees
   # POST /employees.json
@@ -205,6 +142,41 @@ class EmployeesController < ApplicationController
     end
   end
   
+  # MARK - Custom Methods
+  
+  # GET //employees/dashboard
+  def dashboard
+    @employee = current_user.profile.employee
+    
+    # Dashboard will not be accesible to anyone but the owner employee so there is no need to check if current_user is same or not
+    # IF logged in user has no employee object associated with it create one
+    if @employee.blank?
+      if Employee.new(profile_id: @profile.id).save
+        @employee = current_user.profile.employee
+      else
+      end
+    end
+    
+  end
+  def employee_report
+    @employee = Employee.find(params[:eid])
+                     
+    @work_durations = @employee.work_durations
+    @work_durations = @work_durations.where(work_day: DateTime.parse(params[:from_date]).beginning_of_week..DateTime.parse(params[:to_date]).end_of_week) if params[:from_date].present?
+    @work_durations = @work_durations.includes(project: [:employee]).group_by do |w|
+       [w.project.employee.name, w.work_day.beginning_of_week]
+    end
+    respond_to do |format|
+      format.html
+      format.pdf do
+        render pdf: 'Employee Wise Report', page_size: 'A4',
+               margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
+               encoding: 'UTF-8', 
+               show_as_html: params.key?('debug')
+      end
+    end
+  end
+  def add_vendor; end
   def disable_consultant
     @employee = Employee.find(params["emp_id"])
     
@@ -216,7 +188,7 @@ class EmployeesController < ApplicationController
     end
     
   end
-
+  
   private
 
   # Use callbacks to share common setup or constraints between actions.

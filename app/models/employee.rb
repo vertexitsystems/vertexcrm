@@ -45,9 +45,14 @@ class Employee < ApplicationRecord
     has_many :timesheets
     
   def name
-    self.profile.blank? ? "(Profile Missing)" : self.profile.name
+    profile.blank? ? "(Profile Missing)" : profile.name
   end
 	
+  # start_date is larger (newer, 30 july 2022), end_date is smaller (older: 1 junly 2022)
+  def work_durations_for_period(start_date, end_date)
+    work_durations.where("extract(dow from work_day) = ?", 1)
+  end
+  
   private
 
   #def destroy_associations

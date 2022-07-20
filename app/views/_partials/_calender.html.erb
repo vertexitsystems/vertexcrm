@@ -1,3 +1,6 @@
+<%= render "_partials/timesheet_viewer", employees:[Employee.third], can_update:true %>
+
+<% if false  %>
 <script>
 	$(document).ready(function() {
 		$('#generate_report_button').click(function(event){
@@ -48,7 +51,6 @@
 		$('.calendar-picture').click(function() {
 			var name = "#"+$(this).attr('full_image');
 			$(name).show();
-			
 	    });
 		
 		$('.full-image-bg').click(function() {
@@ -129,7 +131,7 @@
 		});
 	});
 </script>
-	
+
 <%= csrf_meta_tag %>
 	
 <% if !defined?(can_update) %>
@@ -401,6 +403,13 @@
 					<% end %>
 					
 					<% if show_each_day %>
+						<div class="col col8 labeled-toggle-g<%=loop_index%>">
+							<label class="mt-3 " for="work_duration_a1">
+								<%= day.mon_hourss %>
+							</label>
+						</div>
+						<!-- PATCH 72205 AA03 - START -->
+						<% if false %>
 						<% wd.all_days.each do |day| %>
 							<div class="col col8 labeled-toggle-g<%=loop_index%>">
 								<label class="mt-3 " for="work_duration_a1">
@@ -422,17 +431,22 @@
 							</div>
 							
 						<% end %> <!-- END OF wd.all_days loop -->
+						<% end %> <!-- END if false -->
+						<!-- PATCH 72205 AA03 - END -->
+						
 					<% end %> <!-- END OF if show_each_day -->
 					
 					<div class="col col8 labeled-toggle-g<%=loop_index%>">
 						<label class="mt-3 label-duration-1" for="work_duration_a1">
-							<%= wd.id.blank? ? "-" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+							<%# wd.id.blank? ? "-" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+							<%= wd.total_hours_worked %>
 						</label>
 					</div>
 					
 					<div class="col col8 field-toggle-g<%=loop_index%>" style="display:none">
 						<label class="mt-3 label-duration-1" for="work_duration_a1", id="total_g<%=loop_index%>">
-							<%= wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+							<%# wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+							<%= wd.total_hours_worked %>
 						</label>
 					</div>
 					
@@ -684,6 +698,12 @@
 				<% end %>
 				
 				<% if show_each_day %>
+					<div class="col col8 labeled-toggle-<%=loop_index%>">
+						<label class="mt-3 " for="work_duration_a1">
+							<%= "day.hours" %>
+						</label>
+					</div>
+					<% if false %>
 					<% wd.all_days.each do |day| %>
 						<div class="col col8 labeled-toggle-<%=loop_index%>">
 							<label class="mt-3 " for="work_duration_a1">
@@ -703,17 +723,20 @@
 							</label>
 						</div>
 					<% end %> <!-- END OF wd.all_days loop -->
+					<% end %>
 				<% end %> <!-- END OF if show_each_day -->
 				
 				<div class="col col8 labeled-toggle-<%=loop_index%>">	
 					<label class="mt-3 label-duration-1" for="work_duration_a1">
-						<%= wd.id.blank? ? "-" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+						<%# wd.id.blank? ? "-" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+						<%= wd.total_hours_worked %>
 					</label>
 				</div>
 				
 				<div class="col col8 field-toggle-<%=loop_index%>" style="display:none">
 					<label class="mt-3 label-duration-1" for="work_duration_a1", id="total_<%=loop_index%>">
-						<%= wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+						<%# wd.id.blank? ? "0" : wd.all_days.map{|wd|wd.hours}.inject(0, :+) %>
+						<%= wd.total_hours_worked %>
 					</label>
 				</div>
 				
@@ -1728,3 +1751,6 @@ ED: <%= end_date %>
 <% end %>
 	 
 	 -->
+	 
+	 
+<% end %>

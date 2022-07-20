@@ -113,17 +113,13 @@
 <% end %>
 <%# "Environment: #{Rails.env}" %>
 <div class="page_heading"> Timesheet Management </div>
-<div class="section">
-	
-    <div class="info_right_daterange">
-        <%# text_field_tag 'time_sheet_date_range', "Date Range",class: 'form-control date-range-picker',id:"date-range-work" %> 
-		<%# text_field_tag 'time_sheet_date_range',  @date, class: 'form-control daterange',id:"date-range-work"  %>
-        <!-- <span class="material-icons calender-icon">calendar_today</span> -->
-    </div>
-</div>
 
-<div class="section" id="calender">
+<div class="section" id="calender" style="margin-top:60px">
 
-<%= render "employees/calender", work_durations:WorkDuration.all, can_update:false, can_act:true, show_unsubmitted:false, show_filters: true, show_actionables_actmgr:true %>
+<%= render "_partials/timesheet_viewer", can_act:true,
+										 show_unsubmitted:false,
+										 show_filters: true,
+										 show_actionables_actmgr:true,
+										 show_each_day: false  %>
 
 </div>

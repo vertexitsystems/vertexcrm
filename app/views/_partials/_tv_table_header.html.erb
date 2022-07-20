@@ -1,0 +1,71 @@
+<% def sortable_header(title, sort_value) %>
+	<% if params["order"].present? && params["order"] == sort_value %>
+  	<i class="material-icons" style="display: inline-flex;vertical-align: top;line-height:16px;">arrow_drop_down</i>
+	<%= title %>
+	<% else %>
+	<span style="font-size:12px;line-height:14px;"><%= link_to title, url_for( :order => sort_value ), :style=>"color:#FFF !important" %></span>
+	<% end %>
+<% end %>
+
+<div class="row top">
+	<% if show_submitted_date %>
+		<div class="col col8"> Submitted Date </div>
+  	<% end %>
+	
+	<% if show_employee_info %>
+		<div class="col col8">
+			<% sortable_header("Consultant Name", "employee") %>
+		</div>
+		
+		<div class="col col8">
+			<% sortable_header("Vendor", "vendor") %>
+		</div>
+	<% end %>
+	
+	<div class="col col-5">
+		<% sortable_header("Time Period", "period") %>
+	</div>
+	
+	<% if show_contract_type %>
+		<div class="col col8">
+			Contract Type
+		</div>
+	<% end %>
+	
+	<% if show_project_name %>
+		<div class="col col8">
+			<% sortable_header("Project", "project") %>
+		</div>
+	<% end %>
+	
+	<% if show_each_day %>
+		<div class="col col8"> Sun </div>
+		<div class="col col8"> Mon </div>
+		<div class="col col8"> Tue </div>
+		<div class="col col8"> Wed </div>
+		<div class="col col8"> Thu </div>
+		<div class="col col8"> Fri </div>
+		<div class="col col8"> Sat </div>
+	<% end %>
+	
+	<div class="col col8"> 
+		Total Hours
+	</div>
+	
+	<div class="col col8">
+		Timesheet / Screenshot
+	</div>
+	
+	<div class="col col8">
+		<% sortable_header("Status", "status") %>
+	</div>
+	
+	<% if can_act %>
+		<div class="col col12">
+			Actions
+		</div>
+	<% end %>
+	
+	<div style="clear:both"></div>
+	
+</div>

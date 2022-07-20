@@ -41,6 +41,34 @@ function bind_filters() {
 		var param_name = $(this).attr("filter_name");
 		loadURL(constructParams(param_name, vend_id));
 	});
+	
+	$(".parent-toggle").on("click",function(event){
+		if ($(event.target).is("div")){
+			
+			
+			var id = this.dataset.index;
+			$(".labeled-toggle-"+id).toggle();
+			$(".field-toggle-"+id).toggle();
+			
+			// var total_hours = 0;
+			// if(flag){
+			// 	$(".emp-duration-"+id).each(function(index,input){
+			// 		total_hours += parseInt(input.value || '0');
+			// 	});
+			//
+			// 	flag = false;
+			// }
+			// else{
+			// 	$(".label-duration-"+id).each(function(index,input){
+			// 		total_hours += parseInt(input.text || '0');
+			// 	});
+			// 	flag = true;
+			// }
+			//
+			// $("#total-hours-"+id).html(total_hours);
+			// $("#"+this.lastElementChild.attributes.id.nodeValue).slideToggle(500);
+		}
+	})
 }
 function bind_date_selectors(){
 	flatpickr(".date_select_field", {
@@ -50,7 +78,13 @@ function bind_date_selectors(){
 		allowInput: true,
 		monthSelectorType: "static"
 	});
-	//$(".date_select_field").datepicker();
+	flatpickr(".date_range_field", {
+		mode: "range",
+		dateFormat: "Y-m-d",
+		defaultDate:'null',
+		allowInput: true,
+		monthSelectorType: "static"
+	});
 }
 function bind_popup_image(){
 	$(document).ready(function() {
