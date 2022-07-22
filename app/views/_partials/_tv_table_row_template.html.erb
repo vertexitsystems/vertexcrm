@@ -41,15 +41,15 @@
 				<div class="col col8 labeled-toggle-<%=unique_id%>"> <%= hour %> </div>
 				<div class="col col8 labeled-toggle-<%=unique_id%>" style="display:none"> 
 					<%- day_name = ["sun","mon","tue","wed","thu","fri","sat"][index] %>
-					<%= number_field_tag day_name, hour, class: "hours_value hours_value_#{unique_id} hour_field_#{day_name}", result_id: "total_#{unique_id}", siblings: "hours_value_#{unique_id}" %> 
+					<%= number_field_tag day_name, hour, class: "hours_value hours_value_#{unique_id} hour_field_#{day_name}", result_id: "total_#{unique_id}", siblings: "hours_value_#{unique_id}" %>
 				</div>
 			<% end %>
 		
 		
 		<% end %>
-	
-		<div class="col col8  labeled-toggle-<%=unique_id%>"> <%= hours_array.inject(:+) %> </div>
-		<div class="col col8 field-toggle-<%=unique_id%>" id="total_<%=unique_id%>" style="display:none"> <%= hours_array.inject(:+) %> </div>
+		GAGA: <%= [0,20,nil,"nono","hello",4].compact.inject(:+) %><br>
+		<div class="col col8  labeled-toggle-<%=unique_id%>"> <%= hours_array.compact.inject(:+).to_i %> </div>
+		<div class="col col8 field-toggle-<%=unique_id%>" id="total_<%=unique_id%>" style="display:none"> <%= hours_array.compact.inject(:+).to_i %> </div>
 		
 		<div class="col col8">
 			<div class="calendar-picture" full_image="" data-toggle="modal" data-target="#popupImage<%= unique_id %>">
