@@ -122,7 +122,7 @@ class WorkDuration < ApplicationRecord
                 fri_hours.blank? ? 0 : fri_hours.hours.to_i,
                 sat_hours.blank? ? 0 : sat_hours.hours.to_i]
       else
-        return [sun, mon, tue, wed, thu, fri, sat]
+        return [sun.to_i, mon.to_i, tue.to_i, wed.to_i, thu.to_i, fri.to_i, sat.to_i]
       end
     end
     

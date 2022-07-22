@@ -95,7 +95,7 @@
 				.flex_col.tsd_col_right
 					= hours
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
-				= hours_array.inject(:+)#@work_duration.total_hours_worked#@work_duration.all_days.map{|x|x.hours}.inject(:+).to_f
+				= hours_array.compact.inject(:+)
 		.flex_row.tsd_row{:style=>"background:#f5fafe"}
 			.flex_col.tsd_col{:style=>"flex-shrink: 0.9;"}
 				Total
