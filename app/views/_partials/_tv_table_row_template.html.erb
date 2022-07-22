@@ -41,13 +41,13 @@
 				<div class="col col8 labeled-toggle-<%=unique_id%>"> <%= hour %> </div>
 				<div class="col col8 labeled-toggle-<%=unique_id%>" style="display:none"> 
 					<%- day_name = ["sun","mon","tue","wed","thu","fri","sat"][index] %>
-					<%= number_field_tag day_name, hour, class: "hours_value hours_value_#{unique_id} hour_field_#{day_name}", result_id: "total_#{unique_id}", siblings: "hours_value_#{unique_id}" %>
+					<%= number_field_tag day_name, hour, class: "hours_value hours_value_#{unique_id} hour_field_#{day_name}", result_id: "total_#{unique_id}", siblings: "hours_value_#{unique_id}", style:"min-width:35px" %>
 				</div>
 			<% end %>
 		
 		
 		<% end %>
-		
+
 		<div class="col col8  labeled-toggle-<%=unique_id%>"> <%= hours_array.compact.inject(:+).to_i %> </div>
 		<div class="col col8 field-toggle-<%=unique_id%>" id="total_<%=unique_id%>" style="display:none"> <%= hours_array.compact.inject(:+).to_i %> </div>
 		
@@ -72,7 +72,7 @@
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		        <img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : "Bettyboop"  %>" style="width: -webkit-fill-available;">
+		        <img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" style="width: -webkit-fill-available;">
 		      </div>
 			  <!--
 		      <div class="modal-footer">

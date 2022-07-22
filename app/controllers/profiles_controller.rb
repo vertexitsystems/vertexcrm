@@ -98,7 +98,13 @@ class ProfilesController < ApplicationController
   end
 
   # GET /profiles/1/edit
-  def edit; end
+  def edit
+    if @profile.id != current_user.profile.id
+      if !(current_user.is_admin? || current_user.is_account_manager?)
+        redirect_to edit_profile_path(current_user.profile)
+      end
+    end
+  end
 
   # POST /profiles
   # POST /profiles.json
@@ -189,15 +195,32 @@ class ProfilesController < ApplicationController
   # PATCH/PUT /profiles/1
   # PATCH/PUT /profiles/1.json
   def update
-    unless params[:profile][:vendor_id].blank?
-      Project.create(vendor_id: params[:profile][:vendor_id], rate: params[:profile][:rate],
-                     employee_id: @profile&.employee&.id)
-    end
+    # unless params[:profile][:vendor_id].blank?
+    #   Project.create(vendor_id: params[:profile][:vendor_id], rate: params[:profile][:rate],
+    #                  employee_id: @profile&.employee&.id)
+    # end
+    
     respond_to do |format|
       
       if @profile.update(profile_params)
-        format.html { redirect_to profile_path(@profile), notice: 'Profile was successfully updated.' }
-        format.json { render :show, status: :ok, location: @profile }
+        
+        if params[:profile][:password].present? && !params[:profile][:password].blank?
+          user_updated = @profile.user.update(email: params[:profile][:email], password: params[:profile][:password])
+        elsif params[:profile][:email].present? && !params[:profile][:email].blank? && (params[:profile][:password] != @user.email)
+          user_updated = @profile.user.update(email: params[:profile][:email])
+        end
+        
+        if user_updated
+          format.html { redirect_to root_path, notice: "Consultant was successfully updated." }
+          format.json { render :show, status: :ok, location: @profile }
+        else
+          flash[:alert] = "Failed with error: #{@user.errors.full_messages}"
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @profile.errors, status: :unprocessable_entity }
+        end
+        
+        #format.html { redirect_to profile_path(@profile), notice: 'Profile was successfully updated.' }
+        #format.json { render :show, status: :ok, location: @profile }
       else
         format.html { render :edit }
         format.json { render json: @profile.errors, status: :unprocessable_entity }

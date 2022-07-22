@@ -19,8 +19,8 @@
 </style>
 <%= link_to "< Back", edit_profile_path(current_user.profile.id) %>
 <div class="page_title"> Update Credentials </div>
-
 <%= form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
+
   <%= render "users/shared/error_messages", resource: resource %>
 
 <div class="flex_col">

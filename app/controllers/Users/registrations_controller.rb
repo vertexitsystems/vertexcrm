@@ -17,14 +17,27 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # GET /resource/edit
-  # def edit
-  #   super
-  # end
+   def edit
+          #
+     # if params[:id].present? && !params[:id].blank?
+     #   if current_user.is_admin? || current_user.is_account_manager?
+     #     user = User.find(params[:id].to_i)
+     #     if !user.blank?
+     #       resource = user
+     #     end
+     #   end
+     # end
+     #
+     # puts "-------------------------------------------------- "
+     # puts resource.id
+     # puts params
+     #
+     super
+   end
 
   # PUT /resource
-  # def update
-  #   super
-  # end
+  def update
+  end
 
   # DELETE /resource
   # def destroy

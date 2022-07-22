@@ -86,7 +86,7 @@ class EmployeesController < ApplicationController
     respond_to do |format|
       if @employee.save
         
-        @employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
+        #@employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
         
         format.html { redirect_to @employee, notice: 'Employee was successfully created.' }
         format.json { render :show, status: :created, location: @employee }
@@ -100,36 +100,61 @@ class EmployeesController < ApplicationController
   # PATCH/PUT /employees/1
   # PATCH/PUT /employees/1.json
   def update
-    #byebug
+    
+    @user = @employee.profile.user
+    
     respond_to do |format|
-      #print "=================> " + employee_params.except("profile_attributes").except("id").to_s
-      #byebug
+      
       if @employee.update(employee_params.except("profile_attributes").except("id"))
-        if @employee.profile.update(employee_params["profile_attributes"])
-
-          if @employee.projects.count > 0
-            if @employee.projects.first.update(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
-              format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
-              format.json { render :show, status: :ok, location: @employee }
-            else
-              format.html { render :edit }
-              format.json { render json: @employee.projects.errors, status: :unprocessable_entity }
-            end
-          else
-            @employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
-            format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
-            format.json { render :show, status: :ok, location: @employee }
-          end
-          
-        else
-          format.html { render :edit }
-          format.json { render json: @employee.profile.errors, status: :unprocessable_entity }
+        
+        if params[:employee][:profile_attributes][:password].present? && !params[:employee][:profile_attributes][:password].blank?
+          user_updated = @user.update(email: params[:employee][:profile_attributes][:email], password: params[:employee][:profile_attributes][:password])
+        elsif params[:employee][:profile_attributes][:email].present? && !params[:employee][:profile_attributes][:email].blank? && (params[:employee][:profile_attributes][:password] != @user.email)
+          user_updated = @user.update(email: params[:employee][:profile_attributes][:email])
         end
-      else
-        format.html { render :edit }
-        format.json { render json: @employee.errors, status: :unprocessable_entity }
+        
+        if user_updated
+          format.html { redirect_to @employee, notice: "Consultant was successfully updated." }
+          format.json { render :show, status: :ok, location: @employee }
+        else
+          flash[:alert] = "Failed with error: #{@user.errors.full_messages}"
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @employee.errors, status: :unprocessable_entity }
+        end
+      
       end
     end
+
+    #byebug
+    # respond_to do |format|
+    #   #print "=================> " + employee_params.except("profile_attributes").except("id").to_s
+    #   #byebug
+    #   if @employee.update(employee_params.except("profile_attributes").except("id"))
+    #     if @employee.profile.update(employee_params["profile_attributes"])
+
+    #       if @employee.projects.count > 0
+    #         if @employee.projects.first.update(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
+    #           format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
+    #           format.json { render :show, status: :ok, location: @employee }
+    #         else
+    #           format.html { render :edit }
+    #           format.json { render json: @employee.projects.errors, status: :unprocessable_entity }
+    #         end
+    #       else
+    #         @employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
+    #         format.html { redirect_to @employee, notice: 'Employee was successfully updated.' }
+    #         format.json { render :show, status: :ok, location: @employee }
+    #       end
+          
+    #     else
+    #       format.html { render :edit }
+    #       format.json { render json: @employee.profile.errors, status: :unprocessable_entity }
+    #     end
+    #   else
+    #     format.html { render :edit }
+    #     format.json { render json: @employee.errors, status: :unprocessable_entity }
+    #   end
+    # end
   end
 
   # DELETE /employees/1
