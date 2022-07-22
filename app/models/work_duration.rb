@@ -114,13 +114,13 @@ class WorkDuration < ApplicationRecord
         fri_hours = wds.select {|wd|wd.work_day == friday}.first
         sat_hours = wds.select {|wd|wd.work_day == saturday}.first
         
-        return [sun_hours.blank? ? 0 : sun_hours.hours,
-                mon_hours.blank? ? 0 : mon_hours.hours,
-                tue_hours.blank? ? 0 : tue_hours.hours,
-                wed_hours.blank? ? 0 : wed_hours.hours,
-                thu_hours.blank? ? 0 : thu_hours.hours,
-                fri_hours.blank? ? 0 : fri_hours.hours,
-                sat_hours.blank? ? 0 : sat_hours.hours,]
+        return [sun_hours.blank? ? 0 : sun_hours.hours.to_i,
+                mon_hours.blank? ? 0 : mon_hours.hours.to_i,
+                tue_hours.blank? ? 0 : tue_hours.hours.to_i,
+                wed_hours.blank? ? 0 : wed_hours.hours.to_i,
+                thu_hours.blank? ? 0 : thu_hours.hours.to_i,
+                fri_hours.blank? ? 0 : fri_hours.hours.to_i,
+                sat_hours.blank? ? 0 : sat_hours.hours.to_i]
       else
         return [sun, mon, tue, wed, thu, fri, sat]
       end
