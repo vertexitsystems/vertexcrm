@@ -334,7 +334,8 @@ class WorkDurationsController < ApplicationController
     wd.status_read = true # IF this value is true consultatnt will see notification for status change
     
     if wd.posting_id.blank?
-      wd.posting_id = wd.employee.active_postings.first.id unless posting.blank?
+      posting = wd.employee.active_postings.first
+      wd.posting_id = posting.id unless posting.blank?
     end
     
     if wd.save
