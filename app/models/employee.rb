@@ -26,7 +26,7 @@ class Employee < ApplicationRecord
   #attr_accessor :profile
 	
   	has_many :projects
-  	has_many :vendors, through: :projects
+  	
   	has_many :work_durations,through: :projects
 
   
@@ -39,6 +39,8 @@ class Employee < ApplicationRecord
     
     has_many :postings
     has_many :jobs, through: :postings
+
+    has_many :vendors, through: :jobs#:projects
     #accepts_nested_attributes_for :postings
     #belongs_to :job, optional: true
     

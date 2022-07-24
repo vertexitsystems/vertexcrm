@@ -6,13 +6,13 @@ document.addEventListener("turbolinks:load", () => {
 	flatpickr("#close_consultant_field_date", {
 		mode: "single",
 		dateFormat: "Y-m-d",
-		allowInput: true,
+		allowInput: false,
 		monthSelectorType: "static"
 	}),
     flatpickr("#date-range-work,#date-range-work-report", {
       mode: "range",
       dateFormat: "Y-m-d",
-		allowInput: true,
+		allowInput: false,
 		monthSelectorType: "static"
     }),
     $("#previous_weeks").on("click", function(event) {
@@ -33,13 +33,34 @@ document.addEventListener("turbolinks:load", () => {
 			//alert("load data with dates: " + d.target.value);
 			var split_dates = d.target.value.split(" to ");
 			var current_url = window.location.protocol + '//' + window.location.host + window.location.pathname;
+
+      var searchString = window.location.search.substring(1);
+      var params = searchString.split("&");
+      var old_params = "";
+      if (searchString != ""){
+        for (var i = 0; i < params.length; i++) {
+          var val = params[i].split("=");
+
+          // if (val[1] == ""){
+          //   continue;
+          // }
+          //alert("val[0]: " + val[0] + " result " + (val[0] != "from_date") );
+          if (val[0] != "from_date" && val[0] != "to_date"){
+            old_params += ("&" + params[i]);
+          }
+        }
+      }
+
+      //alert("ur: "+old_params);
+
 			if (split_dates.length > 1) {
 				
-				window.location.replace(current_url+"?from_date="+split_dates[0]+"&to_date="+split_dates[1]);
+				window.location.replace(current_url+"?from_date="+split_dates[0]+"&to_date="+split_dates[1]+old_params);
 			} else {
 				//alert("Date: start:" + split_dates[0] + ", End: " + split_dates[0]);
-				window.location.replace(current_url+"?from_date="+split_dates[0]+"&to_date="+split_dates[0]);
+				window.location.replace(current_url+"?from_date="+split_dates[0]+"&to_date="+split_dates[0]+old_params);
 			}
+
 			prev_value= ""
 			
 		}

@@ -7,8 +7,43 @@ class InvoicesController < ApplicationController
   # GET /invoices or /invoices.json
   def index
     if current_user.is_admin? || current_user.is_account_manager?
+      
       @invoices = Invoice.where.not(payment_date: nil)
+      
+      @invoices = @invoices.where(approval_status:params[:status].to_i) if params[:status].present? && !params[:status].blank?
+
+      @employer = Employer.includes(:employees).where(id: params[:elr]).first if params[:elr].present? && !params[:elr].blank?
+      @employees = @employer.blank? ? Employee.includes(:profile).all : @employer.employees
+      
+      @selected_employee = Employee.includes(:profile).where(id: params[:emp]).first if params[:emp].present? && !params[:emp].blank?
+
+      @invoices = @invoices.where(employer_id:@employer.id) if !@employer.blank?
+      @invoices = @invoices.where(employee_id:@selected_employee.id) if !@selected_employee.blank?
+      
+      start_date = params[:from_date] if params[:from_date].present? && !params[:from_date].blank?
+      end_date = params[:to_date].present? && !params[:to_date].blank? ? params[:to_date] : start_date
+      
+      @invoices = @invoices.where(payment_date:start_date...end_date) if !start_date.blank?
+
+      
+
+      if !request.format.pdf?
+        @invoices = @invoices.order(:payment_date).page(params[:page])#.paginate(page: (params[:page]), per_page: 1)
+      end
+      
+      
+      respond_to do |format|
+        format.html
+        format.pdf do
+          render pdf: 'Invoice Report', page_size: 'A4',
+                 margin: { top: '10mm', bottom: '10mm', left: '5mm', right: '5mm' }, 
+                 encoding: 'UTF-8', 
+                 show_as_html: params.key?('debug')
+        end
+      end
+
     elsif current_user.is_employer? && params[:emp].present?
+
       @employee = Employee.find(params[:emp].to_i)
       @employer = current_user.profile.employer
       if !@employee.blank? && @employee.employer.id == current_user.profile.employer.id
@@ -38,7 +73,7 @@ class InvoicesController < ApplicationController
       
       start_date = end_date.last_week
     end
-    
+
     
   end
 
@@ -159,7 +194,8 @@ class InvoicesController < ApplicationController
   
   # This method generates a new invoice to be delivered to the client
   def create_new_invoice
-    @client = params[:client_id].present? ? Client.find(params[:client_id]) : Client.first
+    @vendor = (params[:vid].present? && !params[:vid].blank?) ? Vendor.where(id: params[:vid]).includes(:employees).first : nil
+    @employees = @vendor.blank? ? Employee.all : @vendor.employees.distinct
   end
   
   def json_employee_info
@@ -207,7 +243,9 @@ class InvoicesController < ApplicationController
   
   def generate_invoice
     
-    @client = Client.find(params[:client]) if params[:client].present?
+
+    #@client = Client.find(params[:client]) if params[:client].present?
+    @vendor = Vendor.find(params[:vendor]) if params[:vendor].present?
     @values = params[:employees].blank? ? [] : params[:employees].to_unsafe_h.values
 
     @employees = Employee.includes(:profile).where(id: @values.map{|e|e["emp_id"].to_i}) if params[:employees].present? && !params[:employees].blank?

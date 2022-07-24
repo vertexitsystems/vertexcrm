@@ -1,0 +1,78 @@
+- total_amount = 0
+= wicked_pdf_stylesheet_link_tag "bootstrap.min"
+.container-fluid
+  .row
+    .col
+      %b Vertex IT Systems LLC
+    .col.text-right
+      %h1 INVOICE LIST
+  .row.py-5
+    - if !@employer.blank?
+      .col
+        .row
+          .col
+            %b Employer Name:
+          .col
+            = @employer.company_name
+        .row
+          .col
+            %b Employer Address:
+          .col
+            = @employer.company_address
+    - if !@employee.blank?
+      .col
+        .row
+          .col
+            %b Consultant Name: 
+          .col
+            = @selected_employee.name
+  .row
+    .col
+      .row.border.bg-dark{style:"color:white"}
+        .col.border-right.align-middle
+          %b Employer
+        .col.border-right
+          %b Consultant Name
+        .col-3.border-right
+          %b Invoice Period
+        .col-1.border-right
+          %b Hours
+        .col-1.border-right{style:"min-width:100px"}
+          %b Amount
+        .col-2
+          %b Status
+      - if @invoices.count > 0
+        - @invoices.each do |invoice|
+          .row.row_hover_highlight.border
+            .col.border-right
+              = invoice.employer.company_name
+            .col.border-right
+              = invoice.employee.profile.name
+            .col-3.border-right
+              = "#{invoice.end_date.strftime("%b %d, %Y")} - #{invoice.start_date.strftime("%b %d, %Y")}"
+            .col-1.border-right
+              = invoice.approved_hours
+            .col-1.border-right{style:"min-width:100px"}
+              = invoice.approved_amount
+              - total_amount += invoice.approved_amount.tr('$','').to_i
+            .col-2
+              = invoice.status.capitalize
+              =# !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
+  .row.pt-5
+    .col
+    .col-3
+      .row
+        .col
+          Subtotal:
+        .col
+          = "$"+total_amount.to_s
+      .row
+        .col
+          Tax(0%):
+        .col
+          0
+      .row
+        .col
+          Total:
+        .col
+          = "$"+total_amount.to_s

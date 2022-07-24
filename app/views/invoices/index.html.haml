@@ -1,117 +1,119 @@
 .container-fluid
 	.row
 		.col
-		.col-2
-			= link_to "New Invoice", create_new_invoice_invoices_path, class:"rounded bg-success px-5 py-2", style: "color:white !important"
-
-	
-.flex_row
-	.flex_col
-		.section
-			.row.top
-				.col
-					Consultant Name
-				.col
-					Invoice Period
-				.col
-					Approved Hours
-				.col
-					Approved Amount
-				.col
-					File
-				.col
-					Payament Status
-				.col
-					Actions
 			- if current_user.is_account_manager?
-				- @invoices.each do |invoice|
-					.row.row_hover_highlight
-						.col.img_col
-							= invoice.employee.profile.name
-						.col.img_col
-							= link_to "#{invoice.end_date.strftime("%b %d, %Y")} - #{invoice.start_date.strftime("%b %d, %Y")}", invoice_path(invoice.id)
-						.col.img_col
-							= invoice.approved_hours
-						.col.img_col
-							= invoice.approved_amount
-						.col.img_col
-							- if !invoice.invoice_file.blank?
-								.calendar-picture{:style => "width:60px;height:60px"}
-									= link_to url_for(invoice.invoice_file), :style => "max-width:100px;max-height:100px" do image_tag(url_for(invoice.invoice_file)) end 
-							- else
-								(Not Provided)
-						.col.img_col
-							= invoice.status.capitalize
-							=# !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
-						.col.img_col
-							- if current_user.is_admin? || current_user.is_account_manager?
-								- if invoice.pending?#if !invoice.payment_status && invoice.payment_rejection_message.blank?
-									= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
-									|
-									-# if invoice.payment_rejection_message.blank?
-									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
-									|
-									= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete
-									|
-									= link_to "Edit", edit_invoice_path(invoice.id)
+				.row
+					.col
+						= select_tag 'employer_filter', options_from_collection_for_select(Employer.all, "id", "company_name", params["elr"]), class: 'form-control filter_field', id: "employer_filter", filter_name: "elr", prompt: "Employer"
+					.col
+						= select_tag 'employee_filter', options_from_collection_for_select(@employees, "id", "name", params["emp"]), class: 'form-control filter_field', id: "employee_filter", filter_name: "emp", prompt: "Consultant"
+					.col
+						- status_options = [{"name"=>"approved", "id"=>"3"}, {"name"=>"rejected", "id"=>"4"}, {"name"=>"pending", "id"=>"1"}]
+						= select_tag 'status_filter', options_for_select(status_options.collect {|p| [ p['name'], p['id'] ] }, params["status"]), class: 'form-control filter_field', id: "status_filter", filter_name: "status", prompt: "Status"
+					.col
+						= text_field_tag 'time_sheet_date_range', @date, class: 'form-control daterange', id:"date-range-work", placeholder: "Date Filter", value: params["from_date"].present? ? "#{params["from_date"]} to #{params["to_date"]}" : "Select Date"
+					.col
+					.col.text-right{style:"padding:10px 0px;"}
+						.btn-group
+							%button.btn.dropdown-toggle{style:"background-color:var(--main-color);color:white !important","data-toggle":"dropdown", "aria-haspopup":"true", "aria-expanded":"false"}
+								Action
+							.dropdown-menu
+								= link_to "Generate Invoice", create_new_invoice_invoices_path, class:"dropdown-item"
+								= link_to "Print Report", invoices_path(elr: params[:elr], emp: params[:emp], status:params[:status], to_date:params[:to_date], from_date: params[:from_date], format:'pdf'), target: :_blank, class: "dropdown-item"
+	.row
+		.col
+			.section
+				.row.top
+					- if !current_user.is_employer?
+						.col
+							Employer
+					.col
+						Consultant Name
+					.col
+						Invoice Period
+					.col
+						Approved Hours
+					.col
+						Approved Amount
+					.col
+						File
+					.col
+						Payament Status
+					.col
+						Actions
+				- if current_user.is_account_manager?
+					- if @invoices.count > 0
+						- @invoices.each do |invoice|
+							.row.row_hover_highlight
+								.col.img_col
+									= invoice.employer.company_name
+								.col.img_col
+									= invoice.employee.profile.name
+								.col.img_col
+									= link_to "#{invoice.end_date.strftime("%b %d, %Y")} - #{invoice.start_date.strftime("%b %d, %Y")}", invoice_path(invoice.id)
+								.col.img_col
+									= invoice.approved_hours
+								.col.img_col
+									= invoice.approved_amount
+								.col.img_col
+									- if !invoice.invoice_file.blank?
+										.calendar-picture{:style => "width:60px;height:60px"}
+											= link_to url_for(invoice.invoice_file), :style => "max-width:100px;max-height:100px" do image_tag(url_for(invoice.invoice_file)) end 
+									- else
+										(Not Provided)
+								.col.img_col
+									= invoice.status.capitalize
+									=# !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
+								.col.img_col
+									- if current_user.is_admin? || current_user.is_account_manager?
+										- if invoice.pending?#if !invoice.payment_status && invoice.payment_rejection_message.blank?
+											= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
+											|
+											-# if invoice.payment_rejection_message.blank?
+											= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
+											|
+											= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete
+											|
+											= link_to "Edit", edit_invoice_path(invoice.id)
+					- else 
+						.row
+							.col
+								%b No Invoices Found
+										
+				- else
+				
+					- @date_ranges.each do |dr|
+						- invoice = @invoices.where(payment_date: dr.e..dr.s).first
+						- if invoice.blank?
+							- invoice = Invoice.new(payment_date: dr.e + 1, employee_id: @employee.id, employer_id: @employer.id)
+						.row.row_hover_highlight
+							.col.img_col
+								= @employee.blank? ? "-" : @employee.name
+							.col.img_col
+								- if invoice.id.blank?
+									= link_to "#{dr.e.strftime("%b %d, %Y")} - #{dr.s.strftime("%b %d, %Y")}", invoice_path(id: -1, emp: invoice.employee.id, elr:invoice.employer.id, s: invoice.payment_date)
 								- else
-									=# link_to "Reopen", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "O"), :method => :put
-									
-			- else
-			
-				- @date_ranges.each do |dr|
-					- invoice = @invoices.where(payment_date: dr.e..dr.s).first
-					- if invoice.blank?
-						- invoice = Invoice.new(payment_date: dr.e + 1, employee_id: @employee.id, employer_id: @employer.id)
-					.row.row_hover_highlight
-						.col.img_col
-							= @employee.blank? ? "-" : @employee.name
-						.col.img_col
-							- if invoice.id.blank?
-								= link_to "#{dr.e.strftime("%b %d, %Y")} - #{dr.s.strftime("%b %d, %Y")}", invoice_path(id: -1, emp: invoice.employee.id, elr:invoice.employer.id, s: invoice.payment_date)
-							- else
-								= link_to "#{dr.e.strftime("%b %d, %Y")} - #{dr.s.strftime("%b %d, %Y")}", invoice_path(invoice.id)
-						.col.img_col
-							= invoice.approved_hours.blank? ? "0" : invoice.approved_hours #.first.blank? ? "-" : invoice.approved_hours.first.map{|wd|wd.work_day}
-							=# invoice.approved_work_durations.count#.map{|wd|wd.employer.employer.profile.name}
-							=# invoice.approved_hours.first.blank? ? "-" : invoice.approved_hours.first.count
-						.col.img_col
-							= invoice.approved_amount
-						.col.img_col  
-							- if !invoice.invoice_file.blank?
-								.calendar-picture{:style => "width:60px;height:60px"}
-									= link_to url_for(invoice.invoice_file), :style => "max-width:100px;max-height:100px" do image_tag(url_for(invoice.invoice_file)) end 
-							- else
-								(Not Provided)
-						.col.img_col
-							= invoice.status.capitalize
-						.col.img_col
-							- if invoice.available?  || invoice.rejected?
-								- if invoice.persisted?
-									= link_to "Submit Invoice", edit_invoice_path(invoice.id)
-								-else
-									= link_to "Submit Invoice", new_invoice_path(emp: invoice.employee.id, elr:invoice.employer.id, s: invoice.payment_date)
-						
-/			- @invoices.each do |invoice|
-/ 				.row.row_hover_highlight
-/ 					.col.img_col
-/ 						= invoice.payment_date.blank? ? "<Not Provided>" : invoice.payment_date.strftime("%d %b, %Y")
-/ 					.col.img_col
-/ 						= invoice.employee.profile.name
-/ 					.col.img_col
-/ 						= invoice.employer.company_name
-/ 					.col.img_col
-/ 						- if invoice.invoice_file.attached?
-/ 							= link_to (image_tag url_for(invoice.invoice_file), :class=>"invoice_image_thumb"), url_for(invoice.invoice_file)
-/ 							= image_tag invoice.invoice_file.preview(resize_to_limit: [100, 100])
-/ 						- else
-/ 							(Not Provided)
-/ 					.col.img_col
-/ 						= !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Complete"
-/					- if current_user.is_admin? || current_user.is_account_manager?
-/						.col
-/							- if !invoice.payment_status
-/								= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
-/								- if invoice.payment_rejection_message.blank?
-/									|
-/									= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
+									= link_to "#{dr.e.strftime("%b %d, %Y")} - #{dr.s.strftime("%b %d, %Y")}", invoice_path(invoice.id)
+							.col.img_col
+								= invoice.approved_hours.blank? ? "0" : invoice.approved_hours
+							.col.img_col
+								= invoice.approved_amount
+							.col.img_col  
+								- if !invoice.invoice_file.blank?
+									.calendar-picture{:style => "width:60px;height:60px"}
+										= link_to url_for(invoice.invoice_file), :style => "max-width:100px;max-height:100px" do image_tag(url_for(invoice.invoice_file)) end 
+								- else
+									(Not Provided)
+							.col.img_col
+								= invoice.status.capitalize
+							.col.img_col
+								- if invoice.available?  || invoice.rejected?
+									- if invoice.persisted?
+										= link_to "Submit Invoice", edit_invoice_path(invoice.id)
+									-else
+										= link_to "Submit Invoice", new_invoice_path(emp: invoice.employee.id, elr:invoice.employer.id, s: invoice.payment_date)
+
+	.row
+		.col
+		.col-2
+			= paginate @invoices

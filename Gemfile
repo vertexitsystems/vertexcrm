@@ -33,6 +33,8 @@ gem 'whenever', require: false
 gem 'wicked_pdf'
 gem 'wkhtmltopdf-binary'
 
+#gem 'will_paginate', '~> 3.3'
+gem 'kaminari'
 
 # 62202HF2AA:
 #gem 'glib2', '~> 3.5', '>= 3.5.1'

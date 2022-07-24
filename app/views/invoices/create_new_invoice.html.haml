@@ -76,15 +76,15 @@
 		});
 		
 		
-		$("#client_select").change(function(){
+		$("#vendor_select").change(function(){
 			//var url = window.location.href;
 			//window.location.href = url;
 			
 			if(document.location.href.indexOf("?") > -1) {
 				var url = location.protocol + '//' + location.host + location.pathname
-				url = url+"?client_id="+$(this).val();
+				url = url+"?vid="+$(this).val();
 			}else{
-				var url = document.location.href+"?client_id="+$(this).val();
+				var url = document.location.href+"?vid="+$(this).val();
 			}
 			document.location = url;
 			
@@ -103,20 +103,20 @@
 				.row
 					%b Bill To:
 				.row
-					= select_tag :client, options_from_collection_for_select(Client.all, :id, :company_name, @client.id), id: "client_select"
+					= select_tag :vendor, options_from_collection_for_select(Vendor.all, :id, :company_name, (@vendor.blank? ? 0 : @vendor.id)), id: "vendor_select", include_blank: "All"
 			.col.mx-2
 				.row
 					%b Net:
 				.row
 					= select_tag :net, options_for_select(["Net15", "Net30", "Net45"])
-		- if @client.employees.count > 0
+		- if @employees.count > 0
 			.row.rounded.bg-sec-highlight.m-3
 				.col
 					.row.p-2
 						%b Add Consultants
 					.row
 						.col.p-2
-							= select_tag :employee, options_from_collection_for_select(@client.employees.includes(:profile).all, :id, :name, '1'), id:"employee_id_select"
+							= select_tag :employee, options_from_collection_for_select(@employees.includes(:profile).all, :id, :name, '1'), id:"employee_id_select"
 						.col.p-2
 							= text_field :period, "", value:Date.today, class:"date_range_field"
 						.col-1.align-middle

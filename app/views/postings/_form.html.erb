@@ -51,7 +51,7 @@
 			<b>Start Date:</b>
 			<%= form.text_field :start_date, :class => 'date_select_field' %>
 		</div>
-
+		<% if false %>
 		<div class="flex_col">	
 			<b>Designation:</b>
 			<%= form.text_field :designation, :class => '' %>
@@ -61,6 +61,7 @@
 			<b>Rate:</b>
 			<%= form.number_field :posting_rate, :class => '' %>
 		</div>
+		<% end %>
 	</div>
 	
 	<% end %>

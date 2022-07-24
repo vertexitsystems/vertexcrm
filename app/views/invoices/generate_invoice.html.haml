@@ -7,22 +7,25 @@
 		.col
 			Generated Invoice
 		.col-2
-			= link_to "Generate Report", generate_invoice_invoices_path(employees: params[:employees].to_unsafe_h, client: params[:client], net: params[:net], :format => 'pdf'), target: :_blank, class: "button_link", style: "margin:0px"
+			- if params[:employees].present? && !params[:employees].blank?
+				= link_to "Generate Report", generate_invoice_invoices_path(employees: params[:employees].to_unsafe_h, vendor: params[:vendor], net: params[:net], :format => 'pdf'), target: :_blank, class: "button_link", style: "margin:0px"
 	.row
 		.col-2.mr-2
-			.row.rounded-top{style:"background-color:#EEE"}
-				.col
-					%b Customer
-			.row.rounded-bottom{style:"background-color:#EEE"}
-				.col.pl-4
-					= @client.company_name
+			- if !@vendor.blank?
+				.row.rounded-top{style:"background-color:#EEE"}
+					.col
+						%b Customer
+				.row.rounded-bottom{style:"background-color:#EEE"}
+					.col.pl-4
+						= @vendor.company_name
 		.col-2
-			.row.rounded-top{style:"background-color:#EEE"}
-				.col 
-					%b Customer Email
-			.row.rounded-bottom{style:"background-color:#EEE"}
-				.col.pl-4
-					= @client.company_email
+			- if !@vendor.blank?
+				.row.rounded-top{style:"background-color:#EEE"}
+					.col 
+						%b Customer Email
+				.row.rounded-bottom{style:"background-color:#EEE"}
+					.col.pl-4
+						= @vendor.company_email
 		.col
 		.col
 			.row
@@ -32,13 +35,14 @@
 				.col{style:"font-size:34px"}
 					= total_amount_string
 	.row
-		.col-3.rounded{style:"background-color:#EEE"}
-			.row
-				.col
-					%b Billing Address
-			.row
-				.col.pl-4
-					= @client.company_address.blank? ? "(Not Provided)" : @client.company_address
+		.col-3
+			- if !@vendor.blank?
+				.row.rounded{style:"background-color:#EEE"}
+					.col
+						%b Billing Address
+				.row
+					.col.pl-4
+						= @vendor.company_address.blank? ? "(Not Provided)" : @client.company_address
 		.col
 		.col-2
 			.row

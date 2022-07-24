@@ -75,14 +75,14 @@ function bind_date_selectors(){
 		mode: "single",
 		dateFormat: "Y-m-d",
 		defaultDate:'null',
-		allowInput: true,
+		allowInput: false,
 		monthSelectorType: "static"
 	});
 	flatpickr(".date_range_field", {
 		mode: "range",
 		dateFormat: "Y-m-d",
 		defaultDate:'null',
-		allowInput: true,
+		allowInput: false,
 		monthSelectorType: "static"
 	});
 }

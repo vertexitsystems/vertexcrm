@@ -3,7 +3,9 @@ class Invoice < ApplicationRecord
   belongs_to :employer
   
   has_one_attached :invoice_file
-    
+  
+  max_paginates_per 10
+
   # start_date is always the higher date
   def start_date
     if payment_date
