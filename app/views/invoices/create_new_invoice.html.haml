@@ -89,9 +89,19 @@
 			document.location = url;
 			
 		});
+		
+		$("#invoice_form").submit(function( event ) {
+			
+			if ($("#added_employees").children().length <= 0){
+				alert("Atleast on item must be added to the invoice before generating it.");
+				event.preventDefault();
+			}
+			
+		});
+		
 	});
 .container-fluid
-	= form_tag(generate_invoice_invoices_path) do
+	= form_tag(generate_invoice_invoices_path, id:"invoice_form") do
 		.row.py-2
 			.col
 			.col-1{style:"text-align:right"}
@@ -149,7 +159,7 @@
 			.row.py-2
 				.col
 				.col-2
-					= submit_tag 'Generate Invoice', class: "submit_button"
+					= submit_tag 'Generate Invoice', class: "submit_button", id:"generate_invoice_link", data: { disable_with: false }
 		- else
 			.alert.alert-danger
 				Selected Client has no employees.
