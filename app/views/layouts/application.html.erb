@@ -30,7 +30,7 @@
 		  <div class="flex_col">
 			  
 			  <div class="flex_col">
-				  <div class="top_info flex_row">
+				  <div class="top_info flex_row" style="margin:0px">
 					  <% if !notice.blank? || !alert.blank? %>
 					  <div class="notification_container flex_col">
 						  <div style="float:left">
@@ -51,7 +51,7 @@
 				  </div>
 				  
 				  <% if !devise_controller? %>
-				  <div class="top_info flex_row">
+				  <div class="top_info flex_row" style="margin:0px 10px 10px 10px;">
 					  <div style="flex-grow:1;">
 						  <% if user_signed_in? && current_user.is_employee? %>
 						      <% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>

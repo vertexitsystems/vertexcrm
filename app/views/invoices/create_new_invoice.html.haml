@@ -1,4 +1,5 @@
 :javascript
+	var alert_msg_success = "<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Success! Consultant information loaded.</div>";
 	function bind_remove_employee_button(){
 		$('.remove_employee').unbind("click");
 		$(".remove_employee").click(function(){
@@ -18,63 +19,47 @@
 			
 			var url = $(this).attr("fetch_info_link");
 			var eid = $("#employee_id_select").find(":selected").val();
-			var date = $("#period_").val().split(" to ");
-			var sd = date[0];
-			var ed = date.length > 1 ? date[1] : date[0];
-
-			$("#alert_display").html("");
-			$("#alert_display").append("<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>");
-
-			$.ajax({
-				url: url,
-				type: 'PUT',
-				beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
-				data: "eid="+eid+"&start="+sd+"&end="+ed,
-				success: function(data) {
-					if($.trim(data["result"]) == "true"){
-						if ( $("#no_consultant_msg").css('display') != 'none' || $("#no_consultant_msg").css("visibility") != "hidden"){
-							$("#no_consultant_msg").hide();
+			
+			if (eid == ""){
+				// -1 because the first item is blank value
+				var total = $("#employee_id_select option").length  - 1;
+				var loaded = 1;
+				
+				$("#employee_id_select option").each(function(){
+						var eid = $(this).val();
+						if (eid != ""){
+							
+							fetch_item(url, eid, function(data){
+								fill_item_with_result(data);
+								loaded++;
+							
+							
+								if (loaded < total){
+								
+									var msg = "<div class='alert alert-secondary alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Loading! "+ loaded +" out of "+ total +" Items loaded.</div>"
+								
+									show_alert(msg);
+								
+								} else {
+									show_alert(alert_msg_success);
+								}
+							
+							});
+							
 						}
-
-
-						$("#alert_display").html("");
 						
-						$("#alert_display").append("<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Success! Consultant information loaded.</div>")
-						
-						var rate  = parseInt(data["rate"]);
-						var quant = parseInt(data["quantity"]);
-						
-						var sid = data["emp_id"] + data["start_date"] + data["end_date"]
-						
-						var eid_f =  "<input type='hidden' value='"+data["emp_id"]+"' id='employees_"+sid+"_emp_id' name='employees["+sid+"][emp_id]'>"
-						var sdate_f = "<input type='hidden' value='"+data["start_date"]+"' id='employees_"+sid+"_start_date' name='employees["+sid+"][start_date]'>"
-						var edate_f = "<input type='hidden' value='"+data["end_date"]+"' id='employees_"+sid+"_end_date' name='employees["+sid+"][end_date]'>"
-						var quant_f = "<input type='hidden' value='"+quant+"' id='employees_"+sid+"_quant' name='employees["+sid+"][quant]'>"
-						var rate_f = "<input type='hidden' value='"+rate+"' id='employees_"+sid+"_rate' name='employees["+sid+"][rate]'>"
-
-						var client_id = "<input type='hidden' value='"+data["client_id"]+"' id='employees_"+sid+"_client_id' name='employees["+sid+"][client_id]'>"
-						
-						 
-						var input_fields = eid_f + sdate_f + edate_f + quant_f + rate_f;
-
-						$("#added_employees").append("<div class='row py-2'> <div class='col'><b>"+data["designation"]+data["emp_name"]+"</b><br /><span class='text-muted'>Working hours for week "+data["start_date"]+" to "+data["end_date"]+"</span></div><div class='col-2'>"+quant+"</div><div class='col-2'>$"+rate+".0</div><div class='col-2'>$"+(quant*rate)+".0</div><div class='col-1'><a href='#' class='remove_employee'>Remove</a></div>"+input_fields+" </div>");
-						
-						
-						bind_remove_employee_button();
-					} else {
-						
-						$("#alert_display").html("");
-						
-						$("#alert_display").append("<div class='alert alert-warning alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Error! Unable to fetch consultant data ("+data["status"]+").</div>")
-					}
-				},
-				failure: function(error){
-					$("#alert_display").append("<div class='alert alert-warning alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Error! Unable to fetch consultant data ("+error+").</div>")
-				}
-			});
+				});
+				
+			} else {
+				fetch_item(url, eid, function(data){
+					fill_item_with_result(data);
+					show_alert(alert_msg_success);
+				});
+			}
+			
+			
 			return false;
 		});
-		
 		
 		$("#vendor_select").change(function(){
 			//var url = window.location.href;
@@ -99,7 +84,90 @@
 			
 		});
 		
+		$("#load_all_link").click(function(){
+			var x = $("#employee_id_select").find(":selected").val();//$("#employee_id_select").val();
+			alert("x: " + (x == ""));
+			var url = $(this).attr("fetch_info_link");
+			$("#employee_id_select option").each(function(){
+					fetch_item(url, $(this).val());
+			});
+
+			return false
+		});
 	});
+	
+	function show_loader(){
+		$("#alert_display").html("");
+		$("#alert_display").append("<div class='spinner-border' role='status'><span class='sr-only'>Loading...</span></div>");
+	}
+	function show_alert(message){
+		$("#alert_display").html("");
+		
+		$("#alert_display").append(message);
+	}
+	
+	function fetch_item(url, eid, successFunction){
+		var date = $("#period_").val().split(" to ");
+		var sd = date[0];
+		var ed = date.length > 1 ? date[1] : date[0];
+
+		show_loader();
+
+		$.ajax({
+			url: url,
+			type: 'PUT',
+			beforeSend: function(xhr) {xhr.setRequestHeader('X-CSRF-Token', $('meta[name="csrf-token"]').attr('content'))},
+			data: "eid="+eid+"&start="+sd+"&end="+ed,
+			success: function(data) {
+				if($.trim(data["result"]) == "true"){
+					
+					successFunction(data);
+					
+				} else {
+					
+					$("#alert_display").html("");
+					
+					$("#alert_display").append("<div class='alert alert-warning alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Error! Unable to fetch consultant data ("+data["status"]+").</div>")
+				}
+			},
+			failure: function(error){
+				$("#alert_display").append("<div class='alert alert-warning alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Error! Unable to fetch consultant data ("+error+").</div>")
+			}
+		});
+		
+	}
+	function fill_item_with_result(data){
+		if ( $("#no_consultant_msg").css('display') != 'none' || $("#no_consultant_msg").css("visibility") != "hidden"){
+			$("#no_consultant_msg").hide();
+		}
+
+
+		//$("#alert_display").html("");
+		
+		//$("#alert_display").append("<div class='alert alert-success alert-dismissable'><button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>Success! Consultant information loaded.</div>")
+		
+		var rate  = parseInt(data["rate"]);
+		var quant = parseInt(data["quantity"]);
+		
+		var sid = data["emp_id"] + data["start_date"] + data["end_date"]
+		
+		var eid_f =  "<input type='hidden' value='"+data["emp_id"]+"' id='employees_"+sid+"_emp_id' name='employees["+sid+"][emp_id]'>"
+		var sdate_f = "<input type='hidden' value='"+data["start_date"]+"' id='employees_"+sid+"_start_date' name='employees["+sid+"][start_date]'>"
+		var edate_f = "<input type='hidden' value='"+data["end_date"]+"' id='employees_"+sid+"_end_date' name='employees["+sid+"][end_date]'>"
+		var quant_f = "<input type='hidden' value='"+quant+"' id='employees_"+sid+"_quant' name='employees["+sid+"][quant]'>"
+		var rate_f = "<input type='hidden' value='"+rate+"' id='employees_"+sid+"_rate' name='employees["+sid+"][rate]'>"
+
+		var client_id = "<input type='hidden' value='"+data["client_id"]+"' id='employees_"+sid+"_client_id' name='employees["+sid+"][client_id]'>"
+		
+		 
+		var input_fields = eid_f + sdate_f + edate_f + quant_f + rate_f;
+
+		$("#added_employees").append("<div class='row py-2'> <div class='col'><b>"+data["designation"]+data["emp_name"]+"</b><br /><span class='text-muted'>Working hours for week "+data["start_date"]+" to "+data["end_date"]+"</span></div><div class='col-2'>"+quant+"</div><div class='col-2'>$"+rate+".0</div><div class='col-2'>$"+(quant*rate)+".0</div><div class='col-1'><a href='#' class='remove_employee'>Remove</a></div>"+input_fields+" </div>");
+		
+		
+		bind_remove_employee_button();
+	}
+	
 .container-fluid
 	= form_tag(generate_invoice_invoices_path, id:"invoice_form") do
 		.row.py-2
@@ -126,7 +194,7 @@
 						%b Add Consultants
 					.row
 						.col.p-2
-							= select_tag :employee, options_from_collection_for_select(@employees.includes(:profile).all, :id, :name, '1'), id:"employee_id_select"
+							= select_tag :employee, options_from_collection_for_select(@employees.includes(:profile).all, :id, :name, '1'), id:"employee_id_select", include_blank: "All"
 						.col.p-2
 							= text_field :period, "", value:Date.today, class:"date_range_field"
 						.col-1.align-middle
@@ -163,3 +231,5 @@
 		- else
 			.alert.alert-danger
 				Selected Client has no employees.
+				
+= link_to "click_me", "#", id:"load_all_link", fetch_info_link: "#{json_employee_info_invoices_path}.json"

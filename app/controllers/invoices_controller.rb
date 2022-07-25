@@ -242,7 +242,10 @@ class InvoicesController < ApplicationController
   end
   
   def generate_invoice
-    
+    if !params[:net].present? || params[:net].blank?
+      flash[:alert] = "Error: Required parameters missing"
+      redirect_to root_path
+    end
 
     #@client = Client.find(params[:client]) if params[:client].present?
     @vendor = Vendor.find(params[:vendor]) if params[:vendor].present?
