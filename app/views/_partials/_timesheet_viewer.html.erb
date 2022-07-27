@@ -195,6 +195,10 @@
 	
 	end_date = params[:from_date].present? ? params[:from_date].to_date : WorkDuration.order(:work_day).pluck(:work_day).first
 	
+	if end_date.blank?
+		end_date = start_date - 10
+	end
+
 	if curr_end < end_date
 		curr_end = end_date
 	end

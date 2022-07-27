@@ -291,7 +291,6 @@ ActiveRecord::Schema.define(version: 2022_07_14_183631) do
     t.string "timesheet_screenshot"
     t.string "rejection_message"
     t.boolean "status_read"
-    t.integer "job_id"
     t.integer "sun", default: -1
     t.integer "mon", default: -1
     t.integer "tue", default: -1
