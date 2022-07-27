@@ -24,9 +24,7 @@ class InvoicesController < ApplicationController
       end_date = params[:to_date].present? && !params[:to_date].blank? ? params[:to_date] : start_date
       
       @invoices = @invoices.where(payment_date:start_date...end_date) if !start_date.blank?
-
       
-
       if !request.format.pdf?
         @invoices = @invoices.order(:payment_date).page(params[:page])#.paginate(page: (params[:page]), per_page: 1)
       end
@@ -47,8 +45,7 @@ class InvoicesController < ApplicationController
       @employee = Employee.find(params[:emp].to_i)
       @employer = current_user.profile.employer
       if !@employee.blank? && @employee.employer.id == current_user.profile.employer.id
-        @invoices = @employee.invoices.where(employer_id: current_user.profile.employer.id)
-        #Invoice.where(employee_id: current_user.profile.employer.id, employer_id: current_user.profile.employer.id)
+        @invoices = @employee.invoices.where(employer_id: current_user.profile.employer.id).order(:payment_date).page(params[:page])
       else
         flash[:alert] = "Access Denied"
         redirect_to root_path

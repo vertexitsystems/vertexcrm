@@ -231,6 +231,11 @@
 		# end
 		end_date = end_date.beginning_of_week
 		curr_end = end_date
+		
+		if curr_date > start_date
+			curr_date = start_date
+		end
+		
 		work_durations = (curr_date.beginning_of_week.downto(curr_end)).to_a.select {|k| k.wday == 1 }.map {|d|
 			wd = employees.first.work_durations.where(:work_day => d).first 
 			if wd.blank?

@@ -206,7 +206,7 @@ class ProfilesController < ApplicationController
         
         if params[:profile][:password].present? && !params[:profile][:password].blank?
           user_updated = @profile.user.update(email: params[:profile][:email], password: params[:profile][:password])
-        elsif params[:profile][:email].present? && !params[:profile][:email].blank? && (params[:profile][:password] != @user.email)
+        elsif params[:profile][:email].present? && !params[:profile][:email].blank? && (params[:profile][:password] != @profile.email)
           user_updated = @profile.user.update(email: params[:profile][:email])
         end
         
@@ -214,7 +214,7 @@ class ProfilesController < ApplicationController
           format.html { redirect_to root_path, notice: "Consultant was successfully updated." }
           format.json { render :show, status: :ok, location: @profile }
         else
-          flash[:alert] = "Failed with error: #{@user.errors.full_messages}"
+          flash[:alert] = "Failed with error: #{@profile.errors.full_messages}"
           format.html { render :edit, status: :unprocessable_entity }
           format.json { render json: @profile.errors, status: :unprocessable_entity }
         end
