@@ -52,8 +52,17 @@
 		<div class="col col8 field-toggle-<%=unique_id%>" id="total_<%=unique_id%>" style="display:none"> <%= hours_array.compact.inject(:+).to_i %> </div>
 		
 		<div class="col col8">
+			
 			<div class="calendar-picture" full_image="" data-toggle="modal" data-target="#popupImage<%= unique_id %>">
-				<img src="<%=  wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+				<%  if !wd.timesheet_screenshot.blank? %>
+					<% if wd.timesheet_screenshot.content_type == "application/pdf" %>
+						
+						<img src= "/images/files-pdf-icon.png" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+					<% else %>
+						<img src="<%=  wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+					<% end %>
+				<% end %>
+				
 			</div>
 			<!--
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -66,13 +75,20 @@
 		  <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
 		    <div class="modal-content">
 		      <div class="modal-header">
-		        <h5 class="modal-title" id="exampleModalLabel"><%= wd.period %><%= wd.timesheet_screenshot.attached? %></h5>
+		        <h5 class="modal-title" id="exampleModalLabel"><%= wd.period %><%# wd.timesheet_screenshot.attached? %></h5>
 		        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 		          <span aria-hidden="true">&times;</span>
 		        </button>
 		      </div>
 		      <div class="modal-body">
-		        <img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" style="width: -webkit-fill-available;">
+						<%  if !wd.timesheet_screenshot.blank? %>
+							<% if wd.timesheet_screenshot.content_type == "application/pdf" %>
+								<iframe src="<%= rails_blob_path(wd.timesheet_screenshot, disposition: :inline) %>" style="width:100%; height:600px"></iframe>
+							<% else %>
+								<img src="<%= wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" style="width: -webkit-fill-available;">
+							<% end %>
+						<% end %>
+		        
 		      </div>
 			  <!--
 		      <div class="modal-footer">
