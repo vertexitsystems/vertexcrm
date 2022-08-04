@@ -215,7 +215,7 @@ class WorkDurationsController < ApplicationController
       flash[:notice] = "Timesheet #{save_for_later ? "Saved" : "Submitted" } Successfully"
       redirect_back(fallback_location: root_path)
     else
-      flash[:alert] = "Failed to save Timesheet: #{@work_duration.errors}"
+      flash[:alert] = "Failed to save Timesheet: #{work_duration.errors}"
       redirect_back(fallback_location: root_path)
     end
 #     # IMPLEMENT: Server side authentication

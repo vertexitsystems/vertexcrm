@@ -12,8 +12,8 @@
 		<% end %>
 	
 		<% if show_employee_info %>
-			<div class="col col8"> <%= wd.employee.profile.name %> </div>
-			<div class="col col8"> <%= wd.vendor.blank? ? "<Not Provided>" : wd.vendor.name %> </div>
+			<div class="col col8"> <%= wd.employee.blank? ? "(Not Available)" : wd.employee.profile.name %> </div>
+			<div class="col col8"> <%= wd.vendor.blank? ? "(Not Provided)" : wd.vendor.name %> </div>
 		<% end %>
 	
 		<div class="col col-5">
@@ -26,13 +26,21 @@
 	
 		<% if show_contract_type %>
 			<div class="col col8">
-				<%= wd.contract_type.blank? ? (wd.employee.contract_type.blank? ? "<Not Provided>" : wd.employee.contract_type) : wd.contract_type %>
+				<% if wd.employee.blank? %>
+					(Not Provided)
+				<% else %>
+					<%= wd.contract_type.blank? ? (wd.employee.contract_type.blank? ? "(Not Provided)" : wd.employee.contract_type) : wd.contract_type %>
+				<% end %>
 			</div>
 		<% end %>
 	
 		<% if show_project_name %>
 			<div class="col col8">
-				<%= wd.employee.active_postings.count <= 0? "(Not Assigned)" : wd.employee.active_postings.first.job.title %>
+				<% if wd.employee.blank? %>
+					(Not Assigned)
+				<% else %>
+					<%= wd.employee.active_postings.count <= 0? "(Not Assigned)" : wd.employee.active_postings.first.job.title %>
+				<% end %>
 			</div>
 		<% end %>
 		

@@ -272,7 +272,10 @@
 
 <% if (show_actionables_actmgr || show_actionables_consultant) && actionable_work_durations.count > 0 %>
 <div class="cal_sub_heading"> Actionable Timesheets </div>
-<% actionable_work_durations.each_with_index do |wd, index| %>
+<% actionable_work_durations.compact.each_with_index do |wd, index| %>
+
+<% next if wd.employee.blank? %>
+
 <%= render "_partials/tv_table_row_template", wd: wd,
 											  unique_id:"_act_#{index}",
 											  show_submitted_date: show_submitted_date,
@@ -287,9 +290,11 @@
 <div class="cal_sub_heading"> All Timesheets </div>
 <% end %>
 
-
 <!-- MARK: Complete List of Timesheets -->
-<% work_durations.each_with_index do |wd, index| %>
+<% work_durations.compact.each_with_index do |wd, index| %>
+
+<% next if wd.employee.blank? %>
+
 <%= render "_partials/tv_table_row_template", wd: wd,
 											  unique_id:"_all_#{index}",
 											  show_submitted_date: show_submitted_date,
