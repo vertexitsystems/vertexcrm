@@ -36,7 +36,7 @@ class AccountManagersController < ApplicationController
     #   end
     # end
     #
-    @from_date = params[:from_date] if params[:from_date].present?
+    @from_date = params[:from_date].to_date.beginning_of_week if params[:from_date].present?
     @to_date = params[:to_date] if params[:to_date].present?
     @date = @from_date.present? ? "#{@from_date} to #{@to_date}" : 'Date Range'
     

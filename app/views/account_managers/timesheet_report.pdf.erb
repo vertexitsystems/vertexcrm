@@ -409,7 +409,7 @@
 					<%= emp.active_job.blank? ? "-" : emp.active_job.title %>
 				</td>
 				<td class="defult-border-left defult-border-right tr1 text-center">
-					<%= th = wd.id.blank? ? 0 : wd.all_days.inject(0){|sum,e| sum + e.hours } %>
+					<%= th = wd.id.blank? ? 0 : wd.fetch_hours_array.inject(:+) %>
 					<% total_hours += th %>
 				</td>
 				<td class="defult-border-left defult-border-right tr1 text-center">

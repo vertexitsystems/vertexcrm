@@ -116,4 +116,4 @@
 	.row
 		.col
 		.col-2
-			= paginate @invoices if @invoices.count > 0
+			= paginate @invoices if !@invoices.blank?

@@ -13,7 +13,10 @@ document.addEventListener("turbolinks:load", () => {
       mode: "range",
       dateFormat: "Y-m-d",
 		allowInput: false,
-		monthSelectorType: "static"
+		monthSelectorType: "static",
+			onClose: function(selectedDates, dateStr, instance){
+				$("#filter_load_indicator").show();
+			    }
     }),
     $("#previous_weeks").on("click", function(event) {
       $(this).parents('ul').hide();

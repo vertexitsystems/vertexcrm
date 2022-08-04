@@ -61,7 +61,11 @@
 				value: params["from_date"].present? ? "#{params["from_date"]} to #{params["to_date"]}" : "Select Date"
 			%>
 		</div>
-		
+		<div class="loading_container">
+			<div class="spinner-border" role="status" id="filter_load_indicator" style="display:none">
+			  <span class="sr-only">Loading...</span>
+			</div>
+		</div>
 		<div class="flex_col" style="padding:0px 10px;max-width: 100px;">
 			<% sheet_link = current_user.is_employee? ? "/employees/#{current_user.profile.employee.id}?order=status" : "/account_managers/time_sheet_approval?order=status" %>
 			<a href="<%= sheet_link %>" style="background:transparent;line-height:36px"> clear filters </a>

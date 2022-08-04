@@ -40,6 +40,9 @@
 			non_weekday_alert(this)
 		});
 		
+		$("#date-range-work").focusout(function(){
+			//$("#filter_load_indicator").show();
+		});
 		/*
 			This is the ajax call that dynamically submits and updated the aprroved or rejected status
 		*/
@@ -222,13 +225,20 @@
 		}
 	else
 		
-		first_posting = employees.first.active_postings.first
-		posting_start_date = first_posting.blank? ? end_date : first_posting.start_date.beginning_of_week
+		# first_posting = employees.first.active_postings.first
+		# posting_start_date = end_date.beginning_of_week# = first_posting.blank? ? end_date : first_posting.start_date.beginning_of_week
 		
-		if curr_end.beginning_of_week < posting_start_date
-			curr_end = posting_start_date
-			end_date = posting_start_date
+		# if curr_end.beginning_of_week < posting_start_date
+		#  	curr_end = posting_start_date
+		#  	end_date = posting_start_date
+		# end
+		end_date = end_date.beginning_of_week
+		curr_end = end_date
+		
+		if curr_date > start_date
+			curr_date = start_date
 		end
+		
 		work_durations = (curr_date.beginning_of_week.downto(curr_end)).to_a.select {|k| k.wday == 1 }.map {|d|
 			wd = employees.first.work_durations.where(:work_day => d).first 
 			if wd.blank?
@@ -237,6 +247,7 @@
 				wd
 			end
 		}
+		
 	end
 	
 	
