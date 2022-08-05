@@ -55,7 +55,7 @@
 		
 		<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
 		
-		<ul style="<%= params["prv"] == "true" ? "display:none" : "" %>" >
+		<ul>
 			<li class="option <%= (controller_name == "employees" && action_name=="show") ? "menu_item_selected" : "" %>">
 				<a href="/employees/<%=@employee.id%>?order=status"> Timesheet Management </a>
 			</li>
@@ -64,25 +64,7 @@
 			</li>
 		</ul>
 
-		<%if @employee.present?%>
 		
-		
-		
-		<ul style="<%= params["prv"] == "true" ? "" : "display:none"%>">
-			<li id="back" style="cursor:pointer;"><a>Back</a></li>
-
-			<%keys = @employee.work_durations.group_by{|w| ["#{w.work_day.beginning_of_week.strftime("%B %d, %Y")}", w.time_sheet_status]}.keys.to_h%>
-		    <%(3.month.ago.to_datetime..Date.today).select(&:monday?).map{|d| d.strftime("%B %d, %Y")}.each do |date|%>
-
-			<li style="margin: 0 0 10px 0;">
-				<%= link_to date,weekly_wise_data_work_durations_url(date:date,eid:@employee.id,prv: "true"),:class =>
-				keys["#{date}"].present? ? keys["#{date}"]+"-menu" : "pending-menu" %>
-			</li>
-		    <%end%>
-
-		</ul>
-
-		<%end%>
 
 		<%elsif current_user.profile.role == "Assistant"%>
 		<ul>
