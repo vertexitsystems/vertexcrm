@@ -164,20 +164,26 @@ class WorkDurationsController < ApplicationController
     employee = Employee.where(id: params['eid']).first
     posting = (params[:pid].present? && !params[:pid].blank?) ? Posting.find(params[:pid]) : employee.active_postings.first
     
-    #project = Project.where(id: params['pid']).first
+    
     
     work_duration = WorkDuration.find(params[:wdid]) if params[:wdid].present?
+
+
     
     if work_duration.blank?
       
-      ap = employee.active_postings.first
-
-      if employee.projects.count <= 0
-        vid = employee.vendors.count > 0 ? employee.vendors.first.id : Vendor.first.id
-        employee.projects << Project.create(vendor_id:vid, vendor_rate:0, rate:0)
+      if employee.active_postings.count <= 0
+        flash[:alert] = "No Active job for consultant"
+        redirect_back(fallback_location: root_path)
+        return
       end
 
-      u.profile.employee.projects << Project.create(vendor_id:u.profile.employee.vendors.first.id, vendor_rate:0, rate:0)
+      ap = employee.active_postings.first
+
+      # if employee.projects.count <= 0
+      #   vid = employee.vendors.count > 0 ? employee.vendors.first.id : Vendor.first.id
+      #   employee.projects << Project.create(vendor_id:vid, vendor_rate:0, rate:0)
+      # end
       
       work_duration = WorkDuration.new(work_day:params[:dt],
                                        project_id: employee.projects.first.id,
