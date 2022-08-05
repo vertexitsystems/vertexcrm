@@ -98,7 +98,6 @@
 		</div>
 		<div class="flex_col" style="display:<%= @employee.contract_type == "w2" ? "none" : "block" %>" id="employer_rate_field">
 			<b>Employer Rate:</b>
-			<%# form.select :employer, Employer.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.employer.blank? ? false : employee.employer.id %>
 			<%= form.number_field :employer_rate %>
 		</div>
 		<%if false%>
@@ -116,7 +115,7 @@
 		<div class="flex_col">
 			<b>Contract Type: </b>
 			<% contract_types.each do |contract_type| %>
-			<%= form.radio_button :contract_type, contract_type, :checked => (employee.persisted? && employee.contract_type == contract_type) %> 
+			<%= form.radio_button :contract_type, contract_type, :checked => (employee.persisted? ? employee.contract_type == contract_type : contract_type.downcase == "c2c") %> 
 			<%= label :contract_type_label, contract_type %>
 			<% end %>
 		</div>
