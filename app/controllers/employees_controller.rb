@@ -5,6 +5,10 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
+    if current_user.is_employee?
+      redirect_to root_path
+    end
+    
     @employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
     @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
     @employees = @employees.where('jobs.id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
