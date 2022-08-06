@@ -180,10 +180,10 @@ class WorkDurationsController < ApplicationController
 
       ap = employee.active_postings.first
 
-      # if employee.projects.count <= 0
-      #   vid = employee.vendors.count > 0 ? employee.vendors.first.id : Vendor.first.id
-      #   employee.projects << Project.create(vendor_id:vid, vendor_rate:0, rate:0)
-      # end
+      if employee.projects.count <= 0
+        vid = employee.vendors.count > 0 ? employee.vendors.first.id : Vendor.first.id
+        employee.projects << Project.create(vendor_id:vid, vendor_rate:0, rate:0)
+      end
       
       work_duration = WorkDuration.new(work_day:params[:dt],
                                        project_id: employee.projects.first.id,
