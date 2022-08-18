@@ -67,7 +67,7 @@
     <div class="row"> <div class="col"> Saved for later: <%= form.check_box :save_for_later %> </div> </div>
     <div class="row"> <div class="col"> rejection_message: <%= form.text_field :rejection_message %> </div> </div>
     <div class="row"> <div class="col"> read: <%= form.text_field :status_read %> </div> </div>
-    <div class="row"> <div class="col"> job: <%= form.text_field :job_id %> </div> </div>
+    <div class="row"> <div class="col"> job: <%# form.text_field :job_id %> </div> </div>
     <div class="row"> <div class="col"> sun: <%= form.text_field :sun %> </div> </div>
     <div class="row"> <div class="col"> mon: <%= form.text_field :mon %> </div> </div>
     <div class="row"> <div class="col"> tue: <%= form.text_field :tue %> </div> </div>
@@ -85,8 +85,8 @@
 </div>
 
   <% if @employee != nil %>
-  <%= form.hidden_field :eid, :value => @employee.id %>
-  <%= form.hidden_field :date,:value=> @date %>
+  <%# form.hidden_field :eid, :value => @employee.id %>
+  <%# form.hidden_field :date,:value=> @date %>
   <% end %>
   <div class="section actions">
     <%= form.submit "Submit",class: "btn btn-primary",style: "width:20%;" %>

@@ -309,7 +309,7 @@ class WorkDurationsController < ApplicationController
     @work_duration = WorkDuration.find(params[:id])
     respond_to do |format|
       if @work_duration.update(work_duration_params)
-        format.html { redirect_to @work_duration.employee, notice: 'Work duration was successfully updated.' }
+        format.html { redirect_to @work_duration, notice: 'Work duration was successfully updated.' }
         format.json { render :show, status: :ok, location: @work_duration }
       else
         format.html { render :edit }
@@ -399,6 +399,7 @@ class WorkDurationsController < ApplicationController
   # Only allow a list of trusted parameters through.
   def work_duration_params
     params.require(:work_duration).permit(:hours, :work_day, :employee_id, :time_card_certify, :company_certify,
-                                          :save_for_later, :timesheet_screenshot)
+                                          :save_for_later, :timesheet_screenshot, 
+                                          :project_id, :time_sheet_status, :rejection_message, :status_read, :job_id, :sun, :mon, :tue, :wed, :thu, :fri, :sat, :contract_type, :employer_rate, :consultant_rate, :job_rate, :posting_id, :account_manager_id, :eid, :date)
   end
 end
