@@ -67,7 +67,7 @@ class WorkDuration < ApplicationRecord
 #   end
   
   def display_id
-    "WD#{id}#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}"
+    "WD#{id}#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}#{mon < 0 ? "A" : "B"}"
   end
   
   # scope :priority_order, -> {
