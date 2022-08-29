@@ -16,7 +16,7 @@
 			<div class="col col8"> <%= wd.vendor.blank? ? "(Not Provided)" : wd.vendor.name %> </div>
 		<% end %>
 	
-		<div class="col col-5">
+		<div class="col col-5" title="<%= wd.display_id %>">
 			<% if !wd.persisted? || ( wd.time_sheet_status  == "unsubmitted" && !wd.is_past_due_date? ) %>
 				<%= wd.period %>
 			<% else %>
