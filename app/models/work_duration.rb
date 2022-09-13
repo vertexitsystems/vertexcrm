@@ -102,7 +102,7 @@ class WorkDuration < ApplicationRecord
     # if its old structure we want to avoid sending 6 different quries for each day, which means we have to load all in single query
     # So we construct an array where each days hours will be placed in sequence (Convention over configuration) and load that with single query
     def fetch_hours_array
-      if (mon < 0)
+      if (mon.to_i < 0)
         
         wds = employee.work_durations.where(work_day: sunday...saturday)
         
