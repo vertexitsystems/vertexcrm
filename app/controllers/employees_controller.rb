@@ -9,29 +9,14 @@ class EmployeesController < ApplicationController
       redirect_to root_path
     end
     
-    @employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
+    #@employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
+    @employees = Employee.joins(:profile).order(disabled: :desc, created_at: :desc).includes(:profile, :jobs, :vendors)
+
     @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
     @employees = @employees.where('jobs.id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
     @employees = @employees.where(contract_type: params[:contract]) if params[:contract].present? && !params[:contract].blank?
     @employees = @employees.where('vendors.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
-    # @employees = Employee.joins(:profile).order("profiles.full_name")
-    #
-    # params.each do |key, value|
-    #   if key == "emp"
-    #     @employees = @employees.select{|emp|emp.id == value.to_i}
-    #   end
-    #   if key == "proj"
-    #     @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.id == value.to_i}
-    #   end
-    #   if key == "contract"
-    #     @employees = @employees.select{|emp|emp.contract_type == value}
-    #   end
-    #   if key == "vendor"
-    #     @employees = @employees.select{|emp|!emp.projects.blank? && emp.projects.first.vendor.id == value.to_i}
-    #   end
-    # end
-
-    #@employees = Employee.includes(:profile, :vendors, :projects, :jobs)#.joins(:profile).order("profiles.full_name")
+    
   end
 
 

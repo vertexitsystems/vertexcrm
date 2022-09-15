@@ -59,23 +59,14 @@
 <div class="section">
 
   <div class="row top">
-    <div class="col">
-      #
-    </div>
-    <div class="col col25">
-      Consultant Name
-    </div>
-    
-	<div class="col col25">
-      Project
-    </div>
-	
-	<div class="col col8">
-      Contract Type
-    </div>
-	<div class="col col25">
-      Vendor
-    </div>
+    <div class="col"> # </div> 
+    <div class="col col25"> Consultant Name </div>
+		<div class="col col25"> Project </div> 
+    <div class="col"> Contract Type </div>
+		<div class="col col25"> Employer </div>
+		<div class="col"> Start Date </div>
+		<div class="col"> End Date </div>
+    <div class="col"> Status </div>
     <div class="col">Actions</div>
   </div>
 
@@ -100,18 +91,38 @@
 		 <%= employee.jobs.count <= 0 ? "(UnAssigned)" : employee.active_job.title  %>
       </div>
 	  
-      <div class="col col8">
+      <div class="col">
         <%= employee.contract_type.blank? ? "<Not Provided>" : employee.contract_type %>
       </div>
 	  
       <div class="col col25">
-        <%if employee.vendors.count > 0 %>
-          <%= employee.vendors.map { |v| v.name  }.join(',') %>
-        <% else %>
-        UnAssigned
-        <% end %>
+      	<% if employee.contract_type == "w2" %>
+      		<%if !employee.employer.blank? %>
+      			<%= employee.employer.company_name %>
+      		<% else %>
+      		(Not Assigned)
+      		<% end %>
+      	<% else %>
+      	-
+      	<% end %>
+
       </div>
       
+      <div class="col">
+      	<%= employee.created_at.strftime("%d, %m %Y") %>
+      </div>
+      <div class="col">
+      	<% if employee.disabled %>
+      		<%= employee.disable_date.strftime("%d, %m %Y") %>
+      	<% else %>
+      	-
+      	<% end %>
+      </div>
+
+      <div class="col">
+      	<%= employee.disabled ? "Disabled" : "Active" %>
+      </div>
+
       <div class="col">
 		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
 		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> |

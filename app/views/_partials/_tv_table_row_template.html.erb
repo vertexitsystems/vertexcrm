@@ -65,7 +65,7 @@
 				<%  if !wd.timesheet_screenshot.blank? %>
 					<% if wd.timesheet_screenshot.content_type == "application/pdf" %>
 						
-						<img src= "/images/files-pdf-icon.png" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
+						<img src= "/Images/files-pdf-icon.png" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
 					<% else %>
 						<img src="<%=  wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""  %>" class="picture-src" id="wizardPicturePreview" title="" style="background:white">
 					<% end %>
