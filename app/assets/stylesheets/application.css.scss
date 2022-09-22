@@ -333,6 +333,7 @@ height:40px;
     padding:10px;
     background-color: rgb(247, 247, 247);
     width:100%;
+    border-radius: 10px;
 }
 .ap_container .menu ul {
     list-style-type: none;
@@ -373,10 +374,7 @@ height:40px;
 .ap_container .main {
     //float:left; 
     width:100%;
-	
-	background: #FFF;
-	padding: 20px 40px;
-	border-radius: 10px;
+	padding: 0px 40px 20px 40px;
 }
 
 .ap_container .main .heading {
@@ -674,7 +672,7 @@ height:40px;
 	font-family: Roboto;
 }
 .footer_message{
-	line-height:60px;
+    padding-top:10px;
 	font-size:14px
 }
 .footer_actions{
@@ -690,7 +688,12 @@ height:40px;
 	text-decoration:underline;
 }
 .footer_action_title{
-	
+	color:#FFF;
+    margin-right:20px;
+}
+.footer_action_title a {
+    color:#FFF !important;
+    font-size:12px;
 }
 /* FOOTER END */
 

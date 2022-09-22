@@ -30,9 +30,9 @@
 		  
 		  <%= render 'layouts/layout_sidemenu' %>
 	  	  
-		  <div class="flex_col">
+		  <div class="flex_col" style="background:#FFF;border-radius: 10px;">
 			  
-			  <div class="flex_col">
+			  <div class="flex_col" style="margin-top:10px">
 				  <div class="top_info flex_row" style="margin:0px">
 					  <% if !notice.blank? || !alert.blank? %>
 					  <div class="notification_container flex_col">
@@ -82,9 +82,9 @@
 				  <% end %>
 			  </div>
 		  
-			  <div class="main_page_title"> <%= @title %> </div>
+			  
 		  
-			  <div class="main" style="<%= user_signed_in? ? '' : 'width:100%' %>">
+			  <div class="main col" style="<%= user_signed_in? ? '' : 'width:100%' %>">
 		  
 			  	<%= yield %>
 			
