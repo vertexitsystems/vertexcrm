@@ -9,10 +9,13 @@
   = @invoice.employer.profile.name
 %p
   %b Invoice Period
-  = "#{@invoice.end_date.strftime("%b,%d,%Y")}" 
+  = "#{@invoice.end_date.strftime("%b %d,%Y")}" 
   %b
     to
-  = "#{@invoice.start_date.strftime("%b,%d,%Y")}"
+  = "#{@invoice.start_date.strftime("%b %d,%Y")}"
+%p
+  %b Total Hours:
+  = @invoice.approved_hours
 
 .ap_container 
   .main 
@@ -43,7 +46,14 @@
           .col.col8
             = wd.employee.active_job.blank? ? "(Not Available)" : wd.employee.active_job.title
           .col.col8
-            = wd.id.blank? ? "0" : wd.fetch_hours_array.inject(:+)#wd.all_days.map{|wd|wd.hours}.inject(0, :+)
+            -# wd.id.blank? ? "0" : wd.fetch_hours_array.inject(:+)#wd.all_days.map{|wd|wd.hours}.inject(0, :+)
+            - if !wd.id.blank?
+              - ed = (wd.work_day - 1) < @invoice.end_date ? @invoice.end_date : (wd.work_day - 1)
+              - sd = (wd.work_day + 5) > @invoice.start_date ? @invoice.start_date : (wd.work_day + 5)
+              = wd.fetch_hours_array((ed.wday - 1), (sd.wday - 1)).inject(:+).to_f
+            - else
+              0.0
+
           .col.col8
             .calendar-picture{:style => "width:60px;height:60px"}
               = image_tag (wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""), :style => "max-width:100px;max-height:100px"

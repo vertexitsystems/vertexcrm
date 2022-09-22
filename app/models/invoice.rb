@@ -44,16 +44,23 @@ class Invoice < ApplicationRecord
     all_work_durations.select{|wd| wd.time_sheet_status == "approved"}
   end
   
+  # def approved_hours
+  #   active_days = 0
+  #   approved_work_durations.each do |ad|
+  #     result = ad.fetch_hours_array.reduce(:+)#.all_days.select{|d| d.work_day >= end_date && d.work_day <= start_date}.map{|w|w.hours}.reduce(:+)
+  #     active_days += result.blank? ? 0 : result
+  #   end
+  #   return active_days
+  # end
   def approved_hours
-    active_days = 0
-    approved_work_durations.each do |ad|
-      # 72202HF1 : Fix app crashing
-      result = ad.fetch_hours_array.reduce(:+)#.all_days.select{|d| d.work_day >= end_date && d.work_day <= start_date}.map{|w|w.hours}.reduce(:+)
-      active_days += result.blank? ? 0 : result
+    final_hours = 0.0
+    all_work_durations.each do |wd|
+      ed = (wd.work_day - 1) < end_date ? end_date : (wd.work_day - 1)
+      sd = (wd.work_day + 5) > start_date ? start_date : (wd.work_day + 5)
+      final_hours += wd.fetch_hours_array((ed.wday - 1), (sd.wday - 1)).inject(:+).to_f
     end
-    return active_days
+    return final_hours
   end
-  
   def approved_amount
     return "$#{approved_hours.to_i * employee.employer_rate.to_i}"
   end

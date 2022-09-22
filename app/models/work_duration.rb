@@ -101,10 +101,13 @@ class WorkDuration < ApplicationRecord
     # or we might have new structure where each hour is in its own column
     # if its old structure we want to avoid sending 6 different quries for each day, which means we have to load all in single query
     # So we construct an array where each days hours will be placed in sequence (Convention over configuration) and load that with single query
-    def fetch_hours_array
+    
+
+    def fetch_hours_array(start_day = -1, end_day = 5)
+      
       if (mon.to_i < 0)
         
-        wds = employee.work_durations.where(work_day: sunday...saturday)
+        wds = employee.work_durations.where(work_day: (work_day + start_day)...(work_day + end_day))
         
         sun_hours = wds.select {|wd|wd.work_day == sunday}.first
         mon_hours = wds.select {|wd|wd.work_day == monday}.first
@@ -121,8 +124,17 @@ class WorkDuration < ApplicationRecord
                 thu_hours.blank? ? 0 : thu_hours.hours.to_i,
                 fri_hours.blank? ? 0 : fri_hours.hours.to_i,
                 sat_hours.blank? ? 0 : sat_hours.hours.to_i]
+                
       else
-        return [sun.to_i, mon.to_i, tue.to_i, wed.to_i, thu.to_i, fri.to_i, sat.to_i]
+        hours_array = []
+        hours_array << sun.to_i if start_day < 0
+        hours_array << mon.to_i if (start_day <= 0 && end_day >= 0)
+        hours_array << tue.to_i if (start_day <= 1 && end_day >= 1)
+        hours_array << wed.to_i if (start_day <= 2 && end_day >= 2)
+        hours_array << thu.to_i if (start_day <= 3 && end_day >= 3)
+        hours_array << fri.to_i if (start_day <= 4 && end_day >= 4)
+        hours_array << sat.to_i if end_day >= 5
+        return hours_array#[sun.to_i, mon.to_i, tue.to_i, wed.to_i, thu.to_i, fri.to_i, sat.to_i]
       end
     end
     
