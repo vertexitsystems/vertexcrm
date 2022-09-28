@@ -28,30 +28,15 @@
 							Contract:
 						= @profile.employee.contract_type
 			.row
-				%b Email:
-				= @profile.user.email
-			.row
-				%b Phone 1:
-				= @profile.phone1
-			.row
-				%b Phone 2:
-				= @profile.phone2
-			.row
-				%b Address:
-				= @profile.address
-			
-			.row
-				%b Country:
-				= @profile.country
-			.row
-				%b State:
-				= @profile.state
-			.row
-				%b City:
-				= @profile.city
-			.row
-				%b Zipcode:
-				= @profile.zip_code
+				.col 
+					%b Email:
+					= @profile.user.email
+				.col
+					%b Phone 1:
+					= @profile.phone1
+				.col
+					%b Address:
+					= @profile.address
 
 					
 
