@@ -23,11 +23,11 @@
 					.col.img_col
 						= employee.profile.name
 					.col.img_col
-						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.title
+						= employee.job.blank? ? "(Not Available)" : employee.job.title
 					.col.img_col
-						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.vendor.company_name
+						= employee.job.blank? ? "(Not Available)" : employee.job.vendor.company_name
 					.col.img_col
-						= employee.active_job.blank? ? "(Not Available)" : employee.active_job.client.company_name
+						= employee.job.blank? ? "(Not Available)" : employee.job.client.company_name
 					.col.img_col
 						= #employee.work_durations.sum(:hours)
 						= invoiced_hours
@@ -40,7 +40,7 @@
 	.flex_col{:style=>"width:10%;min-width:350px"}			
 		.flex_col.profile_container{:style=>"padding:0px 0px 10px 0px"}
 			.flex_row
-				.flex_col.info_section_title
+				.col.info_section_title
 					Profile Info
 			.flex_row
 				.flex_col

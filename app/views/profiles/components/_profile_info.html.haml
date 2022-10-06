@@ -21,12 +21,6 @@
 
 
 		.col
-			- if @profile.user.is_employee? && !@profile.employee.blank?
-				.row
-					.col
-						%b
-							Contract:
-						= @profile.employee.contract_type
 			.row
 				.col 
 					%b Email:

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2022_07_14_183631) do
+ActiveRecord::Schema.define(version: 2022_10_05_131854) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -117,6 +117,9 @@ ActiveRecord::Schema.define(version: 2022_07_14_183631) do
     t.string "w4"
     t.string "direct_deposit_detail"
     t.string "emergency_contact_form"
+    t.date "job_start_date"
+    t.date "job_end_date"
+    t.string "job_end_reason"
   end
 
   create_table "employers", force: :cascade do |t|
@@ -304,6 +307,7 @@ ActiveRecord::Schema.define(version: 2022_07_14_183631) do
     t.integer "job_rate"
     t.integer "posting_id"
     t.integer "account_manager_id"
+    t.integer "job_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

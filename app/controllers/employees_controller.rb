@@ -17,6 +17,7 @@ class EmployeesController < ApplicationController
     @employees = @employees.where(contract_type: params[:contract]) if params[:contract].present? && !params[:contract].blank?
     @employees = @employees.where('vendors.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
     
+    @employees = @employees.page(params[:page])
   end
 
 
@@ -103,7 +104,7 @@ class EmployeesController < ApplicationController
         end
         
         if user_updated
-          format.html { redirect_to @employee, notice: "Consultant was successfully updated." }
+          format.html { redirect_to @employee.profile, notice: "Consultant was successfully updated." }
           format.json { render :show, status: :ok, location: @employee }
         else
           flash[:alert] = "Failed with error: #{@user.errors.full_messages}"

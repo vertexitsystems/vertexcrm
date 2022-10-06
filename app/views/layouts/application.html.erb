@@ -10,8 +10,8 @@
     <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	
-	
+		<script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&region=us&key=AIzaSyBmRPMbNehdkAPUxqhCViTnwZo5J7rS5l8"></script>
+		
     <link rel="preconnect" href="https://fonts.gstatic.com">
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
 
@@ -26,7 +26,7 @@
 		  
 	  <%= render 'layouts/layout_header' %>
 	  
-	  <div class="ap_container page-body flex_row">
+	  <div class="ap_container page-body flex_row" style="margin-top: 20px;">
 		  
 		  <%= render 'layouts/layout_sidemenu' %>
 	  	  
