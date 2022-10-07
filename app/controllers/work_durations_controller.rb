@@ -324,8 +324,9 @@ class WorkDurationsController < ApplicationController
     wds.each do |wd|
       if wd.mon < 0
         
-        hours_array = wd.fetch_hours_array
+        hours = wd.fetch_hours_array
         wd.update(sun:hours[0],mon:hours[1],tue:hours[2],wed:hours[3],thu:hours[4],fri:hours[5],sat:hours[6])
+        
       end
 
       if wd.job_id.blank?
