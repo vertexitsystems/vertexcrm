@@ -69,9 +69,9 @@ class WorkDuration < ApplicationRecord
   
   def display_id
     if work_day.blank?
-      time_key = "#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}"
-    else
       time_key = "AAA"
+    else
+      time_key = "#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}"
     end
 
     "WD#{id}#{time_key}#{mon.to_i < 0 ? "A" : "B"}"
