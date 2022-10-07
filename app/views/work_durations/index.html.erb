@@ -98,6 +98,7 @@
 
   <div class="row top">
     <div class="col">id</div>
+    <div class="col">Consultant</div>
     <div class="col">Period</div>
     <div class="col">Self contained</div>
     <div class="col">Job ID</div>
@@ -111,6 +112,7 @@
   <% @work_durations.each do |wd| %>
     <div class="row row_hover_highlight">
       <div class="col"><%= link_to wd.display_id, wd %></div>
+      <div class="col"><%= wd.employee.blank? ? "(Missing)" : wd.employee.name %></div>
       <div class="col"><%= wd.period %></div>
       <div class="col"><%= (wd.mon.blank? || wd.mon < 0) ? "NO" : "YES" %></div>
       <div class="col"><%= wd.job_id.blank? ? "NO" : "YES" %></div>

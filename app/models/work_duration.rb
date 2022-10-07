@@ -114,6 +114,8 @@ class WorkDuration < ApplicationRecord
       
       if (mon.to_i < 0)
         
+        return [0,0,0,0,0,0,0,0] if employee.blank?
+
         wds = employee.work_durations.where(work_day: (work_day + start_day)...(work_day + end_day))
         
         sun_hours = wds.select {|wd|wd.work_day == sunday}.first

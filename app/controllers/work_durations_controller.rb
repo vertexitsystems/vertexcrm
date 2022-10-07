@@ -321,10 +321,6 @@ class WorkDurationsController < ApplicationController
       print "--> UPDATING HOURS"
       wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(30)
     end
-    #WorkDuration(sun: integer, mon: integer, tue: integer, wed: integer, thu: integer, fri: integer, sat: integer, 
-    #             employer_rate: integer, consultant_rate: integer, job_rate: integer, job_id: integer, employee_id: integer)
-    
-    # print "------------------------------------------------> JENGA: #{wds.count}"
     wds.each do |wd|
       if wd.mon < 0
         
@@ -333,24 +329,6 @@ class WorkDurationsController < ApplicationController
       end
 
       if wd.job_id.blank?
-        # print ">------------------------------------------------<\n"
-        # print "-----------------------> employer_rate: #{wd.employer_rate}\n"
-        # print "-----------------------> proj_e_r: #{wd.posting.employee.employer_rate}\n"
-        
-        # print "-----------------------> consultant_rate: #{wd.consultant_rate}\n"
-        # print "-----------------------> proj_c_r: #{wd.posting.employee.employee_rate}\n"
-
-        # print "-----------------------> job_rate: #{wd.job_rate}\n"
-        # print "-----------------------> proj_j_r: #{wd.posting.job.rate}\n"
-
-        # print "-----------------------> job_id: #{wd.job_id}\n"
-        # print "-----------------------> proj_j_id: #{wd.posting.job_id}\n"
-
-        # print "-----------------------> employee_id: #{wd.employee_id}\n"
-        # print "-----------------------> proj_e_id: #{wd.posting.employee_id}\n"
-        
-        
-        
 
         if wd.update(employer_rate: wd.posting.employee.employer_rate, 
                       consultant_rate: wd.posting.employee.employee_rate,
@@ -359,9 +337,12 @@ class WorkDurationsController < ApplicationController
                       employee_id: wd.posting.employee_id)
           print "--> UPDATING SUCCESS"
           flash[:notice] = "Updated successfully."
+
         else
+          
           print "--> UPDATING FAILED: #{wd.errors.full_messages}"
           flash[:error] = "Updated Failed: #{wd.errors}"
+
         end
 
       end
