@@ -68,7 +68,13 @@ class WorkDuration < ApplicationRecord
 #   end
   
   def display_id
-    "WD#{id}#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}#{mon.to_i < 0 ? "A" : "B"}"
+    if work_day.blank?
+      time_key = "#{work_day.strftime("%b").upcase}#{work_day.strftime("%d%y")}"
+    else
+      time_key = "AAA"
+    end
+
+    "WD#{id}#{time_key}#{mon.to_i < 0 ? "A" : "B"}"
   end
   
   # scope :priority_order, -> {
