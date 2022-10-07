@@ -102,6 +102,7 @@
     <div class="col">Period</div>
     <div class="col">Self contained</div>
     <div class="col">Job ID</div>
+    <div class="col">has Posting</div>
     <div class="col">Actions</div>
 <!--     <div class="col">
       Turnover
@@ -116,6 +117,7 @@
       <div class="col"><%= wd.period %></div>
       <div class="col"><%= (wd.mon.blank? || wd.mon < 0) ? "NO" : "YES" %></div>
       <div class="col"><%= wd.job_id.blank? ? "NO" : "YES" %></div>
+      <div class="col"><%= wd.posting.blank? ? "NO" : "YES" %></div>
       <div class="col"><%= link_to "Fix", fix_job_issue_work_durations_path(wdid: wd.id), method:"PUT" %></div>
     </div>
   <% end %>
