@@ -2,7 +2,8 @@
 	.flex_col
 		= link_to "Time Sheet List", time_sheet_approval_account_managers_path()
 		.div{:style=>"font-size:28px"}
-			= @work_duration.employee.profile.name
+			=# @work_duration.employee.profile.name
+			>Employee Name<
 		.div{:style=>"font-weight:bold;font-size:12px"}
 			TIME SHEET
 			- if current_user.is_admin? || current_user.is_account_manager?
@@ -120,7 +121,31 @@
 				.flex_col{:style=>"flex-shrink:3"}
 					Site
 				.flex_col
-					= @work_duration.employee.active_job.location
+					=# @work_duration.employee.active_job.location
+					>Employee Active Job Location<
+- if params[:debug_zzx]
+	-# sql = "Select * from projects WHERE work_duration_id = 1"
+	-# records_array = ActiveRecord::Base.connection.execute(sql)
+	PID: 
+	= @work_duration.project_id
+	| EMP: 
+	= @work_duration.employee.profile.name
+	| JOB: 
+	= @work_duration.employee.active_job.title
+	%br/ 
+	PID:
+	- proj = Project.find(@work_duration.project_id)
+	= proj.id
+	| EMP: 
+	= proj.employee.profile.name
+	| JOB: 
+	= proj.employee.active_job.title
+	%br/
+	JID:
+	= @work_duration.job_id
+	| EID:
+	= @work_duration.employee_id
+	=# WorkDuration.find(7).employee.profile.name
 		
 
 / <% if false %>

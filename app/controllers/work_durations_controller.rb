@@ -11,7 +11,7 @@ class WorkDurationsController < ApplicationController
   # GET /work_durations
   # GET /work_durations.json
   def index
-    @work_durations = WorkDuration.all
+    @work_durations = WorkDuration.order(work_day: :desc).page(params[:page])
   end
 
   # GET /work_durations/1
@@ -126,9 +126,6 @@ class WorkDurationsController < ApplicationController
       end
       
     end
-    
-    
-    
   end
   
   def show
@@ -156,9 +153,7 @@ class WorkDurationsController < ApplicationController
   # POST /work_durations
   # POST /work_durations.json
   def create
-    
-#    all_saved = true
-    
+
     save_for_later = params[:save_for_later].present?
     
     employee = Employee.where(id: params['eid']).first
@@ -231,76 +226,6 @@ class WorkDurationsController < ApplicationController
       flash[:alert] = "Failed to save Timesheet: #{work_duration.errors}"
       redirect_back(fallback_location: root_path)
     end
-#     # IMPLEMENT: Server side authentication
-#     # Make sure time sheet is attached to any work duration that is submitted for monday.. if not then we return with error measage
-#     # monday_string = params["wds"].first.select{|ds| project.work_durations.where(work_day: DateTime.parse(ds)).first.work_day.monday? }.keys.first
-#     # monday = project.work_durations.where(work_day:DateTime.parse(monday_string))
-#     #
-#     # FIX THIS CHECK # if !monday.timesheet_screenshot.attached?
-#     #   format.html { redirect_to employee, flash: { error: "Timesheet Image must be provided." } }
-#     #   reutrn
-#     # end
-#
-#
-#     #iterate over all dates sent via params convert
-#     params["wds"].first.keys.each do |date_key|
-#       ## convert key into date and fetch work duration from project for the converted date
-#       date = DateTime.parse(date_key)
-#
-#       work_duration = project.work_durations.where(work_day: date).first
-#
-#       ## if work duration not nil
-#       if !work_duration.blank?
-#         ### change hours to value
-#         work_duration.hours = params["wds"].first[date.strftime("%b,%d,%Y")].to_i
-#         ### change status to pending if save_for_later else saved
-#         work_duration.time_sheet_status = save_for_later ? 'saved' : (work_duration.time_sheet_status == "reopened") ? 'resubmitted' : 'pending'
-#         ### we also change the created_at date because this date is used to signify when the timesheet was submitted
-#         work_duration.created_at = DateTime.now
-#
-#         if params[:timesheet_screenshot] != nil && date.strftime('%A') == 'Monday'
-# #          work_duration.timesheet_screenshot = params[:timesheet_screenshot] if date.strftime('%A') == 'Monday'
-#           work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot])
-#         end
-#       else
-#
-#         work_duration = employee.projects.first.work_durations.create(work_day: date)
-#
-#         work_duration.hours = params["wds"].first[date.strftime("%b,%d,%Y")].to_i
-#
-#         work_duration.created_at = DateTime.now
-#
-#         # we want to set the status of all created dates same as monday to maintain cohearence
-#         if date.monday?
-#           # so we check if the date being created is monday? if it is then we simply check if its being saved or submitted and set the status accordingly
-#           # if monday did not already exits then it is not possible for it be resubmitted currently because timesheet is created in update_duration_status if doesnt exist
-#           work_duration.time_sheet_status = save_for_later ? 'saved' : 'pending'
-#         else
-#           # if its not monday then we fetch monday and set the same status it has
-#           work_duration.time_sheet_status = employee.projects.first.work_durations.where(work_day: date.beginning_of_week).first.time_sheet_status
-#         end
-#
-#
-#         if params[:timesheet_screenshot] != nil && date.strftime('%A') == 'Monday'
-#           work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot])
-#         end
-#
-#       end
-#       # save work duration
-#       if !work_duration.save
-#         all_saved = false
-#       end
-#       #end iteration
-#     end
-#
-#     respond_to do |format|
-#       if all_saved
-#         format.html { redirect_to employee, notice: 'Work duration was successfully created.' }
-#         format.json { render :show, status: :created, location: @work_duration }
-#       else
-#         format.html { redirect_to employee, flash: { error: "Some Values not saved. Please try again." } }
-#       end
-#     end
   end
 
   # PATCH/PUT /work_durations/1
@@ -389,6 +314,71 @@ class WorkDurationsController < ApplicationController
     end
   end
   
+  def fix_job_issue
+    if params[:wdid].present?
+      wds = [WorkDuration.find(params[:wdid])]
+    else
+      print "--> UPDATING HOURS"
+      wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(30)
+    end
+    #WorkDuration(sun: integer, mon: integer, tue: integer, wed: integer, thu: integer, fri: integer, sat: integer, 
+    #             employer_rate: integer, consultant_rate: integer, job_rate: integer, job_id: integer, employee_id: integer)
+    
+    # print "------------------------------------------------> JENGA: #{wds.count}"
+    wds.each do |wd|
+      if wd.mon < 0
+        
+        hours_array = wd.fetch_hours_array
+        wd.update(sun:hours[0],mon:hours[1],tue:hours[2],wed:hours[3],thu:hours[4],fri:hours[5],sat:hours[6])
+      end
+
+      if wd.job_id.blank?
+        # print ">------------------------------------------------<\n"
+        # print "-----------------------> employer_rate: #{wd.employer_rate}\n"
+        # print "-----------------------> proj_e_r: #{wd.posting.employee.employer_rate}\n"
+        
+        # print "-----------------------> consultant_rate: #{wd.consultant_rate}\n"
+        # print "-----------------------> proj_c_r: #{wd.posting.employee.employee_rate}\n"
+
+        # print "-----------------------> job_rate: #{wd.job_rate}\n"
+        # print "-----------------------> proj_j_r: #{wd.posting.job.rate}\n"
+
+        # print "-----------------------> job_id: #{wd.job_id}\n"
+        # print "-----------------------> proj_j_id: #{wd.posting.job_id}\n"
+
+        # print "-----------------------> employee_id: #{wd.employee_id}\n"
+        # print "-----------------------> proj_e_id: #{wd.posting.employee_id}\n"
+        
+        
+        
+
+        if wd.update(employer_rate: wd.posting.employee.employer_rate, 
+                      consultant_rate: wd.posting.employee.employee_rate,
+                      job_rate: wd.posting.job.rate,
+                      job_id: wd.posting.job_id,
+                      employee_id: wd.posting.employee_id)
+          print "--> UPDATING SUCCESS"
+          flash[:notice] = "Updated successfully."
+        else
+          print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+          flash[:error] = "Updated Failed: #{wd.errors}"
+        end
+
+      end
+
+      #wd.save
+    end
+
+    
+
+    respond_to do |format|
+      format.html { redirect_to WorkDuration }
+      format.json { head :no_content }
+    end
+    
+
+  end
+
   private
 
   # Use callbacks to share common setup or constraints between actions.

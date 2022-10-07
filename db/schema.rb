@@ -120,6 +120,7 @@ ActiveRecord::Schema.define(version: 2022_10_05_131854) do
     t.date "job_start_date"
     t.date "job_end_date"
     t.string "job_end_reason"
+    t.decimal "employee_rate"
   end
 
   create_table "employers", force: :cascade do |t|
@@ -308,6 +309,7 @@ ActiveRecord::Schema.define(version: 2022_10_05_131854) do
     t.integer "posting_id"
     t.integer "account_manager_id"
     t.integer "job_id"
+    t.integer "employee_id"
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"

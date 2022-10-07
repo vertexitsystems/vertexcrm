@@ -1,5 +1,5 @@
 class WorkDuration < ApplicationRecord
-  belongs_to :project
+  belongs_to :project, :optional => true
   belongs_to :posting
   
   has_one :vendor, through: :project

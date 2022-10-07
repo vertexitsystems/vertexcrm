@@ -1,6 +1,5 @@
 Rails.application.routes.draw do
-  
-  
+    
   resources :postings
   resources :timesheets
   resources :clients
@@ -61,6 +60,7 @@ Rails.application.routes.draw do
       put :update_duration_status
       get :reopen_timesheet
       put :update_notification_read
+      put :fix_job_issue
     end
   end
   
