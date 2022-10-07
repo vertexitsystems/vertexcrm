@@ -16,8 +16,8 @@ class WorkDuration < ApplicationRecord
   
   
   def period
-    return "(Bad Value)" if sunday.blank? || saturday.blank?
-    "#{sunday.strftime("%b %d, %Y")} - #{saturday.strftime("%b %d, %Y")}"
+    return "(Bad Value)" if work_day.blank? || sunday.blank? || saturday.blank?
+    return "#{sunday.strftime("%b %d, %Y")} - #{saturday.strftime("%b %d, %Y")}"
   end
   def is_unsubmitted?
     time_sheet_status == "unsubmitted"
