@@ -322,7 +322,7 @@ class WorkDurationsController < ApplicationController
       wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(30)
     end
     wds.each do |wd|
-      if wd.mon < 0
+      if wd.mon.blank? || wd.mon < 0
         
         hours = wd.fetch_hours_array
         wd.update(sun:hours[0],mon:hours[1],tue:hours[2],wed:hours[3],thu:hours[4],fri:hours[5],sat:hours[6])
