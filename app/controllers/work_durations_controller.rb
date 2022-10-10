@@ -326,24 +326,38 @@ class WorkDurationsController < ApplicationController
         
         hours = wd.fetch_hours_array
         wd.update(sun:hours[0],mon:hours[1],tue:hours[2],wed:hours[3],thu:hours[4],fri:hours[5],sat:hours[6])
-        
+
       end
 
       if wd.job_id.blank?
 
-        if wd.update(employer_rate: wd.posting.employee.employer_rate, 
-                      consultant_rate: wd.posting.employee.employee_rate,
-                      job_rate: wd.posting.job.rate,
-                      job_id: wd.posting.job_id,
-                      employee_id: wd.posting.employee_id)
-          print "--> UPDATING SUCCESS"
-          flash[:notice] = "Updated successfully."
-
-        else
+        if wd.posting.blank?
+          if wd.update(employer_rate: wd.posting.employee.employer_rate, 
+                        consultant_rate: wd.posting.employee.employee_rate,
+                        job_rate: wd.posting.job.rate,
+                        job_id: wd.posting.job_id,
+                        employee_id: wd.posting.employee_id)
+            print "--> UPDATING SUCCESS"
+            flash[:notice] = "Updated successfully."
+          else
           
-          print "--> UPDATING FAILED: #{wd.errors.full_messages}"
-          flash[:error] = "Updated Failed: #{wd.errors}"
+            print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+            flash[:error] = "Updated Failed: #{wd.errors}"
 
+          end
+
+        elsif wd.project.blank?
+          if wd.update(employer_rate: wd.project.employee.employer_rate, 
+                        consultant_rate: wd.project.employee.employee_rate,
+                        job_rate: wd.project.job.rate,
+                        job_id: wd.project.job_id,
+                        employee_id: wd.project.employee_id)
+            print "--> UPDATING SUCCESS"
+            flash[:notice] = "Updated successfully."
+          else
+            print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+            flash[:error] = "Updated Failed: #{wd.errors}"
+          end
         end
 
       end
