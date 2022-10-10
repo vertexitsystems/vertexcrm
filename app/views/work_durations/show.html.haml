@@ -49,33 +49,33 @@
 				%b
 					Day
 			.flex_col.tsd_col{:style=>"text-align:right"}
-				= @work_duration.sunday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.sunday.strftime("%m/%d")
 				%br
-				= @work_duration.sunday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.sunday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.monday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.monday.strftime("%m/%d")
 				%br
-				= @work_duration.monday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.monday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.tuesday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.tuesday.strftime("%m/%d")
 				%br
-				= @work_duration.tuesday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.tuesday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.wednesday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.wednesday.strftime("%m/%d")
 				%br
-				= @work_duration.wednesday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.wednesday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.thursday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.thursday.strftime("%m/%d")
 				%br
-				= @work_duration.thursday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.thursday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.friday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.friday.strftime("%m/%d")
 				%br
-				= @work_duration.friday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.friday.strftime("%a")
 			.flex_col.tsd_col_right
-				= @work_duration.saturday.strftime("%m/%d")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.saturday.strftime("%m/%d")
 				%br
-				= @work_duration.saturday.strftime("%a")
+				= @work_duration.work_day.blank? ? "-" : @work_duration.saturday.strftime("%a")
 			.flex_col.tsd_col_right{:style=>"flex-shrink: 0.9;"}
 				Total
 		.flex_row.tsd_row
