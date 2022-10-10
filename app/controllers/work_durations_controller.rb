@@ -344,7 +344,7 @@ class WorkDurationsController < ApplicationController
 
           end
 
-        elsif !wd.project.blank? && !wd.project.employee.blank?
+        elsif !wd.project.blank? && !wd.project.employee.blank? && !wd.project.job.blank?
           if wd.update(employer_rate: wd.project.employee.employer_rate, 
                         consultant_rate: wd.project.employee.employee_rate,
                         job_rate: wd.project.job.rate,
