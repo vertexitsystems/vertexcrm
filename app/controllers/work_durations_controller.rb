@@ -331,7 +331,7 @@ class WorkDurationsController < ApplicationController
 
       if wd.job_id.blank?
 
-        if wd.posting.blank?
+        if !wd.posting.blank?
           if wd.update(employer_rate: wd.posting.employee.employer_rate, 
                         consultant_rate: wd.posting.employee.employee_rate,
                         job_rate: wd.posting.job.rate,
@@ -346,7 +346,7 @@ class WorkDurationsController < ApplicationController
 
           end
 
-        elsif wd.project.blank?
+        elsif !wd.project.blank?
           if wd.update(employer_rate: wd.project.employee.employer_rate, 
                         consultant_rate: wd.project.employee.employee_rate,
                         job_rate: wd.project.job.rate,
