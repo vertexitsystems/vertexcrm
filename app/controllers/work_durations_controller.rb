@@ -344,17 +344,19 @@ class WorkDurationsController < ApplicationController
 
           end
 
-        elsif !wd.project.blank? && !wd.project.employee.blank? && !wd.project.job.blank?
-          if wd.update(employer_rate: wd.project.employee.employer_rate, 
-                        consultant_rate: wd.project.employee.employee_rate,
-                        job_rate: wd.project.job.rate,
-                        job_id: wd.project.job_id,
-                        employee_id: wd.project.employee_id)
-            print "--> UPDATING SUCCESS"
-            flash[:notice] = "Updated successfully."
-          else
-            print "--> UPDATING FAILED: #{wd.errors.full_messages}"
-            flash[:error] = "Updated Failed: #{wd.errors}"
+        elsif !wd.project.blank? && !wd.project.employee.blank?
+          if !wd.project.job.blank? 
+            if wd.update(employer_rate: wd.project.employee.employer_rate, 
+                          consultant_rate: wd.project.employee.employee_rate,
+                          job_rate: wd.project.job.rate,
+                          job_id: wd.project.job_id,
+                          employee_id: wd.project.employee_id)
+              print "--> UPDATING SUCCESS"
+              flash[:notice] = "Updated successfully."
+            else
+              print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+              flash[:error] = "Updated Failed: #{wd.errors}"
+            end
           end
         end
 

@@ -26,9 +26,13 @@ default: &default
 development:
   <<: *default
   database: vertex_dev
-  #rp_development
   user: rp
   password: rp321!
+  
+  # database: vertexproduction
+  # host: app-69705f4a-5444-41a6-b36e-dd072d413387-do-user-11151443-0.b.db.ondigitalocean.com
+  # user: vertexproduction
+  # password: LMSDlqV8apbwqrOK
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
