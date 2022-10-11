@@ -318,9 +318,11 @@ class WorkDurationsController < ApplicationController
     if params[:wdid].present?
       wds = [WorkDuration.find(params[:wdid])]
     else
-      wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(30)
+      wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(100)
     end
     wds.each do |wd|
+
+
       if wd.mon.blank? || wd.mon < 0
         
         hours = wd.fetch_hours_array
@@ -331,6 +333,7 @@ class WorkDurationsController < ApplicationController
       if wd.job_id.blank?
 
         if !wd.posting.blank? && !wd.posting.employee.blank?
+
           if wd.update(employer_rate: wd.posting.employee.employer_rate, 
                         consultant_rate: wd.posting.employee.employee_rate,
                         job_rate: wd.posting.job.rate,
@@ -338,16 +341,14 @@ class WorkDurationsController < ApplicationController
                         employee_id: wd.posting.employee_id)
             flash[:notice] = "Updated successfully."
           else
-          
             print "--> UPDATING FAILED: #{wd.errors.full_messages}"
             flash[:error] = "Updated Failed: #{wd.errors}"
-
           end
 
         elsif !wd.project.blank? && !wd.project.employee.blank?
 
           job = wd.project.employee.active_job
-          
+
           if wd.update(employer_rate: wd.project.employee.employer_rate, 
                         consultant_rate: wd.project.employee.employee_rate,
                         job_rate: job.rate,
