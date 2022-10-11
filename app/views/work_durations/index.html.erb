@@ -126,7 +126,23 @@
       <ul>
         <li>A: each day of week has saperate wd, B: each day is stored as wd's property</li>
       </ul>
-      
     </div>
   </div>
+
+  <% if params[:debug].present? %>
+    <div class="row">
+      <div class="col">
+        <%- wds = WorkDuration.all %>
+        Total:
+        <%= wds.count %>
+        <br />
+        Have employees:
+        <%= wds.select{|wd|!wd.employee.blank?}.count %>
+        <br />
+        Have Jobs:
+        <%= wds.select{|wd|!wd.employee.blank?}.select{|wd|!wd.employee.active_job.blank?}.count %>
+      </div>
+    </div>
+  <% end %>
+
 </div>
