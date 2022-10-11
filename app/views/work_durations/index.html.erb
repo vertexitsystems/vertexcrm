@@ -62,11 +62,6 @@
 <% end %>
 <div class="info_container">
   <div class="row">
-<!--     <div class="col">
-      <div class="ti_price"></div>
-      <div class="ti_info">Total Employees</div>
-      <div class="clr"></div>
-    </div> -->
     <div class="col">
       <div class="ti_price"><%= weekly_hours %></div>
       <div class="ti_info">Hours Logged</div>
@@ -75,17 +70,6 @@
 
     <div class="clr"></div>
   </div>
-<!--   <div class="row">
-    <div class="col" style="width:100%">
-      <div class="bi_info">Total Weekly Charge</div>
-      <div class="bi_price">
-        $
-      </div>
-      <div class="clr"></div>
-    </div>
-
-    <div class="clr"></div>
-  </div> -->
 </div>
 
 <div id="chart_div" style="margin-left:10px;float:left"></div>
@@ -102,6 +86,7 @@
     <div class="col">Period</div>
     <div class="col">Self contained</div>
     <div class="col">Job ID</div>
+    <div class="col">Has Active Job</div>
     <div class="col">has Posting</div>
     <div class="col">has Project</div>
     <div class="col">Actions</div>
@@ -118,6 +103,12 @@
       <div class="col"><%= wd.period %></div>
       <div class="col"><%= (wd.mon.blank? || wd.mon < 0) ? "NO" : "YES" %></div>
       <div class="col"><%= wd.job_id.blank? ? "NO" : "YES" %></div>
+      <div class="col">
+        proj job: <%= !wd.try(:project).try(:employee).try(:active_job).blank? %> <br />
+        post job: <%= !wd.try(:posting).try(:job).blank? %> <br />
+        emp a_job: <%= !wd.try(:employee).try(:active_job).blank? %> <br />
+        
+      </div>
       <div class="col"><%= wd.posting.blank? ? "NO" : "YES" %></div>
       <div class="col"><%= wd.project.blank? ? "NO" : "YES" %></div>
       <div class="col"><%= link_to "Fix", fix_job_issue_work_durations_path(wdid: wd.id), method:"PUT" %></div>
