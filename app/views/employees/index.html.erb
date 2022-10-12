@@ -170,13 +170,19 @@
 <%= render "employees/close_consultant_form" %>
 
 <% if params[:debug].present? %>
-	<%= Employee.all.map{|e|e.job_id} %>
+	<%- Employee.all.each do |emp| %>
+		<div style="border:1px solid #000">
+			Name: <%= emp.profile.name %> <br />
+			Active_Job: <%= emp.active_job.blank? ? "-" : emp.active_job.id %> <br />
+			Job_ID: <%= emp.job_id %> <br />
+		</div>
+	<% end %>
 <% end %>
 <% if params[:debug_fix].present? %>
 	<%- ea = Employee.all %>
 	<% ea.each do |emp| %>
 		<% if !emp.active_job.blank? %>
-			<%- Employee.update(job_id: emp.active_job.id) %>
+			<%- emp.update(job_id: emp.active_job.id) %>
 		<% end %>
 	<% end %>
 <% end %>
