@@ -181,8 +181,8 @@
 <% if params[:debug_fix].present? %>
 	<%- ea = Employee.all %>
 	<% ea.each do |emp| %>
-		<% if !emp.active_job.blank? %>
-			<%- emp.update(job_id: emp.active_job.id) %>
+		<% if emp.active_job.blank? %>
+			<%- emp.update(job_id: nil) %>
 		<% end %>
 	<% end %>
 <% end %>
