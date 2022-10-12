@@ -90,6 +90,7 @@
     <div class="col">job_rate</div>
     <div class="col">consultant_rate</div>
     <div class="col">employer_rate</div>
+    <div class="col">STATUS</div>
     <div class="col">Actions</div>
 <!--     <div class="col">
       Turnover
@@ -108,10 +109,11 @@
       <div class="col"><%= wd.job_rate %></div>
       <div class="col"><%= wd.consultant_rate %></div>
       <div class="col"><%= wd.employer_rate %></div>
+      <div class="col"><%= wd.time_sheet_status %></div>
       <div class="col"><%= link_to "Fix", fix_job_issue_work_durations_path(wdid: wd.id), method:"PUT" %></div>
     </div>
   <% end %>
-  
+
   <div class="row">
     <div class="col">
       <%= paginate @work_durations %>
