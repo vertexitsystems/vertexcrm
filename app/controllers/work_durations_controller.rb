@@ -11,8 +11,7 @@ class WorkDurationsController < ApplicationController
   # GET /work_durations
   # GET /work_durations.json
   def index
-    #@work_durations = WorkDuration.order(work_day: :desc).page(params[:page])
-    @work_durations = WorkDuration.where.not("time_sheet_status = ?", 1).where("employee_id IS NULL").page(params[:page])
+    @work_durations = WorkDuration.all.page(params[:page])
   end
 
   # GET /work_durations/1
@@ -153,6 +152,71 @@ class WorkDurationsController < ApplicationController
 
   # POST /work_durations
   # POST /work_durations.json
+  # def create
+
+  #   save_for_later = params[:save_for_later].present?
+    
+  #   employee = Employee.where(id: params['eid']).first
+  #   posting = (params[:pid].present? && !params[:pid].blank?) ? Posting.find(params[:pid]) : employee.active_postings.first
+    
+    
+    
+  #   work_duration = WorkDuration.find(params[:wdid]) if params[:wdid].present?
+
+    
+    
+  #   if work_duration.blank?
+  #     work_duration = WorkDuration.new(work_day:params[:dt],
+  #                                      job_id: employee.job.id,
+  #                                      employer_rate: employee.employer_rate,
+  #                                      consultant_rate: employee.rate,
+  #                                      job_rate: job.rate,
+  #                                      employee_id:employee.id)
+      
+  #   end
+    
+  #   x
+
+  #   work_duration.sun = params[:sun]
+  #   work_duration.mon = params[:mon]
+  #   work_duration.tue = params[:tue]
+  #   work_duration.wed = params[:wed]
+  #   work_duration.thu = params[:thu]
+  #   work_duration.fri = params[:fri]
+  #   work_duration.sat = params[:sat]
+  #   work_duration.save_for_later = save_for_later
+  #   work_duration.created_at = DateTime.now
+  #   work_duration.contract_type = employee.contract_type
+  #   work_duration.employer_rate = employee.employer_rate
+  #   work_duration.consultant_rate = employee.rate
+    
+  #   if work_duration.posting_id.blank?
+  #     ap = employee.active_postings.first
+
+  #     if ap.blank?
+  #       flash[:alert] = "Unable to create timesheet because the consultant has no active postings"
+  #       redirect_back :fallback_location => root_path
+  #       return
+  #     end
+
+  #     work_duration.posting_id = employee.active_postings.first.id
+  #     work_duration.job_rate = ap.posting_rate
+  #   end
+    
+  #   work_duration.time_sheet_status = save_for_later ? 'saved' : (work_duration.time_sheet_status == "reopened") ? 'resubmitted' : 'pending'
+    
+  #   work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot]) if params[:timesheet_screenshot] != nil
+    
+    
+    
+  #   if work_duration.save
+  #     flash[:notice] = "Timesheet #{save_for_later ? "Saved" : "Submitted" } Successfully"
+  #     redirect_back(fallback_location: root_path)
+  #   else
+  #     flash[:alert] = "Failed to save Timesheet: #{work_duration.errors}"
+  #     redirect_back(fallback_location: root_path)
+  #   end
+  # end
   def create
 
     save_for_later = params[:save_for_later].present?

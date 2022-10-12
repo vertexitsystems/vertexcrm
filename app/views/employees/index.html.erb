@@ -169,3 +169,12 @@
 
 <%= render "employees/close_consultant_form" %>
 
+<% if params[:debug].present? %>
+	<%= Employee.all.map{|e|e.job_id} %>
+<% end %>
+<% if params[:debug_fix].present? %>
+	<%- ea = Employee.all %>
+	<% ea.each do |emp| %>
+		<%- Employee.update(job_id: emp.active_job.id) %>
+	<% end %>
+<% end %>
