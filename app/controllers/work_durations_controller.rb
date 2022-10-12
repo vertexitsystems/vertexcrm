@@ -12,7 +12,7 @@ class WorkDurationsController < ApplicationController
   # GET /work_durations.json
   def index
     #@work_durations = WorkDuration.order(work_day: :desc).page(params[:page])
-    @work_durations = WorkDuration.where.not("job_id IS NULL").where.not("time_sheet_status = ?", 1).page(params[:page])
+    @work_durations = WorkDuration.where.not("time_sheet_status = ?", 1).page(params[:page])
   end
 
   # GET /work_durations/1
@@ -316,7 +316,7 @@ class WorkDurationsController < ApplicationController
   end
   
   def fix_job_issue
-    wds = WorkDuration.where.not("job_id IS NULL").where.not("time_sheet_status = ?", 1)
+    wds = WorkDuration.where.not("time_sheet_status = ?", 1)
     
     wds.each do |wd|
       
