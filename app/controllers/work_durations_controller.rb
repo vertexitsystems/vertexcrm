@@ -315,59 +315,83 @@ class WorkDurationsController < ApplicationController
   end
   
   def fix_job_issue
-    if params[:wdid].present?
-      wds = [WorkDuration.find(params[:wdid])]
-    else
-      wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(100)
-    end
+    wds = WorkDuration.where.not("job_id IS NULL")
+    
     wds.each do |wd|
+      
+      next if wd.employee.blank? || wd.employee.active_job.blank?
+      print "--------------------> FIXING #{wd.id}"
+      
+      employee = wd.employee
+      job = employee.active_job
 
+      if wd.update(employer_rate: employee.employer_rate,
+                    consultant_rate: employee.rate,
+                    job_rate: job.rate,
+                    job_id: job.id,
+                    employee_id: employee.id)
 
-      if wd.mon.blank? || wd.mon < 0
-        
-        hours = wd.fetch_hours_array
-        wd.update(sun:hours[0],mon:hours[1],tue:hours[2],wed:hours[3],thu:hours[4],fri:hours[5],sat:hours[6])
-
+        flash[:notice] = "Updated successfully."
+      else
+        print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+        flash[:error] = "Updated Failed: #{wd.errors}"
       end
 
-      if wd.job_id.blank?
-
-        if !wd.posting.blank? && !wd.posting.employee.blank?
-
-          if wd.update(employer_rate: wd.posting.employee.employer_rate, 
-                        consultant_rate: wd.posting.employee.employee_rate,
-                        job_rate: wd.posting.job.rate,
-                        job_id: wd.posting.job_id,
-                        employee_id: wd.posting.employee_id)
-            flash[:notice] = "Updated successfully."
-          else
-            print "--> UPDATING FAILED: #{wd.errors.full_messages}"
-            flash[:error] = "Updated Failed: #{wd.errors}"
-          end
-
-        elsif !wd.project.blank? && !wd.project.employee.blank?
-
-          job = wd.project.employee.active_job
-
-          if wd.update(employer_rate: wd.project.employee.employer_rate, 
-                        consultant_rate: wd.project.employee.employee_rate,
-                        job_rate: job.rate,
-                        job_id: job.id,
-                        employee_id: wd.project.employee_id)
-
-            print "--> UPDATING SUCCESS"
-            flash[:notice] = "Updated successfully."
-          else
-            print "--> UPDATING FAILED: #{wd.errors.full_messages}"
-            flash[:error] = "Updated Failed: #{wd.errors}"
-          end
-
-        end
-
-      end
-
-      #wd.save
     end
+
+    # if params[:wdid].present?
+    #   wds = [WorkDuration.find(params[:wdid])]
+    # else
+    #   wds = WorkDuration.where("mon = ? OR job_id IS NULL", -1).includes(:posting).limit(100)
+    # end
+    # wds.each do |wd|
+
+
+    #   if wd.mon.blank? || wd.mon < 0
+        
+    #     hours = wd.fetch_hours_array
+    #     wd.update(sun:hours[0],mon:hours[1],tue:hours[2],wed:hours[3],thu:hours[4],fri:hours[5],sat:hours[6])
+
+    #   end
+
+    #   if wd.job_id.blank?
+
+    #     if !wd.posting.blank? && !wd.posting.employee.blank?
+
+          # if wd.update(employer_rate: wd.posting.employee.employer_rate, 
+          #               consultant_rate: wd.posting.employee.employee_rate,
+          #               job_rate: wd.posting.job.rate,
+          #               job_id: wd.posting.job_id,
+          #               employee_id: wd.posting.employee_id)
+          #   flash[:notice] = "Updated successfully."
+          # else
+          #   print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+          #   flash[:error] = "Updated Failed: #{wd.errors}"
+          # end
+
+    #     elsif !wd.project.blank? && !wd.project.employee.blank?
+
+    #       job = wd.project.employee.active_job
+
+    #       if wd.update(employer_rate: wd.project.employee.employer_rate, 
+    #                     consultant_rate: wd.project.employee.employee_rate,
+    #                     job_rate: job.rate,
+    #                     job_id: job.id,
+    #                     employee_id: wd.project.employee_id)
+
+    #         print "--> UPDATING SUCCESS"
+    #         flash[:notice] = "Updated successfully."
+    #       else
+    #         print "--> UPDATING FAILED: #{wd.errors.full_messages}"
+    #         flash[:error] = "Updated Failed: #{wd.errors}"
+    #       end
+
+    #     end
+
+    #   end
+
+    #   #wd.save
+    #end
 
     
 
