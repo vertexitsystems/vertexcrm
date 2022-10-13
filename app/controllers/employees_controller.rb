@@ -10,10 +10,10 @@ class EmployeesController < ApplicationController
     end
     
     #@employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
-    @employees = Employee.joins(:profile).order(disabled: :desc, created_at: :desc).includes(:profile, :jobs, :vendors)
+    @employees = Employee.order(disabled: :desc, created_at: :desc)#.includes(:profile, :job, :vendors)
 
     @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
-    @employees = @employees.where('jobs.id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
+    @employees = @employees.where('job_id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
     @employees = @employees.where(contract_type: params[:contract]) if params[:contract].present? && !params[:contract].blank?
     @employees = @employees.where('vendors.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
     

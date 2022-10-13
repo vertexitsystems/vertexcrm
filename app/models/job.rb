@@ -3,9 +3,12 @@ class Job < ApplicationRecord
   belongs_to :vendor
   
   #has_many :employees
-  has_many :postings
-  has_many :employees, through: :postings
-  accepts_nested_attributes_for :postings
+  #has_many :postings
+  #has_many :employees, through: :postings
+  has_many :employees
+  has_many :work_durations
+
+  #accepts_nested_attributes_for :postings
     
   has_many :timesheets
   

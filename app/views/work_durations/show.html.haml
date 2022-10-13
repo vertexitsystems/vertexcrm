@@ -121,7 +121,7 @@
 				.flex_col{:style=>"flex-shrink:3"}
 					Site
 				.flex_col
-					= @work_duration.employee.active_job.location.blank? ? "(Not Provided)" : @work_duration.employee.active_job.location
+					= @work_duration.employee.job.location.blank? ? "(Not Provided)" : @work_duration.employee.job.location
 					=#>Employee Active Job Location<
 - if params[:debug_zzx]
 	-# sql = "Select * from projects WHERE work_duration_id = 1"

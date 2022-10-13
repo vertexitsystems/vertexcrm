@@ -8,27 +8,24 @@
 		
 		<div class="" style="height:10px"></div>
 		
-		<%- active_posting = @employee.postings.where(:end_date => nil).first %>
-		<%- active_job = active_posting.job unless active_posting.blank? %>
-		
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading"> Project: </div>
-			<div class="flex_col"> <%= active_job.blank? ? "(Not Assigned)" : active_job.title %> </div>
+			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.title %> </div>
 		</div>
 		
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading"> Client: </div>
-			<div class="flex_col"> <%= active_job.blank? ? "(Not Assigned)" : active_job.client.company_name %> </div>
+			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.client.company_name %> </div>
 		</div>
 	
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading"> Vendor: </div>
-			<div class="flex_col"> <%= active_job.blank? ? "(Not Assigned)" : active_job.vendor.company_name %> </div>
+			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.vendor.company_name %> </div>
 		</div>
 		
 		<div class="flex_row info_row">
 			<div class="flex_col col_heading"> Project Address: </div>
-			<div class="flex_col"> <%= active_job.blank? ? "(Not Assigned)" : active_job.location %> </div>
+			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.location %> </div>
 		</div>	
 		
 	</div>

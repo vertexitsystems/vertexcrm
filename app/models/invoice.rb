@@ -29,7 +29,7 @@ class Invoice < ApplicationRecord
       #byebug
       wd = employee.work_durations.where(work_day: curr_day).first
       if wd.blank?
-        wds.append( WorkDuration.new(project_id: employee.projects.first.id, work_day: curr_day,time_sheet_status:"unsubmitted") )
+        wds.append( WorkDuration.new(work_day: curr_day,time_sheet_status:"unsubmitted") )
       else
         wds.append(wd)
       end

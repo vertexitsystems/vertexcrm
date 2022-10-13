@@ -1,13 +1,14 @@
 class WorkDuration < ApplicationRecord
-  belongs_to :project, :optional => true
-  belongs_to :posting, :optional => true
+  # belongs_to :project, :optional => true
+  # belongs_to :posting, :optional => true
   
-  has_one :vendor, through: :project
-  has_one :employee, through: :project
+  # has_one :vendor, through: :project
+  # has_one :employee, through: :project
 
-  # belongs_to :employee
-  # belongs_to :job
-  
+  belongs_to :employee
+  belongs_to :job
+  has_one :vendor, through: :job
+
   #enum time_sheet_status: %i[unsubmitted saved pending approved rejected reopened]
   enum time_sheet_status: %i[pending unsubmitted reopened saved approved rejected resubmitted]
 

@@ -39,7 +39,7 @@
 				<% if wd.employee.blank? %>
 					(Not Assigned)
 				<% else %>
-					<%= wd.employee.active_postings.count <= 0? "(Not Assigned)" : wd.employee.active_postings.first.job.title %>
+					<%= wd.employee.job.blank? ? "(Not Assigned)" : wd.employee.job.title %>
 				<% end %>
 			</div>
 		<% end %>

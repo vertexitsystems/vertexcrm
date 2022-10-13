@@ -66,6 +66,24 @@
 
 <div class="page_title"> Work Details </div>
 <div class="flex_col">
+	
+	<div class="flex_row">
+		<div class="flex_col" style="margin-top: 20px;">
+			<b>Contract Type: </b>
+			<% contract_types.each do |contract_type| %>
+			<%= form.radio_button :contract_type, contract_type, :checked => (employee.persisted? ? employee.contract_type == contract_type : contract_type.downcase == "c2c") %> 
+			<%= label :contract_type_label, contract_type %>
+			<% end %>
+		</div>
+	</div>
+
+	<div class="flex_row">
+		<div class="flex_col">
+			<b>Job:</b>
+			<%= form.select :job_id, Job.where(closing_date:nil).collect{|c| [c.title, c.id]}, :class => 'genForm_dropBox', :selected => (employee.job.blank? ? false : employee.job.id) %>
+		</div>
+	</div>
+
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Vendor:</b>
@@ -111,15 +129,7 @@
 <div class="page_title"> Documents </div>
 <div class="flex_col">
 	
-	<div class="flex_row">
-		<div class="flex_col">
-			<b>Contract Type: </b>
-			<% contract_types.each do |contract_type| %>
-			<%= form.radio_button :contract_type, contract_type, :checked => (employee.persisted? ? employee.contract_type == contract_type : contract_type.downcase == "c2c") %> 
-			<%= label :contract_type_label, contract_type %>
-			<% end %>
-		</div>
-	</div>
+	
 	
 	<div class="mututal_documents">
 		<div class="flex_row">

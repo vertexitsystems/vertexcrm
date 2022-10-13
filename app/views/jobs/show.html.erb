@@ -89,24 +89,19 @@
 		</div>
 		<% end %>
 		
+
 		<div class="flex_row job_info_header">
-			Consultants <%= link_to "(Add New Consultant)", new_posting_path(:job_id => @job.id), :style => "color:white !important;margin-left:10px;font-size:12px" %>
+			Consultants <%# link_to "(Add New Consultant)", new_posting_path(:job_id => @job.id), :style => "color:white !important;margin-left:10px;font-size:12px" %>
 		</div>
 		
+		
 		<%# @job.postings.employees.order(end_date: :ASC).each do |employee| %>
-		<% @job.postings.order(end_date: :DESC).each do |posting| %>
+		<% @job.employees.each do |employee| %>
 			<div class="flex_row">
-				<div class="flex_col"><%= link_to posting.employee.name, posting.employee %></div>
-				<div class="flex_col">
-					<%= posting.end_date == nil ? "Active " : "(closed)" %>
-					<% if  posting.end_date == nil %>
-					(
-					<%= link_to "Edit", edit_posting_path(posting) %>
-					|<%= link_to "Close", edit_posting_path(posting, :closing => 1) %>
-					)
-					<% end %>
-				</div>
+				<div class="flex_col"><%= link_to employee.name, employee %></div>
+				<div class="flex_col"></div>
 			</div>
 		<% end %>
+
 	</div>
 </div>

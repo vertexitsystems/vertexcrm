@@ -6,7 +6,7 @@ Status:  <%= @wd.is_approved? ? "Approved" : "Rejected" %>
 Message: <%= @wd.rejection_message%>
 <% end %>
 Period:  <%= @wd.period %>
-Project: <%= @wd.project.display_id %>
+Job: <%= @wd.job.title %>
 
 ---------------------------------
 You can visit the update TimeSheet at: <%= work_durations_url(id:@wd.id) %>

@@ -152,6 +152,60 @@ class WorkDurationsController < ApplicationController
 
   # POST /work_durations
   # POST /work_durations.json
+  def create
+
+    save_for_later = params[:save_for_later].present?
+    
+    employee = Employee.where(id: params['eid']).first
+
+    if employee.job.blank?
+      flash[:alert] = "Unable to create timesheet because the consultant has not been assigned a Job"
+      redirect_back :fallback_location => root_path
+      return
+    end
+    
+    
+    work_duration = WorkDuration.find(params[:wdid]) if params[:wdid].present?
+
+    
+    
+    if work_duration.blank?
+      work_duration = WorkDuration.new(work_day:params[:dt],
+                                       job_id: employee.job.id,
+                                       employer_rate: employee.employer_rate,
+                                       consultant_rate: employee.rate,
+                                       job_rate: employee.job.rate,
+                                       employee_id:employee.id)
+      
+    end
+    
+
+    work_duration.sun = params[:sun]
+    work_duration.mon = params[:mon]
+    work_duration.tue = params[:tue]
+    work_duration.wed = params[:wed]
+    work_duration.thu = params[:thu]
+    work_duration.fri = params[:fri]
+    work_duration.sat = params[:sat]
+    work_duration.save_for_later = save_for_later
+    work_duration.created_at = DateTime.now
+    work_duration.contract_type = employee.contract_type
+    
+    
+    work_duration.time_sheet_status = save_for_later ? 'saved' : (work_duration.time_sheet_status == "reopened") ? 'resubmitted' : 'pending'
+    
+    work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot]) if params[:timesheet_screenshot] != nil
+    
+    
+    
+    if work_duration.save
+      flash[:notice] = "Timesheet #{save_for_later ? "Saved" : "Submitted" } Successfully"
+      redirect_back(fallback_location: root_path)
+    else
+      flash[:alert] = "Failed to save Timesheet: #{work_duration.errors}"
+      redirect_back(fallback_location: root_path)
+    end
+  end
   # def create
 
   #   save_for_later = params[:save_for_later].present?
@@ -163,20 +217,30 @@ class WorkDurationsController < ApplicationController
     
   #   work_duration = WorkDuration.find(params[:wdid]) if params[:wdid].present?
 
-    
+
     
   #   if work_duration.blank?
+      
+  #     if employee.active_postings.count <= 0
+  #       flash[:alert] = "No Active job for consultant"
+  #       redirect_back(fallback_location: root_path)
+  #       return
+  #     end
+
+  #     ap = employee.active_postings.first
+
+  #     if employee.projects.count <= 0
+  #       vid = employee.vendors.count > 0 ? employee.vendors.first.id : Vendor.first.id
+  #       employee.projects << Project.create(vendor_id:vid, vendor_rate:0, rate:0)
+  #     end
+      
   #     work_duration = WorkDuration.new(work_day:params[:dt],
-  #                                      job_id: employee.job.id,
-  #                                      employer_rate: employee.employer_rate,
-  #                                      consultant_rate: employee.rate,
-  #                                      job_rate: job.rate,
-  #                                      employee_id:employee.id)
+  #                                      project_id: employee.projects.first.id,
+  #                                      posting_id: ap.id,
+  #                                      job_rate: ap.posting_rate)
       
   #   end
     
-  #   x
-
   #   work_duration.sun = params[:sun]
   #   work_duration.mon = params[:mon]
   #   work_duration.tue = params[:tue]
@@ -217,81 +281,6 @@ class WorkDurationsController < ApplicationController
   #     redirect_back(fallback_location: root_path)
   #   end
   # end
-  def create
-
-    save_for_later = params[:save_for_later].present?
-    
-    employee = Employee.where(id: params['eid']).first
-    posting = (params[:pid].present? && !params[:pid].blank?) ? Posting.find(params[:pid]) : employee.active_postings.first
-    
-    
-    
-    work_duration = WorkDuration.find(params[:wdid]) if params[:wdid].present?
-
-
-    
-    if work_duration.blank?
-      
-      if employee.active_postings.count <= 0
-        flash[:alert] = "No Active job for consultant"
-        redirect_back(fallback_location: root_path)
-        return
-      end
-
-      ap = employee.active_postings.first
-
-      if employee.projects.count <= 0
-        vid = employee.vendors.count > 0 ? employee.vendors.first.id : Vendor.first.id
-        employee.projects << Project.create(vendor_id:vid, vendor_rate:0, rate:0)
-      end
-      
-      work_duration = WorkDuration.new(work_day:params[:dt],
-                                       project_id: employee.projects.first.id,
-                                       posting_id: ap.id,
-                                       job_rate: ap.posting_rate)
-      
-    end
-    
-    work_duration.sun = params[:sun]
-    work_duration.mon = params[:mon]
-    work_duration.tue = params[:tue]
-    work_duration.wed = params[:wed]
-    work_duration.thu = params[:thu]
-    work_duration.fri = params[:fri]
-    work_duration.sat = params[:sat]
-    work_duration.save_for_later = save_for_later
-    work_duration.created_at = DateTime.now
-    work_duration.contract_type = employee.contract_type
-    work_duration.employer_rate = employee.employer_rate
-    work_duration.consultant_rate = employee.rate
-    
-    if work_duration.posting_id.blank?
-      ap = employee.active_postings.first
-
-      if ap.blank?
-        flash[:alert] = "Unable to create timesheet because the consultant has no active postings"
-        redirect_back :fallback_location => root_path
-        return
-      end
-
-      work_duration.posting_id = employee.active_postings.first.id
-      work_duration.job_rate = ap.posting_rate
-    end
-    
-    work_duration.time_sheet_status = save_for_later ? 'saved' : (work_duration.time_sheet_status == "reopened") ? 'resubmitted' : 'pending'
-    
-    work_duration.timesheet_screenshot.attach(params[:timesheet_screenshot]) if params[:timesheet_screenshot] != nil
-    
-    
-    
-    if work_duration.save
-      flash[:notice] = "Timesheet #{save_for_later ? "Saved" : "Submitted" } Successfully"
-      redirect_back(fallback_location: root_path)
-    else
-      flash[:alert] = "Failed to save Timesheet: #{work_duration.errors}"
-      redirect_back(fallback_location: root_path)
-    end
-  end
 
   # PATCH/PUT /work_durations/1
   # PATCH/PUT /work_durations/1.json
@@ -334,12 +323,12 @@ class WorkDurationsController < ApplicationController
     
     wd.time_sheet_status = params["status"]
     wd.rejection_message = params["reason"]
-    wd.status_read = true # IF this value is true consultatnt will see notification for status change
+    wd.status_read = true # if this value is TRUE consultatnt will see notification for status change
     
-    if wd.posting_id.blank?
-      posting = wd.employee.active_postings.first
-      wd.posting_id = posting.id unless posting.blank?
-    end
+    # if wd.posting_id.blank?
+    #   posting = wd.employee.active_postings.first
+    #   wd.posting_id = posting.id unless posting.blank?
+    # end
     
     if wd.save
       # if status has changed to accepted or rejected then we send and email to the consultant to let them know

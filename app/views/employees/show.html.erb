@@ -49,15 +49,9 @@
 			</div>
 		</div>
 		<div class="flex_row info_row">
-			<div class="flex_col col_heading"> Active Jobs: </div>
+			<div class="flex_col col_heading"> Jobs: </div>
 			<div class="flex_col">
-				<% if @employee.active_postings.count <= 0 %>
-					(UnAssigned)
-				<% else %>
-					<% @employee.active_postings.each do |posting| %>
-					<%= "#{posting.job.title} (Started: #{posting.start_date})" %> <br />
-					<% end %>
-				<% end %>
+				<%= @employee.job.blank? ? "(UnAssigned)" : @employee.job.title %>
 			</div>
 		</div>
 	
@@ -79,3 +73,4 @@
 											 can_act: false,
 											 show_employee_info: false,
 											 show_contract_type: false %>
+</div>

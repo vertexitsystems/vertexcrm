@@ -25,11 +25,12 @@ class Employee < ApplicationRecord
   accepts_nested_attributes_for :profile
   #attr_accessor :profile
 	
-  	has_many :projects
+  	# has_many :projects
   	
-  	has_many :work_durations,through: :projects
+  	# has_many :work_durations,through: :projects
 
-  
+    has_many :work_durations
+    
     #has_and_belongs_to_many :clients
     #has_and_belongs_to_many :employers
     belongs_to :client, optional: true
@@ -37,10 +38,11 @@ class Employee < ApplicationRecord
     
     has_many :invoices
     
-    has_many :postings
-    has_many :jobs, through: :postings
+    # has_many :postings
+    # has_many :jobs, through: :postings
+    belongs_to :job
 
-    has_many :vendors, through: :jobs#:projects
+    has_many :vendors, through: :job#s#:projects
     #accepts_nested_attributes_for :postings
     #belongs_to :job, optional: true
     
@@ -67,15 +69,15 @@ class Employee < ApplicationRecord
     visa_expiry.blank? ? 0 : (visa_expiry.to_date - Date.today).to_i
   end
   
-  public def active_postings
-    postings.where(:end_date => nil)
-  end
-  public def active_job
-    active_postings.first.job unless active_postings.count <= 0
-  end
+  # public def active_postings
+  #   postings.where(:end_date => nil)
+  # end
+  # public def active_job
+  #   active_postings.first.job unless active_postings.count <= 0
+  # end
   
-  public def posting_for_job(job_id)
-    postings.where(job_id: job_id).first
-  end
+  # public def posting_for_job(job_id)
+  #   postings.where(job_id: job_id).first
+  # end
     
 end

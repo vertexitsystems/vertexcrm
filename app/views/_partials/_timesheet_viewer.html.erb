@@ -209,12 +209,12 @@
 	if employees.count > 1
 		work_durations = employees.map {|e|
 			
-			if e.active_postings.count > 0
-				posting_start_date = e.active_postings.first.start_date.beginning_of_week
-				if curr_end.beginning_of_week < posting_start_date
-					next
-				end
-			end
+			# if e.active_postings.count > 0
+			# 	posting_start_date = e.active_postings.first.start_date.beginning_of_week
+			# 	if curr_end.beginning_of_week < posting_start_date
+			# 		next
+			# 	end
+			# end
 			
 			wd = e.work_durations.where(:work_day => curr_date.beginning_of_week).first 
 			if wd.blank?
