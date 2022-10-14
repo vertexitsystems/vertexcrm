@@ -274,8 +274,8 @@
 	elsif show_actionables_consultant # As a convention if we are looking at consultants actionables then the employees array will have only one value
 		employee = employees.first
 		# We want to get actionable timesheets from today all the way back to when the consultant started their current posting
-		ap = employee.active_postings.first
-		end_date = ap.blank? ? employee.created_at : ap.start_date
+		#ap = employee.active_postings.first
+		#end_date = ap.blank? ? employee.created_at : ap.start_date
 		#actionable_work_durations = employee.work_durations_for_period(Date.today, end_date).where(time_sheet_status: ["reopened"])
 		actionable_work_durations = work_durations.select{|wd| wd.time_sheet_status == "reopened" || wd.time_sheet_status == "rejected" }
 	end
