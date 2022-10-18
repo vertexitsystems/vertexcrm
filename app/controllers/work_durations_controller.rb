@@ -86,13 +86,17 @@ class WorkDurationsController < ApplicationController
       
       employee = Employee.where(id:params[:emp].to_i).first
         
-      ap = employee.active_postings.first
+      #ap = employee.active_postings.first
     
       work_duration = WorkDuration.new(work_day:params[:date].to_date,
-                                       project_id: employee.projects.first.id,
-                                       posting_id: ap.id,
-                                       job_rate: ap.posting_rate,
+                                       job_id: employee.job.id,
+                                       employer_rate: employee.employer_rate,
+                                       consultant_rate: employee.rate,
+                                       job_rate: employee.job.rate,
+                                       employee_id:employee.id,
                                        time_sheet_status:"reopened")
+
+
       
        if work_duration.save
          flash[:notice] = "Timesheet Reopened"
@@ -104,18 +108,18 @@ class WorkDurationsController < ApplicationController
        
     else
       
-      if work_duration.posting_id.blank?
-        ap = work_duration.employee.active_postings.first
+      # if work_duration.posting_id.blank?
+      #   ap = work_duration.employee.active_postings.first
 
-        if ap.blank?
-          flash[:alert] = "Unable to reopen timesheet because the consultant has no active postings"
-          redirect_back :fallback_location => root_path
-          return
-        end
+      #   if ap.blank?
+      #     flash[:alert] = "Unable to reopen timesheet because the consultant has no active postings"
+      #     redirect_back :fallback_location => root_path
+      #     return
+      #   end
 
-        work_duration.posting_id = ap.id
-        work_duration.job_rate = ap.posting_rate
-      end
+      #   work_duration.posting_id = ap.id
+      #   work_duration.job_rate = ap.posting_rate
+      # end
       
       if work_duration.update(time_sheet_status:"reopened")
         flash[:notice] = "Timesheet Reopened"
