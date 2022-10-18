@@ -2,7 +2,9 @@
 <% return current_user.is_admin? ? "Something went wrong. work duration is nil." : "" %> 
 <% end %>
 <%- hours_array = wd.fetch_hours_array %>
+
 <%- allow_update = (can_submit_timesheet && (!wd.is_past_due_date? || wd.is_reopened?) && wd.should_update?) %>
+<%- allow_update = current_user.is_admin? || allow_update %>
 
 <div class="row_hover_highlight <%= allow_update ? "parent-toggle" : "" %>" data-index="<%=unique_id%>">
 	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>

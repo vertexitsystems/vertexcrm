@@ -191,8 +191,18 @@ class InvoicesController < ApplicationController
   
   # This method generates a new invoice to be delivered to the client
   def create_new_invoice
+
     @vendor = (params[:vid].present? && !params[:vid].blank?) ? Vendor.where(id: params[:vid]).includes(:employees).first : nil
-    @employees = @vendor.blank? ? Employee.all : @vendor.employees.distinct
+    @client = (params[:cid].present? && !params[:cid].blank?) ? Client.where(id: params[:cid]).includes(:employees).first : nil
+
+    if params[:vid].present?
+      @employees = @vendor.employees.distinct
+    elsif params[:cid].present?
+      @employees = @client.employees.distinct
+    else
+      @employees = Employee.all
+    end
+    
   end
   
   def json_employee_info
@@ -219,7 +229,7 @@ class InvoicesController < ApplicationController
     
     wds = employee.work_durations.where(work_day: start_date...end_date)
     hours_quantity = wds.map{|wd|wd.fetch_hours_array.filter{|h|h > 0}.count}.inject(:+).to_i
-    rate = employee.jobs.count > 0 ? employee.jobs.first.rate.to_i : 0
+    rate = employee.job.rate.to_i
     
     respond_to do |format|
       format.html { redirect_to :back, alert: "This method cannot be called as an html request." }
@@ -231,7 +241,7 @@ class InvoicesController < ApplicationController
                                   id: employee.id,
                                   quantity: hours_quantity,
                                   rate: rate,
-                                  designation: wds.first.blank? ? "" : (wds.first.posting.blank? ? "" : wds.first.posting.designation),
+                                  designation: wds.first.blank? ? "" : wds.first.employee.designation,
                                   status:"success"
                                 }
                               }
@@ -244,7 +254,8 @@ class InvoicesController < ApplicationController
       redirect_to root_path
     end
 
-    #@client = Client.find(params[:client]) if params[:client].present?
+    
+    @client = Client.find(params[:client]) if params[:client].present?
     @vendor = Vendor.find(params[:vendor]) if params[:vendor].present?
     @values = params[:employees].blank? ? [] : params[:employees].to_unsafe_h.values
 

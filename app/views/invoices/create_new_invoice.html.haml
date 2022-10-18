@@ -62,9 +62,6 @@
 		});
 		
 		$("#vendor_select").change(function(){
-			//var url = window.location.href;
-			//window.location.href = url;
-			
 			if(document.location.href.indexOf("?") > -1) {
 				var url = location.protocol + '//' + location.host + location.pathname
 				url = url+"?vid="+$(this).val();
@@ -72,7 +69,16 @@
 				var url = document.location.href+"?vid="+$(this).val();
 			}
 			document.location = url;
-			
+		});
+
+		$("#client_select").change(function(){
+			if(document.location.href.indexOf("?") > -1) {
+				var url = location.protocol + '//' + location.host + location.pathname
+				url = url+"?cid="+$(this).val();
+			}else{
+				var url = document.location.href+"?cid="+$(this).val();
+			}
+			document.location = url;
 		});
 		
 		$("#invoice_form").submit(function( event ) {
@@ -171,34 +177,48 @@
 .container-fluid
 	= form_tag(generate_invoice_invoices_path, id:"invoice_form") do
 		.row.py-2
-			.col
-			.col-1{style:"text-align:right"}
-				%b Date:
-			.col-2{style:"text-align:left"}
-				= Date.today.strftime("%B %d, %YY")
-		.row.py-2
 			.col.mx-2
 				.row
-					%b Bill To:
+					.col
+						%b Bill To
+						- if (params[:t].present? && params[:t] == "vendor" ) || params[:vid].present?
+							(Vendor):
+						- else
+							(Client):
 				.row
-					= select_tag :vendor, options_from_collection_for_select(Vendor.all, :id, :company_name, (@vendor.blank? ? 0 : @vendor.id)), id: "vendor_select", include_blank: "All"
+					.col
+						- if (params[:t].present? && params[:t] == "vendor" ) || params[:vid].present?
+							= select_tag :vendor, options_from_collection_for_select(Vendor.all, :id, :company_name, (@vendor.blank? ? 0 : @vendor.id)), id: "vendor_select", include_blank: "All"
+						- else
+							= select_tag :client, options_from_collection_for_select(Client.all, :id, :company_name, (@client.blank? ? 0 : @client.id)), id: "client_select", include_blank: "All"
+						=# text_field :type, :reciever_type, (params[:t].present? ? params[:t] : (params[:vid].present? ? "vendor" : "client"))
+						= hidden_field :reciever, :type, :value => (params[:t].present? ? params[:t] : (params[:vid].present? ? "vendor" : "client"))
+				.row.content-right
+					.col{style:"text-align:right"}
+						- if ( params[:t].present? && params[:t] == "client" ) || params[:cid].present?
+							= link_to "Switch to Vendor Invoice", create_new_invoice_invoices_path(t:"vendor")
+						- else
+							= link_to "Switch to Client Invoice", create_new_invoice_invoices_path(t:"client")
 			.col.mx-2
 				.row
-					%b Net:
+					.col
+						%b Net:
 				.row
-					= select_tag :net, options_for_select(["Net15", "Net30", "Net45"])
+					.col
+						= select_tag :net, options_for_select(["Net15", "Net30", "Net45"])
+
 		- if @employees.count > 0
 			.row.rounded.bg-sec-highlight.m-3
 				.col
 					.row.p-2
 						%b Add Consultants
 					.row
-						.col.p-2
+						.col-5.p-2
 							= select_tag :employee, options_from_collection_for_select(@employees.includes(:profile).all, :id, :name, '1'), id:"employee_id_select", include_blank: "All"
-						.col.p-2
+						.col-5.p-2
 							= text_field :period, "", value:Date.today, class:"date_range_field"
-						.col-1.align-middle
-							= link_to "Add Item", "#", class: "border-left py-3", id: "add_item_link", style:"display:block", fetch_info_link: "#{json_employee_info_invoices_path}.json"
+						.col-auto.align-middle
+							= link_to "Add Item", "#", class: "btn border-left py-3", id: "add_item_link", style:"display:block", fetch_info_link: "#{json_employee_info_invoices_path}.json"
 					.row
 						.col-2
 						.col

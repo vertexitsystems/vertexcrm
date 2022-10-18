@@ -44,7 +44,10 @@
               = link_to wd.period, wd
             =# "#{wd.work_day.beginning_of_week.strftime("%b,%d,%Y")} to #{wd.work_day.end_of_week.strftime("%b,%d,%Y")}"
           .col.col8
-            = wd.employee.active_job.blank? ? "(Not Available)" : wd.employee.active_job.title
+            - if wd.employee.blank?
+              (Employee Not Available)
+            - else
+              = wd.employee.job.blank? ? "(Not Available)" : wd.employee.job.title
           .col.col8
             -# wd.id.blank? ? "0" : wd.fetch_hours_array.inject(:+)#wd.all_days.map{|wd|wd.hours}.inject(0, :+)
             - if !wd.id.blank?
@@ -55,21 +58,18 @@
               0.0
 
           .col.col8
-            .calendar-picture{:style => "width:60px;height:60px"}
+            .calendar-picture
               = image_tag (wd.timesheet_screenshot.attached? ? url_for(wd.timesheet_screenshot) : ""), :style => "max-width:100px;max-height:100px"
           .col.col8
             = wd.time_sheet_status
-
-
-  %center
-    - if !@invoice.invoice_file.blank?
-      %b Invoice file:
-      %br
-      - if @invoice.blank?
-        "-"
-      - else
-        = link_to url_for(@invoice.invoice_file) do image_tag(url_for(@invoice.invoice_file)) end
-    - else
-      (Not Provided)
-=# link_to 'Edit', edit_invoice_path(@invoice)
-=# link_to 'Back', invoices_path
+      .row
+        .col.file_image
+          - if !@invoice.invoice_file.blank?
+            %b Invoice file:
+            %br
+            - if @invoice.blank?
+              "-"
+            - else
+              = link_to url_for(@invoice.invoice_file) do image_tag(url_for(@invoice.invoice_file)) end
+          - else
+            (Not Provided)

@@ -14,11 +14,12 @@
 						= text_field_tag 'time_sheet_date_range', @date, class: 'form-control daterange', id:"date-range-work", placeholder: "Date Filter", value: params["from_date"].present? ? "#{params["from_date"]} to #{params["to_date"]}" : "Select Date"
 					.col
 					.col.text-right{style:"padding:10px 0px;"}
-						.btn-group
+						.btn-group.dropleft
 							%button.btn.dropdown-toggle{style:"background-color:var(--main-color);color:white !important","data-toggle":"dropdown", "aria-haspopup":"true", "aria-expanded":"false"}
 								Action
 							.dropdown-menu
-								= link_to "Generate Invoice", create_new_invoice_invoices_path, class:"dropdown-item"
+								= link_to "Generate Prime Vendor Invoice", create_new_invoice_invoices_path(t:"vendor"), class:"dropdown-item"
+								= link_to "Generate Client Invoice", create_new_invoice_invoices_path(t:"client"), class:"dropdown-item"
 								= link_to "Print Report", invoices_path(elr: params[:elr], emp: params[:emp], status:params[:status], to_date:params[:to_date], from_date: params[:from_date], format:'pdf'), target: :_blank, class: "dropdown-item"
 	.row
 		.col

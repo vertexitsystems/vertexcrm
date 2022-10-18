@@ -16,7 +16,10 @@
 					= @profile.name
 			.row
 				.col{style:"font-size:14px;margin:0 auto;text-align:center"}
-					= @profile.role
+					- if @profile.user.is_employee?
+						= @profile.user.employee.designation.blank? ? "Consultant" : @profile.user.employee.designation
+					-else
+						= @profile.role
 			
 
 

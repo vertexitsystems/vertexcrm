@@ -11,8 +11,6 @@ Number of Users: <%= User.count %><br />
 	  <th>NEW name</th>
 	  <th>Role</th>
 	  <th>Job</th>
-	  <th>Project</th>
-	  <th>Active Posting</th>
 	  <th>Email</th>
       <th colspan="3"></th>
     </tr>
@@ -25,16 +23,7 @@ Number of Users: <%= User.count %><br />
 				<td class="border-left"><%= profile.name %></td>
 				<td class="border-left"><%= profile.role %> </td>
 				<td class="border-left">
-					<%= profile.user.is_employee? ? profile.employee.jobs.count : "" %>:
-					<%= profile.user.is_employee? ? profile.employee.jobs.first.try(:title) : "" %>
-				</td>
-				<td class="border-left">
-					<%= profile.user.is_employee? ? profile.employee.projects.count : "" %>:
-					<%= profile.user.is_employee? ? profile.employee.projects.first.try(:id) : "" %>
-				</td>
-				<td class="border-left">
-					<%= profile.user.is_employee? ? profile.employee.postings.count : "" %>:
-					<%= profile.user.is_employee? ? profile.employee.active_postings.first.try(:id) : "" %>
+					<%= profile.user.is_employee? ? profile.employee.job.try(:title) : "" %>
 				</td>
 				<td class="border-left"><%= profile.user.blank? ? "<No User>" : profile.user.email %> </td>
         <td class="border-left"><%= link_to 'Show', profile %></td>

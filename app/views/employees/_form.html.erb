@@ -82,6 +82,14 @@
 			<b>Job:</b>
 			<%= form.select :job_id, Job.where(closing_date:nil).collect{|c| [c.title, c.id]}, :class => 'genForm_dropBox', :selected => (employee.job.blank? ? false : employee.job.id) %>
 		</div>
+		<div class="flex_col">
+			<b>Designation:</b>
+			<%= form.text_field :designation %>
+		</div>
+		<div class="flex_col">
+			<b>Consultant Rate:</b>
+			<%= form.text_field :rate %>
+		</div>
 	</div>
 
 	<div class="flex_row">
@@ -91,24 +99,22 @@
 		</div>
 		
 		<% if false%>
-		<!-- Hidden because requested by QA.. not removed because there is still some confusion if it needs to be removed permanently -->
-		<div class="flex_col">
-			<b>Vendor Rate:</b>
-			<%= form.text_field :vendor_rate %>
-		</div>
+					<!-- Hidden because requested by QA.. not removed because there is still some confusion if it needs to be removed permanently -->
+					<div class="flex_col">
+						<b>Vendor Rate:</b>
+						<%= form.text_field :vendor_rate %>
+					</div>
 		<% end %>
 		
-		<div class="flex_col">
-			<b>Consultant Rate:</b>
-			<%= form.text_field :rate %>
-		</div>
-	</div>
-	<div class="flex_row">
 		<div class="flex_col">
 			<b>Client:</b>
 			<%= form.collection_select(:client_id, Client.all, :id, :company_name) %>
 			<%# form.select :client, Client.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.client.blank? ? false : employee.client.id %>
 		</div>
+		
+	</div>
+	<div class="flex_row">
+		
 		<div class="flex_col" style="display:<%= @employee.contract_type == "w2" ? "none" : "block" %>" id="employer_field">
 			<b>Employer:</b>
 			<%# form.select :employer, Employer.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.employer.blank? ? false : employee.employer.id %>

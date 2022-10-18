@@ -10,22 +10,29 @@
 			- if params[:employees].present? && !params[:employees].blank?
 				= link_to "Generate Report", generate_invoice_invoices_path(employees: params[:employees].to_unsafe_h, vendor: params[:vendor], net: params[:net], :format => 'pdf'), target: :_blank, class: "button_link", style: "margin:0px"
 	.row
-		.col-2.mr-2
-			- if !@vendor.blank?
+		- if !@vendor.blank? || !@client.blank?
+			.col-2.mr-2
 				.row.rounded-top{style:"background-color:#EEE"}
 					.col
-						%b Customer
+						%b 
+							= (params[:reciever][:type] == "client") ? "Client" : "Vendor"
 				.row.rounded-bottom{style:"background-color:#EEE"}
 					.col.pl-4
-						= @vendor.company_name
-		.col-2
-			- if !@vendor.blank?
+						- if (params[:reciever][:type] == "client") 
+							= @client.blank? ? "(Not Available)" : @client.company_name
+						- else
+							= @vendor.blank? ? "(Not Available)" : @vendor.company_name
+			.col-2
 				.row.rounded-top{style:"background-color:#EEE"}
 					.col 
-						%b Customer Email
+						%b
+							= (params[:reciever][:type] == "client") ? "Client Email" : "Vendor Email"
 				.row.rounded-bottom{style:"background-color:#EEE"}
 					.col.pl-4
-						= @vendor.company_email
+						- if (params[:reciever][:type] == "client") 
+							= @client.blank? ? "(Not Available)" : @client.company_email
+						- else 
+							= @vendor.blank? ? "(Not Available)" : @vendor.company_email
 		.col
 		.col
 			.row
@@ -36,15 +43,18 @@
 					= total_amount_string
 	.row
 		.col-3
-			- if !@vendor.blank?
+			- if (@vendor.blank? || @client.blank?)
 				.row.rounded{style:"background-color:#EEE"}
 					.col
 						%b Billing Address
 				.row
 					.col.pl-4
-						= @vendor.company_address.blank? ? "(Not Provided)" : @vendor.company_address
+						- if (params[:reciever][:type] == "client") 
+							= @client.blank? ? "(Not Available)" : @client.company_address
+						- else
+							= @vendor.blank? ? "(Not Available)" : @vendor.company_address
 		.col
-		.col-2
+		.col-3.text-right
 			.row
 				.col.text-right
 					%b Billing Date
@@ -102,7 +112,7 @@
 				= total_amount_string
 	.row.mb-5.mt-3
 		.col
-		.col-2
+		.col-3
 			.row
 				.col.text-right
 					%b Total:
