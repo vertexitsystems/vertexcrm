@@ -83,10 +83,6 @@
 			<%= form.select :job_id, Job.where(closing_date:nil).collect{|c| [c.title, c.id]}, :class => 'genForm_dropBox', :selected => (employee.job.blank? ? false : employee.job.id) %>
 		</div>
 		<div class="flex_col">
-			<b>Designation:</b>
-			<%= form.text_field :designation %>
-		</div>
-		<div class="flex_col">
 			<b>Consultant Rate:</b>
 			<%= form.text_field :rate %>
 		</div>

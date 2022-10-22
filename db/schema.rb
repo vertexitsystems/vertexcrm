@@ -121,7 +121,6 @@ ActiveRecord::Schema.define(version: 2022_10_17_080851) do
     t.date "job_end_date"
     t.string "job_end_reason"
     t.decimal "employee_rate"
-    t.string "designation"
   end
 
   create_table "employers", force: :cascade do |t|

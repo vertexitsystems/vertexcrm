@@ -17,7 +17,7 @@
 			.row
 				.col{style:"font-size:14px;margin:0 auto;text-align:center"}
 					- if @profile.user.is_employee?
-						= @profile.user.employee.designation.blank? ? "Consultant" : @profile.user.employee.designation
+						Consultant
 					-else
 						= @profile.role
 			

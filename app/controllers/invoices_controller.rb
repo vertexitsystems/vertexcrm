@@ -241,7 +241,6 @@ class InvoicesController < ApplicationController
                                   id: employee.id,
                                   quantity: hours_quantity,
                                   rate: rate,
-                                  designation: wds.first.blank? ? "" : wds.first.employee.designation,
                                   status:"success"
                                 }
                               }
