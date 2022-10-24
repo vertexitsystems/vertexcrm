@@ -38,11 +38,11 @@
 											
 											<% work_detail_item("Rate", @profile.employee.rate.to_f) %>
 
-											<% work_detail_item("Start Date", @profile.employee.job_start_date.blank? ? "-" : @profile.employee.job_start_date) %>
+											<% work_detail_item("Start Date", @profile.employee.job_start_date.blank? ? @profile.employee.created_at.strftime("%d %b, %Y") : @profile.employee.job_start_date.strftime("%d %b, %Y")) %>
 
 
-											<% work_detail_item("End Date", @profile.employee.job_end_date.blank? ? "-" : @profile.employee.job_end_date) %>
-											<% work_detail_item("End Reason", @profile.employee.job_end_reason.blank? ? "-" : @profile.employee.job_end_reason) %>
+											<% work_detail_item("End Date", @profile.employee.disabled ? @profile.employee.disable_date.strftime("%d %b, %Y") : "-") %>
+											<% work_detail_item("End Reason", @profile.employee.disabled ? @profile.employee.disable_reason : "-") %>
 
 											<div style="margin-bottom: 10px;"></div>
 
