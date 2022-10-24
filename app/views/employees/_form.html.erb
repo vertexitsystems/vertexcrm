@@ -86,6 +86,11 @@
 			<b>Consultant Rate:</b>
 			<%= form.text_field :rate %>
 		</div>
+		<div class="flex_col">
+			<b>Start Date:</b>
+			<%- start_date = @employee.persisted? ? (@employee.job_start_date.blank? ? @employee.created_at : @employee.job_start_date) : Date.today %>
+			<%= form.text_field :job_start_date, :class => 'date_select_field', value: start_date %>
+		</div>
 	</div>
 
 	<div class="flex_row">

@@ -69,9 +69,21 @@ class ProfilesController < ApplicationController
           when 3396 # Employer
             redirect_to employer_url(@profile.employer.id)
           when 445 # Employee
-            if current_page?('/')
-              redirect_to dashboard_employees_path#employee_url(@profile.employee.id)
+            
+
+            if !@profile.employee.blank?
+              if @profile.employee.disabled && @profile.id == current_user.profile.id
+                flash[:alert] = "This account has been disabled."
+                sign_out(current_user)
+                redirect_to new_user_session_url
+                return
+              end
             end
+
+            if current_page?('/')
+              redirect_to dashboard_employees_path
+            end
+
           when 2623 # Vendor
             #redirect_to vendor_url(@profile.vendor.id)
           else
