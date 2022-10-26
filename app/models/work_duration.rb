@@ -113,6 +113,11 @@ class WorkDuration < ApplicationRecord
     # if its old structure we want to avoid sending 6 different quries for each day, which means we have to load all in single query
     # So we construct an array where each days hours will be placed in sequence (Convention over configuration) and load that with single query
     
+    def total_hours_array_with_limits(start_date, end_date)
+      ed = (work_day - 1) < end_date ? end_date : (work_day - 1)
+      sd = (work_day + 5) > start_date ? start_date : (work_day + 5)
+      fetch_hours_array((ed.wday - 1), (sd.wday - 1)).inject(:+).to_f
+    end
 
     def fetch_hours_array(start_day = -1, end_day = 5)
       

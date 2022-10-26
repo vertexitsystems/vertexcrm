@@ -209,9 +209,9 @@ class AccountManagersController < ApplicationController
   		page = 0
   	end
     
-  	work_durations = params["eid"].blank? ? WorkDuration.all : Employee.find(params["eid"]).work_durations
+  	# work_durations = params["eid"].blank? ? WorkDuration.all : Employee.find(params["eid"]).work_durations
 	
-  	@wds = work_durations.where("extract(dow from work_day) = ?", 1)
+  	# @wds = work_durations.where("extract(dow from work_day) = ?", 1)
 	  # 62201AA01 - Start
   	#@wds = @wds.order("work_day DESC") if !params[:order].present? || params[:order] == ""
 	
@@ -222,16 +222,16 @@ class AccountManagersController < ApplicationController
   	#@wds = @wds.joins(:project).order("projects.id DESC") if params[:order].present? && params[:order] == "project"
     # 62201AA01 - End
     
-  	@wds = @wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
-  	@wds = @wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
+  	# @wds = @wds.where("work_day >= ?" , params[:from_date].to_date.beginning_of_week) if params[:from_date].present? && params[:from_date] != ""
+  	# @wds = @wds.where("work_day <= ?" , params[:to_date].to_date.beginning_of_week) if params[:to_date].present? && params[:to_date] != ""
 
-  	@wds = @wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
-  	@wds = @wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
-  	@wds = @wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
+  	# @wds = @wds.joins(:project).where("projects.employee_id = ?" , params[:emp]) if params[:emp].present? && params[:emp] != ""
+  	# @wds = @wds.joins(:project).where("projects.vendor_id = ?" , params[:vendor]) if params[:vendor].present? && params[:vendor] != ""
+  	# @wds = @wds.joins(:employee).where("employees.contract_type = ?" , params[:contract]) if params[:contract].present? && params[:contract] != ""
     
-  	@total_records = @wds.count
+  	# @total_records = @wds.count
     
-    @wds = @wds.order(work_day: :DESC)
+   #  @wds = @wds.order(work_day: :DESC)
     
     #62201AA02
   	#@wds = @wds.limit(records_per_page).offset(page * records_per_page)
@@ -241,15 +241,18 @@ class AccountManagersController < ApplicationController
     
     # 62201AA04.1 - START
     @start_date = (params[:to_date].present? && params[:to_date] != "")     ? params[:to_date].to_date : Date.today
-    @end_date   = (params[:from_date].present? && params[:from_date] != "") ? params[:from_date].to_date   : (@wds.count > 0 ? @wds.last.work_day.end_of_week : Date.today)
+    @end_date   = (params[:from_date].present? && params[:from_date] != "") ? params[:from_date].to_date   : Date.today - 360
     
     
     @iteration_dates = []
-    @start_date.downto(@end_date) do |date|
+    @start_date.beginning_of_week.downto(@end_date.beginning_of_week) do |date|
+      
       if date.monday?
         @iteration_dates << date
       end
+
     end
+
     # 62201AA04.1 - END
     
     respond_to do |format|

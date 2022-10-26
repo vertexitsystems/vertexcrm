@@ -203,6 +203,21 @@ class EmployeesController < ApplicationController
     end
     
   end
+  def enable_consultant
+    @employee = Employee.find(params["emp_id"])
+    
+    if @employee.update(:disabled=>false, :disable_reason=>nil, :disable_date=>nil, :disable_notes=>nil)
+      respond_to do |format|
+        format.html { redirect_to employees_url, notice: 'Employee was successfully enabled.' }
+        format.json { head :no_content }
+      end
+    else
+      respond_to do |format|
+        format.html { redirect_to employees_url, notice: 'Unable to enable Employee' }
+        format.json { head :no_content }
+      end
+    end
+  end
   
   private
 

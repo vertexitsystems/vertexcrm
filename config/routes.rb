@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     collection do 
       get :employee_report
       put :disable_consultant
+      put :enable_consultant
       get :dashboard
     end
   end

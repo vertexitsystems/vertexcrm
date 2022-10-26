@@ -68,6 +68,13 @@ class Employee < ApplicationRecord
   public def days_remaining_till_visa_expiry
     visa_expiry.blank? ? 0 : (visa_expiry.to_date - Date.today).to_i
   end
+
+  public def was_active_between(start_date, end_date)
+    esd = (job_start_date.blank? ? created_at : job_start_date).to_date
+    eed = (job_end_date.blank? ? Date.today : job_end_date).to_date
+    
+    !(start_date >= esd && end_date <= eed)
+  end
   
   # public def active_postings
   #   postings.where(:end_date => nil)
