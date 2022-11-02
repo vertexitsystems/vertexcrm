@@ -305,14 +305,21 @@
 <% work_durations.compact.each_with_index do |wd, index| %>
 	
 	<!-- GO NEXT if employee doesnt exist -->
-	<% next if wd.employee.blank? %>
+	<% check1 = wd.employee.blank? %>
+	<%= "check1: #{check1} | " if params[:vertd].present?  %>
+	<% next if check1 %>
 
 	<!-- GO NEXT if date is after employee was disabled -->
-	<% next if !(wd.employee.disable_date.blank? || wd.employee.disable_date.to_date > wd.work_day) %>
+	<% check2 = !(wd.employee.disable_date.blank? || wd.employee.disable_date.to_date > wd.work_day) %>
+	<%= "check2: #{check2} | " if params[:vertd].present?  %>
+	<% next if check2 %>
 
 	<!-- GO NEXT if employee was created after current date -->
+	
 	<% started_date = wd.employee.job_end_date.blank? ? wd.employee.created_at : wd.employee.job_end_date %>
 	
+	<% check3 = (started_date > wd.work_day) %>
+	<%= sanitize "check3: #{check3} <br>" if params[:vertd].present?  %>
 	<% next if started_date > wd.work_day %>
 
 	
