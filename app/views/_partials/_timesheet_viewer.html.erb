@@ -316,11 +316,11 @@
 
 	<!-- GO NEXT if employee was created after current date -->
 	
-	<% started_date = wd.employee.job_end_date.blank? ? wd.employee.created_at : wd.employee.job_end_date %>
+	<% started_date = wd.employee.job_start_date.blank? ? wd.employee.created_at : wd.employee.job_start_date %>
 	
 	<% check3 = (started_date.beginning_of_week > wd.work_day) %>
-	<%= sanitize "check3: #{check3} <br>" if params[:vertd].present?  %>
-	<% next if check3 %>
+	<%= sanitize "check3: #{check3} (#{started_date.beginning_of_week.strftime("%a %d, %b")} | #{wd.work_day.strftime("%a %d, %b")})<br>" if params[:vertd].present?  %>
+	<% break if check3 %>
 
 	
 	<%= render "_partials/tv_table_row_template", wd: wd,
