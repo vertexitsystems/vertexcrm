@@ -298,22 +298,27 @@
 	
 	
 	<!-- This is Employee info section that can only be shown if we are displaying data for only one employee -->
-	<% if @employees.count <= 1 %>
+
+	
 	<table border="0" style="width:80%;margin:0 auto">
+    <tr>
+      <td width="20%;"><strong>ID</strong></td>
+      <td width="30%"><%= @employees.first.work_durations.first.display_id %></td>
+      <td width="20%;"><strong>Period</strong></td>
+      <td width="30%">
+        <%= @start_date.strftime("%b %d, %Y") %> - <%= @end_date.strftime("%b %d, %Y") %>
+      </td>
+    </tr>
+
+    <% if @employees.count <= 1 %>
+		
 		<tr>
-			<td width="20%;"><strong>ID</strong></td>
-			<td width="30%"><%= @employees.first.work_durations.first.display_id %></td>
-			<td width="20%;font-weight:bold"><strong>Consultant</strong></td>
-			<td width="30%"><%= @employees.first.name %></td>
-		</tr>
-		<tr>
-			<td width="20%;"><strong>Period</strong></td>
-			<td width="30%">
-				<%= @start_date.strftime("%b %d, %Y") %> - <%= @end_date.strftime("%b %d, %Y") %>
-			</td>
-			<td width="20%;font-weight:bold"><strong>Project</strong></td>
-			<td width="30%"><%= @employees.first.job.blank? ? "(Not Assigned)" : @employees.first.job.title %></td>
-		</tr>
+      <td width="20%;font-weight:bold"><strong>Consultant</strong></td>
+      <td width="30%"><%= @employees.first.name %></td>
+      <td width="20%;font-weight:bold"><strong>Project</strong></td>
+      <td width="30%"><%= @employees.first.job.blank? ? "(Not Assigned)" : @employees.first.job.title %></td>
+    </tr>
+
 		<tr>
 			<td width="20%;"><strong>Client</strong></td>
 			<td width="30%"><%= @employees.first.client.blank? ? "<Not Provided>" : @employees.first.client.company_name %></td>
@@ -326,8 +331,9 @@
 			<td width="20%;font-weight:bold"><strong>Address</strong></td>
 			<td width="30%"><%= @employees.first.employer.blank? ? "<Not Provided>" : @employees.first.employer.company_address %></td>
 		</tr>
+    <% end %> <!-- End of employee info -->
 	</table>
-	<% end %> <!-- End of employee info -->
+	
 	
 	<% total_sheet_hours = 0 %>
 
@@ -415,6 +421,12 @@
 		</div>
 	<% end %>
 
+  <table class="table table-striped col-xs-3 font-size-12">
+    <tr style="background-color:#EEE">
+      <td class="defult-border-left defult-border-right tr1 text-right"><b>Sheet Total: <%= total_sheet_hours %></b></td>
+    </tr>
+  </table>
+  
 
 	<!-- Keeping here to for future  -->
 	<% if false %>

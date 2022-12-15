@@ -120,6 +120,7 @@
 		</div>
 	
 		<% if can_act %>
+
 			<div class="col col12">
 				<% if  (!wd.is_past_due_date? && wd.is_pending?) || wd.is_resubmitted? %>
 					<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
@@ -165,8 +166,16 @@
 					</div>
 				
 				<% end %>
+
+				<% if wd.is_approved? && !wd.timesheet_screenshot.blank? %>
+					<%= link_to wd.timesheet_screenshot, target: :_blank do %>
+						<i class="material-icons time_sheet_action">download</i></a>
+					<% end %>
+				<% end %>
 			</div>
+
 		<% end %>
+
 	</div>
 	<div class="row labeled-toggle-<%=unique_id%>" style="display:none;">
 		<div class="section">
@@ -217,6 +226,7 @@
 			<div id="submit_message_<%=unique_id%>" style="display:<%= wd.timesheet_screenshot.attached? ? "none" : "block" %>" >
 				Select Timesheet Image
 			</div>
+
 		</div>
 		<div class="clr"></div>
 	</div>

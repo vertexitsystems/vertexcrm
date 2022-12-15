@@ -26,8 +26,15 @@
 					%b Email:
 					= @profile.user.email
 				.col
-					%b Phone 1:
-					= @profile.phone1
+					.row
+						.col
+							%b Phone:
+							= @profile.phone1
+					- if !@profile.phone2.blank?
+						.row
+							.col
+								%b Mobile:
+								= @profile.phone2
 				.col
 					%b Address:
 					= @profile.address

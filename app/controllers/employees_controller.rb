@@ -97,20 +97,28 @@ class EmployeesController < ApplicationController
       
       if @employee.update(employee_params.except("profile_attributes").except("id"))
         
-        if params[:employee][:profile_attributes][:password].present? && !params[:employee][:profile_attributes][:password].blank?
-          user_updated = @user.update(email: params[:employee][:profile_attributes][:email], password: params[:employee][:profile_attributes][:password])
-        elsif params[:employee][:profile_attributes][:email].present? && !params[:employee][:profile_attributes][:email].blank? && (params[:employee][:profile_attributes][:password] != @user.email)
-          user_updated = @user.update(email: params[:employee][:profile_attributes][:email])
+        if @employee.profile.update( employee_params["profile_attributes"] )
+
+          if params[:employee][:profile_attributes][:password].present? && !params[:employee][:profile_attributes][:password].blank?
+            user_updated = @user.update(email: params[:employee][:profile_attributes][:email], password: params[:employee][:profile_attributes][:password])
+          elsif params[:employee][:profile_attributes][:email].present? && !params[:employee][:profile_attributes][:email].blank? && (params[:employee][:profile_attributes][:password] != @user.email)
+            user_updated = @user.update(email: params[:employee][:profile_attributes][:email])
+          end
+        
+          if user_updated
+            format.html { redirect_to @employee.profile, notice: "Consultant was successfully updated." }
+            format.json { render :show, status: :ok, location: @employee }
+          else
+            flash[:alert] = "Failed with error: #{@user.errors.full_messages}"
+            format.html { render :edit, status: :unprocessable_entity }
+            format.json { render json: @employee.errors, status: :unprocessable_entity }
+          end
+        else
+          flash[:alert] = "Failed with error: #{@employee.profile.errors.full_messages}"
+          format.html { render :edit, status: :unprocessable_entity }
+          format.json { render json: @employee.profile.errors, status: :unprocessable_entity }
         end
         
-        if user_updated
-          format.html { redirect_to @employee.profile, notice: "Consultant was successfully updated." }
-          format.json { render :show, status: :ok, location: @employee }
-        else
-          flash[:alert] = "Failed with error: #{@user.errors.full_messages}"
-          format.html { render :edit, status: :unprocessable_entity }
-          format.json { render json: @employee.errors, status: :unprocessable_entity }
-        end
       
       end
     end

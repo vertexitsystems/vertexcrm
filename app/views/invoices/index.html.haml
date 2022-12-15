@@ -59,7 +59,10 @@
 								.col.img_col
 									- if !invoice.invoice_file.blank?
 										.calendar-picture{:style => "width:60px;height:60px"}
-											= link_to url_for(invoice.invoice_file), :style => "max-width:100px;max-height:100px" do image_tag(url_for(invoice.invoice_file)) end 
+											- if invoice.invoice_file.content_type == "application/pdf"
+												= link_to url_for(invoice.invoice_file), target: :_blank do image_tag("/Images/files-pdf-icon.png", :style => "max-height:100%;background:#CCC") end
+											- else
+												= link_to url_for(invoice.invoice_file), target: :_blank do image_tag(url_for(invoice.invoice_file), :style => "max-height:100%") end
 									- else
 										(Not Provided)
 								.col.img_col
