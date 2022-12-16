@@ -16,7 +16,7 @@
 					.col.text-right{style:"padding:10px 0px;"}
 						.btn-group.dropleft
 							%button.btn.dropdown-toggle{style:"background-color:var(--main-color);color:white !important","data-toggle":"dropdown", "aria-haspopup":"true", "aria-expanded":"false"}
-								Action
+								Generate Report
 							.dropdown-menu
 								= link_to "Generate Prime Vendor Invoice", create_new_invoice_invoices_path(t:"vendor"), class:"dropdown-item"
 								= link_to "Generate Client Invoice", create_new_invoice_invoices_path(t:"client"), class:"dropdown-item"
@@ -69,16 +69,39 @@
 									= invoice.status.capitalize
 									=# !invoice.payment_status ? (invoice.payment_rejection_message.blank? ? "Pending" : "Rejected") : "Approved"
 								.col.img_col
-									- if current_user.is_admin? || current_user.is_account_manager?
-										- if invoice.pending?#if !invoice.payment_status && invoice.payment_rejection_message.blank?
-											= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
-											|
-											-# if invoice.payment_rejection_message.blank?
-											= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
-											|
-											= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete
-											|
-											= link_to "Edit", edit_invoice_path(invoice.id)
+									- if false
+										- if current_user.is_admin? || current_user.is_account_manager?
+											- if invoice.pending?#if !invoice.payment_status && invoice.payment_rejection_message.blank?
+												= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put
+												|
+												-# if invoice.payment_rejection_message.blank?
+												= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put
+												|
+												= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete
+												|
+												= link_to "Edit", edit_invoice_path(invoice.id)
+												|
+										= link_to invoice.invoice_file, download: true do
+											%i{class:"material-icons time_sheet_action"}
+												download
+									- else
+										.btn-group.dropdown
+											%button.btn.dropdown-toggle{style:"background-color:var(--main-color);color:white !important","data-toggle":"dropdown", "aria-haspopup":"true", "aria-expanded":"false"}
+												Action
+											%ul.dropdown-menu
+												- if current_user.is_admin? || current_user.is_account_manager?
+													- if invoice.pending?
+														%li.dropdown-item
+															= link_to "Accept", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "1"), :method => :put, class:"dropdown-item"
+														%li.dropdown-item
+															= link_to "Reject", update_status_invoices_path(:invoice_id => invoice.id, :payment_status => "0"), :method => :put, class:"dropdown-item"
+														%li.dropdown-item
+															= link_to 'Delete', invoice_path(invoice.id), data: {:confirm => 'Are you sure?'}, :method => :delete, class:"dropdown-item"
+														%li.dropdown-item
+															= link_to "Edit", edit_invoice_path(invoice.id), class:"dropdown-item"
+													%li.dropdown-item
+														= link_to "download", invoice.invoice_file, download: true, class:"dropdown-item"
+
 					- else 
 						.row
 							.col
