@@ -36,7 +36,7 @@
 												<% work_detail_item("ContractType", @profile.employee.contract_type) %>
 											<% end %>
 											
-											<% work_detail_item("Rate", @profile.employee.rate.to_f) %>
+											<%# work_detail_item("Rate", @profile.employee.rate.to_f) %>
 
 											<% work_detail_item("Start Date", @profile.employee.job_start_date.blank? ? @profile.employee.created_at.strftime("%d %b, %Y") : @profile.employee.job_start_date.strftime("%d %b, %Y")) %>
 
