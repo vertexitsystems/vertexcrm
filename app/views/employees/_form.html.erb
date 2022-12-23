@@ -33,8 +33,8 @@
 <% def show_file_field(form, field, title, file) %>
 	<b><%= title %>:</b>
 	<span style="font-size:12px">
-	<% if file.present? %>
-	(<%= link_to "Show Previous", file.url %>)
+	<% if !file.blank? %>
+	(<%= link_to "Show Previous", url_for(file) %>)
 	<% else %>
 	(Not Provided)
 	<% end %>
