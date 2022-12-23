@@ -9,7 +9,10 @@
 		<div class="" style="height:10px"></div>
 		
 		<% if @employee.job.blank? %>
-
+			<div class="flex_row info_row">
+				<div class="flex_col col_heading"> Project: </div>
+				<div class="flex_col"> (Not Assigned) </div>
+			</div>
 		<% else %>
 			
 			<div class="flex_row info_row">
@@ -21,15 +24,15 @@
 				<div class="flex_col col_heading"> Project Address: </div>
 				<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.location %> </div>
 			</div>
-			
-			<% if @employee.job.client.blank? %>
+
+			<% if !@employee.job.client.blank? %>
 				<div class="flex_row info_row">
 					<div class="flex_col col_heading"> Client: </div>
 					<div class="flex_col"> <%= @employee.job.client.company_name %> </div>
 				</div>
 			<% end %>
 
-			<% if @employee.job.vendor.blank? %>
+			<% if !@employee.job.vendor.blank? %>
 				<div class="flex_row info_row">
 					<div class="flex_col col_heading"> Vendor: </div>
 					<div class="flex_col"> <%= @employee.job.vendor.company_name %> </div>
