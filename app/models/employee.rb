@@ -10,8 +10,9 @@ class Employee < ApplicationRecord
   mount_uploader :psa, AttachmentsUploader
   mount_uploader :voided_check_copy, AttachmentsUploader
   
-  mount_uploader :resume, AttachmentsUploader
-  
+  #mount_uploader :resume, AttachmentsUploader
+  has_one_attached :resume
+
   mount_uploader :new_hire_package, AttachmentsUploader
   mount_uploader :po, AttachmentsUploader
   mount_uploader :offer_letter, AttachmentsUploader
