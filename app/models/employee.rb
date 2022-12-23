@@ -1,27 +1,47 @@
 class Employee < ApplicationRecord
   #after_destroy :destroy_associations
   
-  mount_uploader :passport, AttachmentsUploader
-  mount_uploader :visa, AttachmentsUploader
-  mount_uploader :state_id, AttachmentsUploader
-  mount_uploader :i9, AttachmentsUploader
-  mount_uploader :e_verify, AttachmentsUploader
-  mount_uploader :w9, AttachmentsUploader
-  mount_uploader :psa, AttachmentsUploader
-  mount_uploader :voided_check_copy, AttachmentsUploader
+  # mount_uploader :passport, AttachmentsUploader
+  # mount_uploader :visa, AttachmentsUploader
+  # mount_uploader :state_id, AttachmentsUploader
+  # mount_uploader :i9, AttachmentsUploader
+  # mount_uploader :e_verify, AttachmentsUploader
+  # mount_uploader :w9, AttachmentsUploader
+  # mount_uploader :psa, AttachmentsUploader
+  # mount_uploader :voided_check_copy, AttachmentsUploader
   
-  #mount_uploader :resume, AttachmentsUploader
+  # #mount_uploader :resume, AttachmentsUploader
+  
+
+  # mount_uploader :new_hire_package, AttachmentsUploader
+  # mount_uploader :po, AttachmentsUploader
+  # mount_uploader :offer_letter, AttachmentsUploader
+  # mount_uploader :w2_contract, AttachmentsUploader
+  # mount_uploader :w4, AttachmentsUploader
+  # mount_uploader :direct_deposit_detail, AttachmentsUploader
+  # mount_uploader :emergency_contact_form, AttachmentsUploader
+  has_one_attached :passport
+  has_one_attached :visa
+  has_one_attached :state_id
+  has_one_attached :i9
+  has_one_attached :e_verify
+  has_one_attached :w9
+  has_one_attached :psa
+  has_one_attached :voided_check_copy
+  
   has_one_attached :resume
 
-  mount_uploader :new_hire_package, AttachmentsUploader
-  mount_uploader :po, AttachmentsUploader
-  mount_uploader :offer_letter, AttachmentsUploader
-  mount_uploader :w2_contract, AttachmentsUploader
-  mount_uploader :w4, AttachmentsUploader
-  mount_uploader :direct_deposit_detail, AttachmentsUploader
-  mount_uploader :emergency_contact_form, AttachmentsUploader
+  mount_uploader :new_hire_package
+  mount_uploader :po
+  mount_uploader :offer_letter
+  mount_uploader :w2_contract
+  mount_uploader :w4
+  mount_uploader :direct_deposit_detail
+  mount_uploader :emergency_contact_form
   
+
   
+
 	belongs_to :profile
   accepts_nested_attributes_for :profile
   #attr_accessor :profile
