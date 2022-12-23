@@ -31,16 +31,17 @@
 <% end %>
 
 <% def show_file_field(form, field, title, file) %>
-<b><%= title %>:</b>
-<span style="font-size:12px">
-<% if file.present? %>
-(<%= link_to "Show Previous", file.url %>)
-<% else %>
-(Not Provided)
-<% end %>
-</span>
+	<b><%= title %>:</b>
+	<span style="font-size:12px">
+	<% if file.present? %>
+	(<%= link_to "Show Previous", file.url %>)
+	<% else %>
+	(Not Provided)
+	<% end %>
+	</span>
 
-<%= form.file_field field, accept: 'image/*,application/pdf', :class => "timesheet_field", :style=>"width:100%" %>
+	<%= form.file_field field, accept: 'image/*,application/pdf', :class => "timesheet_field", :style=>"width:100%" %>
+
 <% end %>
 
 <%= form_with(model: employee, local: true) do |form| %>

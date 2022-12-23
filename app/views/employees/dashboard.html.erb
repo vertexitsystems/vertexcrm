@@ -8,25 +8,36 @@
 		
 		<div class="" style="height:10px"></div>
 		
-		<div class="flex_row info_row">
-			<div class="flex_col col_heading"> Project: </div>
-			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.title %> </div>
-		</div>
+		<% if @employee.job.blank? %>
+
+		<% else %>
+			
+			<div class="flex_row info_row">
+				<div class="flex_col col_heading"> Project: </div>
+				<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.title %> </div>
+			</div>
+
+			<div class="flex_row info_row">
+				<div class="flex_col col_heading"> Project Address: </div>
+				<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.location %> </div>
+			</div>
+			
+			<% if @employee.job.client.blank? %>
+				<div class="flex_row info_row">
+					<div class="flex_col col_heading"> Client: </div>
+					<div class="flex_col"> <%= @employee.job.client.company_name %> </div>
+				</div>
+			<% end %>
+
+			<% if @employee.job.vendor.blank? %>
+				<div class="flex_row info_row">
+					<div class="flex_col col_heading"> Vendor: </div>
+					<div class="flex_col"> <%= @employee.job.vendor.company_name %> </div>
+				</div>
+			<% end %>
+
+		<% end %>
 		
-		<div class="flex_row info_row">
-			<div class="flex_col col_heading"> Client: </div>
-			<div class="flex_col"> <%= (!@employee.job.blank? && !@employee.job.client) ? "(Not Assigned)" : @employee.job.client.company_name %> </div>
-		</div>
-	
-		<div class="flex_row info_row">
-			<div class="flex_col col_heading"> Vendor: </div>
-			<div class="flex_col"> <%= (!@employee.job.blank? && !@employee.job.vendor.blank?) ? "(Not Assigned)" : @employee.job.vendor.company_name %> </div>
-		</div>
-		
-		<div class="flex_row info_row">
-			<div class="flex_col col_heading"> Project Address: </div>
-			<div class="flex_col"> <%= @employee.job.blank? ? "(Not Assigned)" : @employee.job.location %> </div>
-		</div>	
 		
 	</div>
 	
