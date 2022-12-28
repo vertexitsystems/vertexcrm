@@ -110,9 +110,9 @@
 		</div>
 	
 		<div class="test1 col col8 <%= !wd.is_past_due_date? ? wd.time_sheet_status : "" %>" id="status-div-<%=wd.id%>">
-			<% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_resubmitted? %>
+			<% if wd.is_past_due_date? && !wd.is_reopened? && !wd.is_resubmitted? && !can_act %>
 				<label style="color:red">
-					PASSED DUE DATE <br /><%= wd.time_sheet_status %>
+					PASSED DUE DATE <br />(<%= wd.time_sheet_status %>)
 				</label>
 			<% else %>
 				<%= wd.time_sheet_status.upcase %>
@@ -122,7 +122,7 @@
 		<% if can_act %>
 
 			<div class="col col12">
-				<% if  (!wd.is_past_due_date? && wd.is_pending?) || wd.is_resubmitted? %>
+				<% if  wd.is_pending? || wd.is_resubmitted? %>
 					<div class="action_buttons_parent" id="action_buttons_container_<%=wd.id%>">
 						<div class="action_button_container approve">
 							<div class="action_button_div">
