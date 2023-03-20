@@ -187,7 +187,7 @@
 	# Fetch the work day for the last work_duration, This will be used as end_date is end_date is not specified through filter
 	#last_record = WorkDuration.order(:created_at).first
 	
-	employees = (params[:emp].blank? || params[:emp] == "") ? (employees.blank? ? Employee.all.includes(:profile, :job, :vendors) : employees ) : [Employee.find(params[:emp].to_i)]
+	employees = (params[:emp].blank? || params[:emp] == "") ? (employees.blank? ? Employee.all.includes(:profile, :job, :vendor) : employees ) : [Employee.find(params[:emp].to_i)]
 	
 	# Start date is the higher of two dates ... may 30 is higher then may 2 but lower then june 2
 	start_date = (params[:to_date].present? ? params[:to_date].to_date : Date.today.beginning_of_week)

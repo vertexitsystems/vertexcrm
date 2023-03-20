@@ -8,16 +8,23 @@ class EmployeesController < ApplicationController
     if current_user.is_employee?
       redirect_to root_path
     end
-    
+    records_per_page = 10
+    @page = (!params[:page].present? || params[:page] == "") ? 0 : params[:page].to_i
+
     #@employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
-    @employees = Employee.order(disabled: :desc, created_at: :desc)#.includes(:profile, :job, :vendors)
+    @employees = Employee.order(disabled: :desc, created_at: :desc)#.includes(:profile, :job, :vendor)
 
     @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
     @employees = @employees.where('job_id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
     @employees = @employees.where(contract_type: params[:contract]) if params[:contract].present? && !params[:contract].blank?
-    @employees = @employees.where('vendors.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
+    #@employees = @employees.where('vendor.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
+    #@employees = Vendor.find(params[:vendor]).employees if params[:vendor].present? && !params[:vendor].blank?
+    @employees = @employees.left_joins(:vendor).where(vendors: { id: params[:vendor] }) if params[:vendor].present? && !params[:vendor].blank?
+   
+    @total_pages = (@employees.count.to_f / 10.0).floor.to_i + (((@employees.count.to_f / 10.0).modulo(1) > 0) ? 1 : 0)
     
-    @employees = @employees.page(params[:page])
+    #@employees = @employees.limit(records_per_page).offset(@page * records_per_page)
+   @employees = @employees.page(params[:page]).per(10)
   end
 
 
@@ -66,6 +73,8 @@ class EmployeesController < ApplicationController
     @employee.profile.user = User.new(email: user_params[:email], password: user_params[:password], password_confirmation: user_params[:password])
     
     if !@employee.profile.user.save
+      
+      flash[:alert] = "Failed to create user: #{@employee.profile.user.errors.full_messages.first}"
       respond_to do |format|
         format.html { render :new }
         format.json { render json: @employee.profile.user, status: :unprocessable_entity }
@@ -236,7 +245,7 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, :employer_rate, :job_id, :job_start_date, :resume, :new_hire_package, :po, :w2_contract, :offer_letter, :w4, :direct_deposit_detail, :emergency_contact_form, {profile_attributes: [:first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, :employer_rate, :job_id, :job_start_date, :resume, :new_hire_package, :po, :w2_contract, :offer_letter, :w4, :direct_deposit_detail, :emergency_contact_form, {profile_attributes: [:photo, :first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
   end
   
   

@@ -16,8 +16,8 @@
  *= require_self
  */
 :root {
-	--main-color:rgb(222, 3, 7);
-	--main-hover-color:rgb(188, 3, 7);;
+	--main-color:rgb(77, 7, 10);
+	--main-hover-color:rgb(35, 2, 2);;
 }
 .bg-main-color{
 	background-color:var(--main-color);
@@ -154,7 +154,7 @@ p#alert{
 }
 .nav_bar{
     padding-left:50px;
-	background-color: var(--main-color);
+	background-color: #ffffff;
 }
 .nav_bar_title {
     height: 60px;
@@ -164,8 +164,8 @@ p#alert{
 .nav_bar_title img{
     height: 60px;
 	
-	-webkit-filter: brightness(0) invert(1);
-	filter: brightness(0) invert(1);
+	/* -webkit-filter: brightness(0) invert(1);
+	filter: brightness(0) invert(1); */
 }
 .nav_bar_title a {
 	font-size: 24px;
@@ -202,7 +202,7 @@ p#alert{
     padding: 18px;
 }
 .nav_bar_menu a:hover {
-    background-color: var(--main-hover-color);
+    background-color: white;
 }
 .nav_bar_menu a span {
     float: right;
@@ -406,7 +406,7 @@ height:40px;
     color: #FFF;
     background: var(--main-color);//rgb(73, 137, 207);
     border-radius: 10px 10px 0px 0px;
-    padding-right: 28px;
+    padding-right: 0px;
 	margin-left:0px;
 }
 
@@ -485,6 +485,7 @@ height:40px;
   font-weight: bold;
 }
 .ap_container .main .section .row .col {
+    font-weight: bold;
     float: left;
     padding: 10px 0px;
     /* min-width: 80px; */
@@ -761,7 +762,7 @@ height:40px;
 /* POPUP END */
 
 .dropbtn {
-  background-color: var(--main-color);
+  background-color: white;
   color: white;
   padding: 10px;
   font-size: 16px;
@@ -822,7 +823,7 @@ height:40px;
 .welcome_message{
 	float:left;
 	//line-height:60px;
-	color:#FFF;
+	color:rgb(1, 1, 1);
 	margin-top:13px;
 	text-align:right;
 }

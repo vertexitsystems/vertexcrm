@@ -45,7 +45,9 @@
 <% end %>
 
 <%= form_with(model: employee, local: true) do |form| %>
-
+<p>
+<div class="page_title"> Consultant Details </div> 
+</p>
 <%= render "profiles/embedable_form", profile:employee.profile, allow_submit:false, form:form %>
 
 <div class="page_title"> VISA Details </div>
@@ -60,7 +62,8 @@
 	</div>
 	<div class="flex_col">
 		<b>Visa Expiry:</b>
-		<%= form.text_field :visa_expiry, :class => 'date_select_field' %>
+		<%- visa_expiry = @employee.persisted? ? (@employee.visa_expiry.blank? ? @employee.created_at : @employee.visa_expiry) : Date.today %>
+		<%= form.text_field :visa_expiry, :required => true,  :class => 'date_select_field', value: visa_expiry %>
 	</div>
 </div>
 
@@ -97,7 +100,9 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Vendor:</b>
-			<%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendors.blank? ? false : employee.vendors.first.id) %>
+            
+			<%# <%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendors.blank? ? false : employee.vendors.first.id) %> 
+			<%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendor.blank? ? false : employee.vendor.id) %>
 		</div>
 		
 		<% if false%>

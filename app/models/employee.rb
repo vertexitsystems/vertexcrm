@@ -1,4 +1,6 @@
 class Employee < ApplicationRecord
+
+  validates :visa_expiry, presence: true
   #after_destroy :destroy_associations
   
   # mount_uploader :passport, AttachmentsUploader
@@ -56,14 +58,14 @@ class Employee < ApplicationRecord
     #has_and_belongs_to_many :employers
     belongs_to :client, optional: true
     belongs_to :employer, optional: true
-    
+    #belongs_to :vendor, through: jobs
     has_many :invoices
     
     # has_many :postings
     # has_many :jobs, through: :postings
     belongs_to :job
 
-    has_many :vendors, through: :job#s#:projects
+    has_one :vendor, through: :job#s#:projects
     #accepts_nested_attributes_for :postings
     #belongs_to :job, optional: true
     

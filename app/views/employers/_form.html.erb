@@ -31,8 +31,10 @@
 <% end %>
 
 <%= form_with(model: @employer, local: true) do |form| %>
-
-
+    <p>
+       <div class="page_title"> Employers Details 
+       </div> 
+    </p>
 <%= render "profiles/embedable_form", 
 	profile:@employer.profile, 
 	allow_submit:false, 

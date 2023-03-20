@@ -50,35 +50,45 @@
 			prompt: "Vendor" %>
 	</div>
 	
-	<div class="flex_col"></div>
+	<%# <div class="flex_col"></div> %>
 	
 	<div class="flex_col">
-		<%= link_to "Add Consultant", new_employee_url, {:class => "button_link", :style=> "background:#36d673;font-size:13px;width:160px;"} %>
+		<%= link_to "Add Consultant", new_employee_url, {:class => "button_link", :style=> "background:#36d673;font-size:13px;width:160px;align:right"} %>
 	</div>
 	
 </div>
 <div class="section">
-
   <div class="row top">
-    <div class="col"> # </div> 
-    <div class="col col25"> Consultant Name </div>
-		<div class="col col25"> Project </div> 
-    <div class="col"> Contract Type </div>
-		<div class="col col25"> Employer </div>
-		<div class="col"> Start Date </div>
-		<div class="col"> End Date </div>
-    <div class="col"> Status </div>
-    <div class="col">Actions</div>
+  <div class="col"> # </div> 
+  <div class="col">Consultant Name</div>
+  <div class="col">Project</div> 
+  <div class="col"> Contract Type </div>
+  <div class="col"> Employer </div>
+  <div class="col"> Start Date </div>
+  <div class="col"> End Date </div>
+  <div class="col"> Visa Type </div>
+  <div class="col"> Expiry Date </div>
+  <div class="col"> Status </div>
+  <div class="col">Actions</div>
   </div>
 
   <% total_hours = 0 %>
   <% @employees.each_with_index do |employee, index| %>
-    <div class="row row_hover_highlight">
+
+  <%# employee.visa_expiry.blank? || employee.visa_status == "USC" %>
+    
+    
+	
+   
+	<% diff = employee.visa_expiry.blank? ? 0 : (employee.visa_expiry - Date.today).to_i %>
+	
+	<div class="row <%= diff < 30 ? "" : (diff < 60 ? "" : "row_hover_highlight") %>" >
+     
       <div class="col">
         <%= index + 1 %>
       </div>
       
-      <div class="col col25">
+      <div class="col">
         <%if employee.try(:profile).present?%>
           <%= link_to employee.profile.name, employee_path(id:employee,order:"period"), role:employee.try(:profile).try(:role).try(:downcase) %>
         <%end%>
@@ -87,17 +97,17 @@
 		<% end %>
       </div>
       
-	  <div class="col col25">
+	  <div class="col">
          <%# employee.job.blank? ? "(UnAssigned)" : employee.job.title  %>
 		 <%= employee.job.blank? ? "(UnAssigned)" : employee.job.title  %>
       </div>
 	  
       <div class="col">
-        <%= employee.contract_type.blank? ? "<Not Provided>" : employee.contract_type %>
+        <%= employee.contract_type.blank? ? " - " : employee.contract_type %>
       </div>
 	  
-      <div class="col col25">
-      	<% if employee.contract_type == "w2" %>
+      <div class="col">
+      	<% if employee.contract_type != "w2" %>
       		<%if !employee.employer.blank? %>
       			<%= employee.employer.company_name %>
       		<% else %>
@@ -116,9 +126,22 @@
       	<% if employee.disabled %>
       		<%= employee.disable_date.strftime("%d, %b %Y") %>
       	<% else %>
-      	-
+      	<%= employee.job_end_date.blank? ? " - " : employee.job_end_date.strftime("%d, %b %Y") %>
+
       	<% end %>
       </div>
+
+	  <div class="col">
+      	<%= employee.visa_status.blank? ? "Not Provided" : employee.visa_status %>
+      </div>
+
+		<% if employee.visa_status != "USC" %>
+	  <div class="col" style="color:<%= diff < 30 ? "#FF7276" : (diff < 60 ? "#F2D4D7" : "#000") %>">
+      	<%= employee.visa_expiry.blank? ? "Not Provided" : employee.visa_expiry %>
+      </div>
+	  <% else %>
+	  	<div class="col">-</div>
+	  <% end %>
 
       <div class="col">
       	<%= employee.disabled ? "Disabled" : "Active" %>
@@ -126,7 +149,7 @@
 
       <div class="col">
 		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
-		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> |
+		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> 
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
 		  <% if !employee.disabled %><!--disable_job_link-->
 		  	<a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.profile.name%>" class="disable_consultant_link">Disable</a>
@@ -166,7 +189,7 @@
 </div>
 
 <div style="float:right">
-  		<%= paginate @employees %>
+  		<%= paginate @employees %> 
   	</div>
   	<div class="clr"></div>
 
@@ -189,3 +212,41 @@
 		<% end %>
 	<% end %>
 <% end %>
+<div class="recorc_bottom flex_row">
+	<div class="flex_row"></div>
+	<div class="pagination_container flex_row" style="flex-grow:0;width:160px">
+		<%# total_pages = (@jobs.count.to_f / 10.0).floor.to_i + (((@jobs.count.to_f / 10.0).modulo(1) > 0) ? 1 : 0) %>
+		
+		<% if @page > 0 %>
+		<div class="flex_col" style="padding:0px">
+			<a href="" class="pagination_link" new_page="0">
+				<span class="material-icons">
+				skip_previous
+				</span>
+			</a>
+			<a href="" class="pagination_link" new_page="<%= @page - 1 %>">
+				<span class="material-icons">
+				navigate_before
+				</span>
+			</a>
+		</div> 
+		<% end %>
+		<div class="flex_col" style="padding:0px;text-align:center">
+		<%= "#{@page + 1} / #{@total_pages}" %> 
+		</div>
+		<% if @page < @total_pages - 1 %>
+		<div class="flex_col" style="padding:0px">
+		<a href="" class="pagination_link" new_page="<%= @page + 1 %>">
+			<span class="material-icons">
+			navigate_next
+			</span>
+		</a>
+		<a href="" class="pagination_link" new_page="<%= @total_pages - 1%>">
+			<span class="material-icons">
+			skip_next
+			</span>
+		</a>
+		</div>
+		<% end %>
+	</div>
+</div>

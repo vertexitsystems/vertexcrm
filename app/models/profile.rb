@@ -11,10 +11,12 @@ class Profile < ApplicationRecord
   
   attr_accessor(:email, :password)
 
-  mount_uploader :photo, AttachmentsUploader
-  mount_uploader :resume, AttachmentsUploader
-  mount_uploader :degree, AttachmentsUploader
-  
+  # mount_uploader :photo, AttachmentsUploader
+  # mount_uploader :resume, AttachmentsUploader
+  # mount_uploader :degree, AttachmentsUploader
+  has_one_attached :photo
+  has_one_attached :resume
+  has_one_attached :degree
   
   def role
     return 'Applicant' if user_type.nil?

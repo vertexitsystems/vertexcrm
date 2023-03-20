@@ -128,6 +128,7 @@ class ProfilesController < ApplicationController
       puts 'USER created'
     else
       puts 'USER NOT created' + @user.errors.messages.to_s
+      
       # respond_to do |format|
       #  return format.html { render :new }
       # end
