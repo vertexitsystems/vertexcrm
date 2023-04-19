@@ -156,7 +156,7 @@
       </div>
       
       <div class="col col-1">
-      	<%= employee.job_start_date.blank? ? employee.created_at.strftime("%d, %b %Y") : employee.job_start_date.strftime("%d, %b %Y") %>
+      	<%= employee.job_start_date.blank? ? "-" : employee.job_start_date.strftime("%d, %b %Y") %>
       </div>
       <div class="col col-1">
       	<% if employee.disabled %>

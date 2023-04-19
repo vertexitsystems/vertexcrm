@@ -15,7 +15,7 @@ class EmployeesController < ApplicationController
     @employees = params.except(:controller, :action).blank? ? Employee.includes(:profile).all : Employee.includes(:profile).order(disabled: :desc, created_at: :desc) 
     
     @employees = Employee.includes(:profile).order('profiles.first_name ' + (params[:order].present? ? params[:order] : "ASC") ) if params[:sort].present? && params[:sort] == "emp"
-    @employees = Employee.order(job_start_date: (params[:order].present? ? params[:order].upcase : "ASC") ) if params[:sort].present? && params[:sort] == "strtdate"
+    @employees = Employee.where(disabled: [false, nil]).order(job_start_date: (params[:order].present? ? params[:order].upcase : "ASC") ) if params[:sort].present? && params[:sort] == "strtdate"
     @employees = Employee.order(visa_expiry: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "expdate"
     @employees = Employee.order(disabled: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "empstatus"
 
