@@ -8,7 +8,7 @@
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'client_filter',
 			options_from_collection_for_select(Client.all, "id", "company_name", params["client"]),
-			class: 'form-control filter_field',
+			class: 'form-select filter_field',
 			id: "filter_field",
 			filter_name: "client",
 			prompt: "Client" %>
@@ -17,7 +17,7 @@
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'vendor_filter',
 			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
-			class: 'form-control filter_field',
+			class: 'form-select filter_field',
 			id: "filter_field",
 			filter_name: "vendor",
 			prompt: "Vendor" %>
@@ -26,7 +26,7 @@
 	<div class="flex_col" style="padding:0px 10px">
 		<%= select_tag 'status_filter',
 			options_for_select(["Open", "Close"], params["status"]),
-			class: 'form-control filter_field',
+			class: 'form-select filter_field',
 			id: "filter_field",
 			filter_name: "status",
 			prompt: "Status" %>
@@ -44,9 +44,9 @@
 	
 	<div class="flex_col"></div>
 	
-	<div class="flex_col">
+	<!--<div class="flex_col">
 		<%= link_to "Add Job", new_job_url, {:class => "button_link", :style=> "background:#36d673;font-size:13px;width:160px;"} %>
-	</div>
+	</div> -->
 	
 </div>
 <div class="section">

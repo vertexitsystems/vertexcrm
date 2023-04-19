@@ -1,6 +1,6 @@
 class Employee < ApplicationRecord
 
-  validates :visa_expiry, presence: true
+  #validates :visa_expiry, presence: true
   #after_destroy :destroy_associations
   
   # mount_uploader :passport, AttachmentsUploader

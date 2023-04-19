@@ -8,4 +8,14 @@ module ApplicationHelper
     params.merge(p).delete_if{|k,v| v.blank?}
   end
   
+  def hello_app(x)
+    
+    "
+    <h3>this is Value from helper<h3>
+    <b>#{x}</b>
+    
+    
+    "
+  end 
+
 end

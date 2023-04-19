@@ -1,75 +1,111 @@
+
+<div class="flex_row">
+
 <div class="page_heading">
 	Consultants
 </div>
-<div class="info_print_employee flex_row">
+
+ <!-- <div class="flex_col">
+		<%= link_to "Add Consultant", new_employee_url, {:class => "button_link", :style=> "background:#660000;font-size:13px;width:160px;align:right"} %>
+	</div> -->
+</div>
+<%# <div class="info_print_employee flex_row"> %>
 	<%# The script that makes these filter fields work is defined in application.js %>
 	<%# Any thing with class "filter_field" will get .onChanged attached to it where the "filter_name" attribute will be turned into parameter name and the current url will be called %>
 	
-	<div class="flex_col" style="padding:0px 10px">
-		
-		<%# select_tag 'employee_filter',  
-			options_from_collection_for_select(Employee.include(:profile).all, "id", "name", params["emp"]),
-			class: 'form-control filter_field',
-			id: "filter_field",
-			filter_name: "emp",
-			prompt: "Consultant" 
-			%>
-		<%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
-			class: 'form-control filter_field',
+
+	<%# <div class="flex_col"></div> %>
+	
+	
+	
+<%# </div> %>
+
+<% def create_header(name, value) %>
+	<%- is_sorted = params[:order].present? && params[:order] == "desc" && params[:sort] == value %>
+
+	<div class="header_container" style="border:0px; padding:0px"> 
+		<%= link_to employees_url(sort: value, order: ( is_sorted ? "asc" : "desc")), 
+		     {class: 'row form-select sorting_link', style: "border-bottom:0;color:white  !important", 
+			id: "sorting_link",
+			sort_type: value,
+			order_type: (is_sorted ? "asc" : "desc") } do %>
+		<div class="col"></div> 
+		<div class="col-auto" style="padding:0px; text-align:center">
+			<%= name %>
+		</div>
+		<div class="col" style="padding:0px">
+			<i class="material-icons" style="textDecoration: none; display: inline-flex; vertical-align: top;line-height:16px;"><%= is_sorted ? "arrow_drop_down" : "arrow_drop_up"%></i>
+		</div>
+		<div class="col"></div>
+		<% end %>
+	</div>
+<% end %>
+<%# asdf: <%= sanitize hello_app(567) %> 
+<div class="section">
+  <div class="row top">
+  <div class="col col-1"> # </div> 
+  <div class="col col-2">
+	<% create_header("Consultants","emp") %>
+  </div>
+  <div class="col col-1">Projects</div> 
+  <div class="col col-1"> Contracts </div>
+  <div class="col col-1"> Employers </div>
+  <div class="col col-1"> 
+	<% create_header("Start Date","strtdate") %>
+  </div>
+  <div class="col col-1"> End Date </div>
+  <div class="col col-1"> Visa Type </div>
+  <div class="col col-1">
+  <% create_header("Visa Expiry","expdate") %>
+   </div>
+  <div class="col col-1">
+    <% create_header("Status","empstatus") %>
+   </div>
+  <div class="col col-1">Actions</div>
+  </div>
+
+  <%# Row of Filters in Table %>
+
+  <div class="filters row">
+  <div class="col col-1 " style="padding:0px"> </div> 
+  <div class="col col-2" style="padding:1px"> 
+  <%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
+			class: 'form-select filter_field',
 			id: "filter_field",
 			filter_name: "emp",
 			prompt: "Consultant"%>
-	</div>
-	
-	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'contract_filter',
-			options_from_collection_for_select(Job.all, "id", "title", params["proj"]), 
-			class: 'form-control filter_field',
+  </div>
+  <div class="col col-1" style="padding:1px">
+  <%= select_tag 'contract_filter',
+			options_from_collection_for_select(Job.all, :id, :title, params["proj"]), 
+			class: 'form-select filter_field',
 			id: "filter_field",
 			filter_name: "proj",
 			prompt: "Jobs" 
 			%>
-	</div>
-	
-	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'contract_filter', 
+  </div> 
+  <div class="col col-1" style="padding:1px"> 
+  <%= select_tag 'contract_filter', 
 			options_for_select(contract_types, params["contract"]),
-			class: 'form-control filter_field', 
+			class: 'form-select filter_field', 
 			id: "filter_field",
 			filter_name: "contract",
-			prompt: "Contract Type"
+			prompt: "Contracts"
 			%>
-	</div>
-	
-	<div class="flex_col" style="padding:0px 10px">
-		<%= select_tag 'vendor_filter',
-			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
-			class: 'form-control filter_field',
+   </div>
+  
+  <div class="col col-1" style="padding:0px"> 
+  <%= select_tag 'employers_filter', options_from_collection_for_select(Employer.all, :id, :company_name, params["emplyer"]),
+			class: 'form-select filter_field',
 			id: "filter_field",
-			filter_name: "vendor",
-			prompt: "Vendor" %>
-	</div>
-	
-	<%# <div class="flex_col"></div> %>
-	
-	<div class="flex_col">
-		<%= link_to "Add Consultant", new_employee_url, {:class => "button_link", :style=> "background:#36d673;font-size:13px;width:160px;align:right"} %>
-	</div>
-	
-</div>
-<div class="section">
-  <div class="row top">
-  <div class="col"> # </div> 
-  <div class="col">Consultant Name</div>
-  <div class="col">Project</div> 
-  <div class="col"> Contract Type </div>
-  <div class="col"> Employer </div>
-  <div class="col"> Start Date </div>
-  <div class="col"> End Date </div>
-  <div class="col"> Visa Type </div>
-  <div class="col"> Expiry Date </div>
-  <div class="col"> Status </div>
-  <div class="col">Actions</div>
+			filter_name: "emplyer",
+			prompt: "Employers"%>
+  </div>
+  <div class="col col-1" style="padding:0px"> </div>
+  <div class="col col-1" style="padding:0px"> </div>
+  <div class="col col-1" style="padding:0px"> </div>
+  <div class="col col-1" style="padding:0px"> </div>
+  <div class="col col-1" style="padding:0px"> </div> 
   </div>
 
   <% total_hours = 0 %>
@@ -82,13 +118,13 @@
    
 	<% diff = employee.visa_expiry.blank? ? 0 : (employee.visa_expiry - Date.today).to_i %>
 	
-	<div class="row <%= diff < 30 ? "" : (diff < 60 ? "" : "row_hover_highlight") %>" >
+	<div class="row row_hover_highlight" >
      
-      <div class="col">
+      <div class="col col-1">
         <%= index + 1 %>
       </div>
       
-      <div class="col">
+      <div class="col col-2">
         <%if employee.try(:profile).present?%>
           <%= link_to employee.profile.name, employee_path(id:employee,order:"period"), role:employee.try(:profile).try(:role).try(:downcase) %>
         <%end%>
@@ -97,16 +133,16 @@
 		<% end %>
       </div>
       
-	  <div class="col">
+	  <div class="col col-1">
          <%# employee.job.blank? ? "(UnAssigned)" : employee.job.title  %>
 		 <%= employee.job.blank? ? "(UnAssigned)" : employee.job.title  %>
       </div>
 	  
-      <div class="col">
+      <div class="col col-1">
         <%= employee.contract_type.blank? ? " - " : employee.contract_type %>
       </div>
 	  
-      <div class="col">
+      <div class="col col-1">
       	<% if employee.contract_type != "w2" %>
       		<%if !employee.employer.blank? %>
       			<%= employee.employer.company_name %>
@@ -119,10 +155,10 @@
 
       </div>
       
-      <div class="col">
+      <div class="col col-1">
       	<%= employee.job_start_date.blank? ? employee.created_at.strftime("%d, %b %Y") : employee.job_start_date.strftime("%d, %b %Y") %>
       </div>
-      <div class="col">
+      <div class="col col-1">
       	<% if employee.disabled %>
       		<%= employee.disable_date.strftime("%d, %b %Y") %>
       	<% else %>
@@ -131,23 +167,24 @@
       	<% end %>
       </div>
 
-	  <div class="col">
+	  <div class="col col-1">
       	<%= employee.visa_status.blank? ? "Not Provided" : employee.visa_status %>
       </div>
 
 		<% if employee.visa_status != "USC" %>
-	  <div class="col" style="color:<%= diff < 30 ? "#FF7276" : (diff < 60 ? "#F2D4D7" : "#000") %>">
+
+	  <div class="col col-1" style="color:<%= diff < 30 ? "#FF0000" : (diff < 60 ? "#FF9933" : "#000000") %>">
       	<%= employee.visa_expiry.blank? ? "Not Provided" : employee.visa_expiry %>
       </div>
 	  <% else %>
-	  	<div class="col">-</div>
+	  	<div class="col col-1">-</div>
 	  <% end %>
 
-      <div class="col">
+      <div class="col col-1">
       	<%= employee.disabled ? "Disabled" : "Active" %>
       </div>
 
-      <div class="col">
+      <div class="col col-1">
 		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
 		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> 
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
@@ -212,6 +249,7 @@
 		<% end %>
 	<% end %>
 <% end %>
+<!--
 <div class="recorc_bottom flex_row">
 	<div class="flex_row"></div>
 	<div class="pagination_container flex_row" style="flex-grow:0;width:160px">
@@ -249,4 +287,5 @@
 		</div>
 		<% end %>
 	</div>
+-->
 </div>

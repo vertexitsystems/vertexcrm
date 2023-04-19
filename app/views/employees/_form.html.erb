@@ -15,8 +15,21 @@
 				$("#c2c_documents").show();
 			}
 		});
+
+		$('#employee_visa_status').change(function(){
+			
+		 	if ( this.value == "USC"){
+				$("#employee_visa_expiry").hide();
+				$("#visa_expiry_field").hide();	
+			} else {
+				$("#employee_visa_expiry").show();
+				$("#visa_expiry_field").show();
+		 	}
+		});
 	});
 </script>
+
+
 	
 <% if employee.present? and employee.try(:errors).any? %>
 <div id="error_explanation">
@@ -55,12 +68,12 @@
 	<div class="flex_col">
 		<b>Visa Status:</b>
 		<%= form.select :visa_status, 
-			options_for_select(["USC", "GC-EAD", "H4-EAD", "H1-B", "OPT-EAD", "CPT"], employee.visa_status),
+			options_for_select(["GC-EAD", "USC", "H4-EAD", "H1-B", "OPT-EAD", "CPT"], employee.visa_status),
 			class: 'form-control', 
 			filter_name: "contract"
 			%>
 	</div>
-	<div class="flex_col">
+	<div class="flex_col", id="visa_expiry_field">
 		<b>Visa Expiry:</b>
 		<%- visa_expiry = @employee.persisted? ? (@employee.visa_expiry.blank? ? @employee.created_at : @employee.visa_expiry) : Date.today %>
 		<%= form.text_field :visa_expiry, :required => true,  :class => 'date_select_field', value: visa_expiry %>
@@ -141,7 +154,6 @@
 </div>
 <div class="page_title"> Documents </div>
 <div class="flex_col">
-	
 	
 	
 	<div class="mututal_documents">

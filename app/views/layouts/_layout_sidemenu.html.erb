@@ -1,4 +1,5 @@
-<% if user_signed_in? %>
+<!--
+ <% if user_signed_in? %>
 	<div class="flex_col" style="max-width:300px">
 		
 		<div class="menu">
@@ -45,8 +46,8 @@
 		</ul>
 
 		<ul>
-			<li class="option <%= controller_name=="vendors" ? "jos" : "" %>"> <a href="/jobs">Jobs</a> </li>
-			<li class="option <%= controller_name=="clients" ? "reports" : "" %>"> <%= link_to "Reports", reports_account_managers_path %> </li>
+			<li class="option <%= controller_name=="jobs" ? "menu_item_selected" : "" %>"> <a href="/jobs">Jobs</a> </li>
+			<li class="option <%= controller_name=="reports" ? "reports" : "" %>"> <%= link_to "Reports", reports_account_managers_path %> </li>
 			<li class="option <%= controller_name=="employees" ? "invoices" : "" %>"> <%= link_to "Invoices", invoices_path %> </li>
 		</ul>
 
@@ -75,5 +76,6 @@
 		<% end %>
 		</div>
 	</div>
-<% end %>
+<% end %> 
 
+-->

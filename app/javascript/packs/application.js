@@ -34,7 +34,20 @@ function bind_filters() {
 		var new_page = $(this).attr("new_page");
 		loadURL(constructParams("page", new_page));
 	});
+    
+	$('.sorting_link').on('click', function (event) {
+		//var vend_id = $(this).val();
+		var param_sort  = $(this).attr("sort_type");
+		var param_order = $(this).attr("order_type");
+		
+		var url_first = constructParams("sort", param_sort);
+		var url_final = constructParamsWithUrl(url_first, "order", param_order);
+		
+		loadURL(url_final);
 
+		event.preventDefault();
+		return false;
+	});
 
 	$('.filter_field').on('change', function () {
 		var vend_id = $(this).val();
@@ -123,6 +136,11 @@ function bind_phonenumber_formatter(){
 
 function constructParams(param_key, param_value){
 	var searchString = window.location.search.substring(1);
+	return constructParamsWithUrl(searchString, param_key, param_value);
+}
+
+function constructParamsWithUrl(url, param_key, param_value){
+	var searchString = url;
 	var params = searchString.split("&");
 	var new_params = "";
 
@@ -151,6 +169,37 @@ function constructParams(param_key, param_value){
 
 	return new_params
 }
+
+// function constructParams2(param_key, param_value){
+// 	var searchString = window.location.search.substring(1);
+// 	var params = searchString.split("&");
+// 	var new_params = "";
+
+// 	 var found = false;
+
+// 	if (searchString != ""){
+// 		for (var i = 0; i < params.length; i++) {
+// 			var val = params[i].split("=");
+// 			if (unescape(val[0]) == param_key){
+// 				found = true;
+
+// 				if (param_value == ""){
+// 					continue;
+// 				}
+
+// 				new_params += val[0] + "=" +  param_value;
+
+// 			} else {
+// 				new_params += val[0] + "=" +  val[1];
+// 			}
+// 			if ((params.length > i + 1) || !found){ new_params += "&"; }
+// 		}
+// 	}
+
+// 	if (!found){ new_params += param_key + '=' + param_value; }
+
+// 	return new_params
+// }
 
 function loadURL(with_params){
 	window.location = location.protocol + '//' + location.host + location.pathname + "?" + with_params;
