@@ -10,15 +10,15 @@
 	<%= form_tag work_durations_path, multipart: true, style: "margin:0px;width:100%;padding:0px;"  do %>
 	<div class="row">
 		<% if show_submitted_date %>
-			<div class="col col8"> <%= (!wd.created_at.blank? && !wd.unsubmitted? ) ? wd.created_at.strftime("%b %d, %Y") : "-" %> </div>
+			<div class="col col-1"> <%= (!wd.created_at.blank? && !wd.unsubmitted? ) ? wd.created_at.strftime("%b %d, %Y") : "-" %> </div>
 		<% end %>
 	
 		<% if show_employee_info %>
-			<div class="col col8"> <%= wd.employee.blank? ? "(Not Available)" : wd.employee.profile.name %> </div>
-			<div class="col col8"> <%= wd.vendor.blank? ? "(Not Provided)" : wd.vendor.name %> </div>
+			<div class="col col-1"> <%= wd.employee.blank? ? "(Not Available)" : wd.employee.profile.name %> </div>
+			<div class="col col-1"> <%= wd.vendor.blank? ? "(Not Provided)" : wd.vendor.name %> </div>
 		<% end %>
 	
-		<div class="col col-5" title="<%= wd.display_id %>">
+		<div class="col col-2" title="<%= wd.display_id %>">
 			<% if !wd.persisted? || ( wd.time_sheet_status  == "unsubmitted" && !wd.is_past_due_date? ) %>
 				<%= wd.period %>
 			<% else %>
@@ -27,7 +27,7 @@
 		</div>
 	
 		<% if show_contract_type %>
-			<div class="col col8">
+			<div class="col col-1">
 				<% if wd.employee.blank? %>
 					(Not Provided)
 				<% else %>
@@ -37,7 +37,7 @@
 		<% end %>
 	
 		<% if show_project_name %>
-			<div class="col col8">
+			<div class="col col-1">
 				<% if wd.employee.blank? %>
 					(Not Assigned)
 				<% else %>

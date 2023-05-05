@@ -207,6 +207,7 @@
 	end
 	
 	if employees.count > 1
+		wds = WorkDuration.where(:work_day => curr_date.beginning_of_week)#.load
 		work_durations = employees.map {|e|
 			
 			# if e.active_postings.count > 0
@@ -216,13 +217,14 @@
 			# 	end
 			# end
 			
-			wd = e.work_durations.where(:work_day => curr_date.beginning_of_week).first 
+			wd = wds.where(employee_id: e.id).first #e.work_durations.where(:work_day => curr_date.beginning_of_week).first 
 			if wd.blank?
 				WorkDuration.new(:employee => e, :work_day => curr_date.beginning_of_week, :time_sheet_status => :unsubmitted)
 			else
 				wd
 			end
 		}
+		
 	else
 		
 		# first_posting = employees.first.active_postings.first
@@ -320,9 +322,10 @@
 	
 	<% check3 = (started_date.beginning_of_week > wd.work_day) %>
 	<%= sanitize "check3: #{check3} (#{started_date.beginning_of_week.strftime("%a %d, %b")} | #{wd.work_day.strftime("%a %d, %b")})<br>" if params[:vertd].present?  %>
-	<% break if check3 %>
-
+	<% next if check3 %>
 	
+	
+
 	<%= render "_partials/tv_table_row_template", wd: wd,
 												unique_id:"_all_#{index}",
 												show_submitted_date: show_submitted_date,

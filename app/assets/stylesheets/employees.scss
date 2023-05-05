@@ -67,6 +67,7 @@
 	width:100%;
 	text-align:left;
 	padding:0px 0px;
+	margin:0px 5px;
 }
 .flex_col input[type=text],input[type=file], input[type=tel],input[type=number], select {
 	display: block;
@@ -76,7 +77,7 @@
 	font-weight: 400;
 	line-height: 1.5;
 	color: #000000;
-	background-color: rgb(228, 226, 226);
+	
 	background-clip: padding-box;
 	border: 1px solid #ced4da;
 	-webkit-appearance: menulist-button;
@@ -84,10 +85,13 @@
 	appearance: button;
 	border-radius: .25rem;
 	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+	height:40px;
+	background-color: #FFF;
 }
 
-.flex_col select {
-	
+.filter_field{
+	height:30px;
+	background-color: rgb(228, 226, 226);
 }
 .submit_button{
 	background:var(--main-color);

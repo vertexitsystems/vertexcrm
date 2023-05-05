@@ -54,7 +54,7 @@
 	<% create_header("Start Date","strtdate") %>
   </div>
   <div class="col col-1"> End Date </div>
-  <div class="col col-1"> Visa Type </div>
+  <div class="col col-1"> Visa Types </div>
   <div class="col col-1">
   <% create_header("Visa Expiry","expdate") %>
    </div>
@@ -103,9 +103,30 @@
   </div>
   <div class="col col-1" style="padding:0px"> </div>
   <div class="col col-1" style="padding:0px"> </div>
+  <div class="col col-1" style="padding:0px">
+  <%= select_tag 'visa_filter', 
+			options_for_select(visa_statuses, params["visastat"]),
+			class: 'form-select filter_field', 
+			id: "filter_field",
+			filter_name: "visastat",
+			prompt: "Visa Types"
+			%>
+  </div>
+  
   <div class="col col-1" style="padding:0px"> </div>
-  <div class="col col-1" style="padding:0px"> </div>
-  <div class="col col-1" style="padding:0px"> </div> 
+  <div class="col col-1" style="padding:0px">
+
+
+
+  <%= select_tag 'emp_filter', 
+			options_for_select(employee_statuses, params["disabled"]),
+			class: 'form-select filter_field', 
+			id: "filter_field",
+			filter_name: "disabled",
+			prompt: "Active"
+			%>
+  
+  </div> 
   </div>
 
   <% total_hours = 0 %>
@@ -186,7 +207,7 @@
 
       <div class="col col-1">
 		  <%# link_to "Edit", edit_profile_path(employee.profile)%>
-		  <%= link_to "View Profile", profile_path(:id => employee.profile.id) %> 
+		  <%= link_to "View", profile_path(:id => employee.profile.id) %> |
 		  <%= link_to "Edit", edit_employee_path(employee)%> |
 		  <% if !employee.disabled %><!--disable_job_link-->
 		  	<a href="#" employee_id="<%=employee.id%>" employee_name="<%=employee.profile.name%>" class="disable_consultant_link">Disable</a>

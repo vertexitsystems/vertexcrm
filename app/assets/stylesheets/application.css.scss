@@ -50,7 +50,9 @@ input::-webkit-inner-spin-button {
   -webkit-appearance: none;
   margin: 0;
 }
-
+.capitalized {
+  text-transform: capitalize;
+}
 /* Firefox */
 input[type=number] {
   -moz-appearance: textfield;
@@ -66,7 +68,7 @@ input[type=number] {
 }
 .page-body {
    //flex-grow: 1;
-   flex: 1 0 auto;
+   flex: none;
 }
 
 a {
@@ -216,10 +218,12 @@ form {
     padding: 20px;
     //width: 90%;
     margin: 0 auto;
+    
 }
 form .field {
     padding: 5px;
     text-align: center;
+    
 }
 form .field input {
     width: 80%;
@@ -227,6 +231,8 @@ form .field input {
     background: #FFF;
     border: 1px solid #899;
     border-radius: 5px;
+
+    text-transform: capitalize;
 }
 form .field label {
 	    font-weight: bold;

@@ -3,18 +3,255 @@
 	<b>ALERT: </b>Your Visa is about to expire in <%= @profile.employee.days_remaining_till_visa_expiry %> days.
 </div>
 <% end %>
-
 <div class="profile_main row">
 	<div class="row" style="width:100%">
 		<%= render "profiles/components/profile_info" %>
 	</div>
-	<div class="row" style="margin-top: 30px;">
+	<div class="row" style="margin-top: 30px; width: 100%;">
 		<div class="col">
 			<div class="row">
 				<% if @profile.user.is_employee? %>
 				<div class="profile_menu_right" style="width:100%">
-					
+
+				<%# Tab Bar for Profile Details %>
+
+				<ul class="nav nav-tabs" id="myTab" role="tablist">
+                    <li class="nav-item" role="presentation">
+                    <button class="nav-link active" id="home-tab" data-bs-toggle="tab" data-bs-target="#home" type="button" role="tab" aria-controls="home" aria-selected="false">Work Details</button>
+                    </li>
+  					<li class="nav-item" role="presentation">
+    				<button class="nav-link" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Visa Details</button>
+  					</li>
+  					<li class="nav-item" role="presentation">
+    				<button class="nav-link" id="document-tab" data-bs-toggle="tab" data-bs-target="#document" type="button" role="tab" aria-controls="contact" aria-selected="false">Documents</button>
+  					</li>
+					<% if @profile.employee.disabled%>
+					<li class="nav-item" role="presentation">
+    				<button class="nav-link" id="disabled-tab" data-bs-toggle="tab" data-bs-target="#disabled" type="button" role="tab" aria-controls="disabled" aria-selected="false">Disabled</button>
+  					</li>
+					<% end %>
+
+				</ul>
+
+						<div class="tab-content" id="myTabContent">
+
+							<div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+
+
+								<div class="col">
+									<div class="profile_right_section">
+									  <div class="section_title"> </div>
+										<div class="section_details">
+											<div class="flex_row" >
+												
+												<div class="col" style="padding: 0px 0px;">
+													<% def work_detail_item(title, value) %>
+														<div class="flex_row info_row">
+															<div class="flex_col col_heading"> <%= title %>: </div>
+															<div class="flex_col"> <%= value %> </div>
+														</div>
+													<% end %>
+													<%# #Show profile Erroe in consultanat list for Account Manager %>
+													<%# <% vendor = @profile.employee.vendors.first %> 
+													<% vendor = @profile.employee.vendor %>
+
+													<% if @profile.user.is_employee? && !@profile.employee.blank? %>
+														<% work_detail_item("ContractType", @profile.employee.contract_type) %>
+													<% end %>
+													
+													<%# work_detail_item("Rate", @profile.employee.rate.to_f) %>
+
+													<% work_detail_item("Start Date", @profile.employee.job_start_date.blank? ? @profile.employee.created_at.strftime("%d %b, %Y") : @profile.employee.job_start_date.strftime("%d %b, %Y")) %>
+
+
+													<% work_detail_item("End Date", @profile.employee.disabled ? @profile.employee.disable_date.strftime("%d %b, %Y") : "-") %>
+													<% work_detail_item("End Reason", @profile.employee.disabled ? @profile.employee.disable_reason : "-") %>
+
+													<div style="margin-bottom: 10px;"></div>
+
+													<% work_detail_item("Client", (@profile.employee.client.blank? ? "(Not Assigned)" : @profile.employee.client.company_name)) %>
+													
+													<% work_detail_item("ClientAddress", (@profile.employee.client.blank? ? "(Not Assigned)" : @profile.employee.client.company_address)) %>
+
+													<% work_detail_item("Vendor", (vendor.blank? ? "(Not Assigned)" : vendor.company_name)) %>
+													
+													<% work_detail_item("VendorAddress", (vendor.blank? ? "(Not Assigned)" : vendor.company_address)) %>
+
+													
+
+													<% if @profile.employee.contract_type != "w2" %>
+												
+														<div class="flex_row info_row">
+															<div class="flex_col col_heading"> Employer: </div>
+															<div class="flex_col"> <%= @profile.employee.employer.blank? ? "(Not Assigned)" : @profile.employee.employer.company_name %> </div>
+														</div>
+									
+														<div class="flex_row info_row">
+															<div class="flex_col col_heading"> Employer Address: </div>
+															<div class="flex_col"> <%= @profile.employee.employer.blank? ? "(Not Assigned)" : @profile.employee.employer.company_address %> </div>
+														</div>
+													
+													<% end %>
+												</div>
+												
+												
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>	
+
+							<div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+						
+								<div class="col">
+									<div class="profile_right_section">
+										<div class="section_title"> </div>
+										<div class="section_details">
+											<div class="flex_row">
+												
+												<div class="col"style="padding: 0px 0px;">
+													<div class="flex_row info_row">
+														<div class="flex_col col_heading"> Visa Status: </div>
+														<div class="flex_col"> <%= @profile.employee.visa_status.blank? ? "(Not Provided)" : @profile.employee.visa_status %> </div>
+													</div>
+								
+													<div class="flex_row info_row">
+														<div class="flex_col col_heading"> Visa Expires: </div>
+														<div class="flex_col">
+															<% if @profile.employee.visa_expiry.blank? %>
+															(Not Provided)
+															<% else %>
+																<%= @profile.employee.visa_expiry.to_date.strftime("%B %d, %Y") %>
+																<span style="font-size:10px;color:<%= @profile.employee.days_remaining_till_visa_expiry > 30 ? '#776' : 'var(--main-color)' %>">
+																	(in <%= @profile.employee.days_remaining_till_visa_expiry %> days)
+																</span>
+															<% end %>
+														</div>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+									</div>
+								</div>
+						
+							</div>
+
+								<div class="tab-pane fade" id="document" role="tabpanel" aria-labelledby="document-tab">
+								<div class="col">
+									<% if current_user.is_account_manager? || current_user.is_admin? %>
+									<div class="profile_right_section">
+										<div class="section_title"> </div>
+										<div class="section_details">
+											<% def show_document(title, document) %>
+											<div class="employee_info_item" style="padding: 0px 0px;">
+												<b><%= title %>: </b> 
+												<% if document.present? %>
+
+													<%if document.class.method_defined?(:url) %>
+														<%= link_to "Show", document.url, target:"_blank" %>
+													<% else %>
+														<%= link_to "Show", url_for(document), target:"_blank" %>
+													<% end %>
+												
+												<% else %>
+												(Not Provided)
+												<% end %>
+											</div>
+											<% end %>
+											
+											
+											<div class="flex_row">
+												<div class="flex_col">
+													<% show_document("Resume", @profile.employee.resume) %>
+													<% show_document("State ID", @profile.employee.state_id) %>
+													<% show_document("Passport", @profile.employee.passport) %>
+													<% show_document("Work Auth/Visa", @profile.employee.visa) %>
+											
+													<% show_document("i9", @profile.employee.i9) %>
+													<% show_document("E-Verify", @profile.employee.e_verify) %>
+													<% show_document("Void Check", @profile.employee.voided_check_copy) %>
+													<% if @profile.employee.contract_type == "w2" %>
+														<% show_document("Offer Letter", @profile.employee.offer_letter) %>
+														<% show_document("W2 Contract", @profile.employee.w2_contract) %>
+														<% show_document("W4", @profile.employee.w4) %>
+														<% show_document("Direct Deposit Details", @profile.employee.direct_deposit_detail) %>
+														<% show_document("Emergency Contact Form", @profile.employee.emergency_contact_form) %>
+													<% else %>
+														<% show_document("W9", @profile.employee.w9) %>
+														<% show_document("PSA", @profile.employee.psa) %>
+														<% show_document("New Hire Package", @profile.employee.new_hire_package) %>
+														<% show_document("PO", @profile.employee.po) %>
+													<% end %>
+												</div>
+											</div>																				
+										</div>
+									</div>
+									<% end %>
+									
+									<% if (current_user.is_employee? && current_user.employee.contract_type == "w2") %>
+										<div class="profile_right_section">
+											<div class="section_title"> Documents </div>
+										
+											<div class="section_details">
+												<% def show_document(title, document) %>
+												<div class="employee_info_item" style="padding: 0px 0px;">
+													<b><%= title %>: </b> 
+													<% if document.present? %>
+													<%= link_to "Show", document.url, target:"_blank" %>
+													<% else %>
+													(Not Provided)
+													<% end %>
+												</div>
+												<% end %>
+											
+											
+												<div class="flex_row">
+													<div class="flex_col">
+														<% if @profile.employee.contract_type == "w2" %>
+															<% show_document("W2 Contract", @profile.employee.w2_contract) %>
+														<% end %>
+													</div>
+												</div>
+											
+											
+											
+											</div>
+										</div>
+									<% end %>
+								</div>
+								</div>
+
+							<div class="tab-pane fade" id="disabled" role="tabpanel" aria-labelledby="disabled-tab">
+
+                            <div class="profile_right_section">
+										<div class="section_title"> </div>
+									<div class="section_details">
+										<div class="employee_info_item" style="padding: 0px 0px;">
+											<b>Disable Date: </b> <%= @profile.employee.disable_date %>
+										</div>
+										<div class="employee_info_item" style="padding: 0px 0px;">
+											<b>Disable Reason: </b> <%= @profile.employee.disable_reason %>
+										</div>
+										<div class="employee_info_item" style="padding: 0px 0px;">
+										<b>Disable Notes: </b> <%= @profile.employee.disable_notes %>
+										</div>
+									</div>
+							</div>
+
+							</div>
+						</div>
+
+
+
+
+
+
+                    </div>
+
 					<div class="row">
+					<!--
+					
 						<div class="col">
 							<div class="profile_right_section">
 								<div class="section_title"> Work Details </div>
@@ -76,6 +313,7 @@
 								</div>
 							</div>
 						</div>
+						
 
 						<div class="col">
 							<div class="profile_right_section">
@@ -108,108 +346,14 @@
 								</div>
 							</div>
 						</div>
+						-->
 
-						<div class="col">
-							<% if current_user.is_account_manager? || current_user.is_admin? %>
-							<div class="profile_right_section">
-								<div class="section_title"> Documents </div>
-								
-								<div class="section_details">
-									<% def show_document(title, document) %>
-									<div class="employee_info_item" style="padding: 0px 0px;">
-										<b><%= title %>: </b> 
-										<% if document.present? %>
-										
-										<%= link_to "Show", url_for(document), target:"_blank" %>
-										<%# link_to "Show", document.url, target:"_blank" %>
-										<% else %>
-										(Not Provided)
-										<% end %>
-									</div>
-									<% end %>
-									
-									
-									<div class="flex_row">
-										<div class="flex_col">
-											<% show_document("Resume", @profile.employee.resume) %>
-											<% show_document("State ID", @profile.employee.state_id) %>
-											<% show_document("Passport", @profile.employee.passport) %>
-											<% show_document("Work Auth/Visa", @profile.employee.visa) %>
-									
-											<% show_document("i9", @profile.employee.i9) %>
-											<% show_document("E-Verify", @profile.employee.e_verify) %>
-											<% show_document("Void Check", @profile.employee.voided_check_copy) %>
-											<% if @profile.employee.contract_type == "w2" %>
-												<% show_document("Offer Letter", @profile.employee.offer_letter) %>
-												<% show_document("W2 Contract", @profile.employee.w2_contract) %>
-												<% show_document("W4", @profile.employee.w4) %>
-												<% show_document("Direct Deposit Details", @profile.employee.direct_deposit_detail) %>
-												<% show_document("Emergency Contact Form", @profile.employee.emergency_contact_form) %>
-											<% else %>
-												<% show_document("W9", @profile.employee.w9) %>
-												<% show_document("PSA", @profile.employee.psa) %>
-												<% show_document("New Hire Package", @profile.employee.new_hire_package) %>
-												<% show_document("PO", @profile.employee.po) %>
-											<% end %>
-										</div>
-									</div>
-									
-									
-									
-								</div>
-							</div>
-							<% end %>
-							
-							<% if (current_user.is_employee? && current_user.employee.contract_type == "w2") %>
-								<div class="profile_right_section">
-									<div class="section_title"> Documents </div>
-								
-									<div class="section_details">
-										<% def show_document(title, document) %>
-										<div class="employee_info_item" style="padding: 0px 0px;">
-											<b><%= title %>: </b> 
-											<% if document.present? %>
-											<%= link_to "Show", document.url, target:"_blank" %>
-											<% else %>
-											(Not Provided)
-											<% end %>
-										</div>
-										<% end %>
-									
-									
-										<div class="flex_row">
-											<div class="flex_col">
-												<% if @profile.employee.contract_type == "w2" %>
-													<% show_document("W2 Contract", @profile.employee.w2_contract) %>
-												<% end %>
-											</div>
-										</div>
-									
-									
-									
-									</div>
-								</div>
-							<% end %>
-						</div>
+						
 					</div>
 					
 					
 					<% if @profile.employee.disabled%>
-					<div class="profile_right_section">
-						<div class="section_title"> Disabled </div>
-						
-						<div class="section_details">
-							<div class="employee_info_item" style="padding: 0px 0px;">
-								<b>Disable Date: </b> <%= @profile.employee.disable_date %>
-							</div>
-							<div class="employee_info_item" style="padding: 0px 0px;">
-								<b>Disable Reason: </b> <%= @profile.employee.disable_reason %>
-							</div>
-							<div class="employee_info_item" style="padding: 0px 0px;">
-								<b>Disable Notes: </b> <%= @profile.employee.disable_notes %>
-							</div>
-						</div>
-					</div>
+					
 					<% end %>
 				</div>
 				<% end %>

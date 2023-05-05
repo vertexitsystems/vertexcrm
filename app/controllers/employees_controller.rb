@@ -12,18 +12,20 @@ class EmployeesController < ApplicationController
     @page = (!params[:page].present? || params[:page] == "") ? 0 : params[:page].to_i
 
     #@employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
-    @employees = params.except(:controller, :action).blank? ? Employee.includes(:profile).all : Employee.includes(:profile).order(disabled: :desc, created_at: :desc) 
-    
-    @employees = Employee.includes(:profile).order('profiles.first_name ' + (params[:order].present? ? params[:order] : "ASC") ) if params[:sort].present? && params[:sort] == "emp"
+    #@employees = params.except(:controller, :action).blank? ? Employee.where('disabled IS NOT ?', true).includes(:profile).all : Employee.includes(:profile).order(disabled: :desc, created_at: :desc) 
+    @employees = (!params[:disabled].present? || (params[:disabled].present? && params[:disabled] != "all") ) ? Employee.where((params[:disabled] == "true") ? 'disabled IS true' : 'disabled IS NOT true').includes(:profile) : Employee.includes(:profile).order(disabled: :desc, created_at: :desc) 
+    @employees = @employees.includes(:profile).order('profiles.first_name ' + (params[:order].present? ? params[:order] : "ASC") ) if params[:sort].present? && params[:sort] == "emp"
     @employees = Employee.where(disabled: [false, nil]).order(job_start_date: (params[:order].present? ? params[:order].upcase : "ASC") ) if params[:sort].present? && params[:sort] == "strtdate"
-    @employees = Employee.order(visa_expiry: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "expdate"
+    @employees = @employees.order(visa_expiry: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "expdate"
     @employees = Employee.order(disabled: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "empstatus"
 
     @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
     @employees = @employees.where('job_id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
     @employees = @employees.where(contract_type: params[:contract]) if params[:contract].present? && !params[:contract].blank?
+    @employees = @employees.where(visa_status: params[:visastat]) if params[:visastat].present? && !params[:visastat].blank?
     @employees = @employees.where('employer_id = ?', params[:emplyer]).where.not(contract_type:"w2") if params[:emplyer].present? && !params[:emplyer].blank?
-    
+    #@employees = @employees.where(params[:disabled] = params[:employee_status]) if params[:employee_status].present? && !params[:employee_status].blank?
+
     #@employees = @employees.where('vendor.id = ?', params[:vendor]) if params[:vendor].present? && !params[:vendor].blank?
     #@employees = Vendor.find(params[:vendor]).employees if params[:vendor].present? && !params[:vendor].blank?
     @employees = @employees.left_joins(:vendor).where(vendors: { id: params[:vendor] }) if params[:vendor].present? && !params[:vendor].blank?

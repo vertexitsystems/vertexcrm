@@ -1,99 +1,98 @@
 <!DOCTYPE html>
 <html>
-  <head>
+	<head>
 
-  	<title>RecruitmentPortal</title>
-    <%= csrf_meta_tags %>
-    <%= csp_meta_tag %>
+		<title>RecruitmentPortal</title>
+		<%= csrf_meta_tags %>
+		<%= csp_meta_tag %>
 
-    <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
-    <%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
+		<%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track': 'reload' %>
+		<%= javascript_pack_tag 'application', 'data-turbolinks-track': 'reload' %>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-		<script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&region=us&key=AIzaSyBmRPMbNehdkAPUxqhCViTnwZo5J7rS5l8"></script>
-		
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-
-    <link rel="icon" href="/Images/favicon.png">
-  </head>
-
-  <body>
-	  
-		  
-	  <%= render 'layouts/layout_header' %>
-
-	  <%= render 'layouts/layout_topmenu' %>
-	  
-	  <div class="ap_container page-body flex_row" style="margin-top: 0px;">
-		  
-		  <%= render 'layouts/layout_sidemenu' %>
-	  	  
-		  <div class="flex_col" style="background:#FFF;border-radius: 10px;">
-			  
-			  <div class="flex_col" style="margin-top:10px">
-				  <div class="top_info flex_row" style="margin:0px">
-					  <% if !notice.blank? || !alert.blank? %>
-					  <div class="notification_container flex_col">
-						  <div style="float:left">
-							  <% if !notice.blank? %>
-							  <p id="notice"><%= notice %></p>
-							  <% end %>
-							  <% if !alert.blank? %>
-							  <p id="alert"><b>ERROR:</b> <%= alert %></p>
-							  <% end %>
-						  </div>
-						  <div style="float:right"><a href="">close</a></div>
-					  </div>
-					  <% end %>
-					  
-					  <div class="date_container flex_col" style="width:400px;text-align:right">
-						  <b>Date:</b> <%= Date.today.strftime("%A %B %d, %Y") %>
-					  </div>
-				  </div>
-				  
-				  <% if !devise_controller? %>
-				  <div class="top_info flex_row" style="margin:0px 10px 10px 10px;">
-					  <div style="flex-grow:1;">
-						  <% if user_signed_in? && current_user.is_employee? %>
-						      <% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>
-							  <% wd_notifications.each do |wd| %>
-							  	<% if !(wd.is_rejected? || wd.is_approved?) %>
-							  		<% next %>
-							  	<% end %>
-							  <div class="notification_container flex_col" style="margin-bottom:6px;box-shadow: 4px 4px 8px #CCC;">
-							  <div style="float:left">
-								  Timesheet for period <b>(<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>)</b> has been 
-								  <b style="color: <%= wd.time_sheet_status.upcase == 'REJECTED' ? 'red' : 'green' %>"> <%= wd.time_sheet_status.upcase %> </b>
-								  <% if wd.time_sheet_status.upcase == "REJECTED" %>
-								  <br /><b>message:</b> <%= wd.rejection_message %>
-								  <% end %>
-							  </div>
-					  
-							  <div style="float:right"><%= link_to "ok", {:controller => "work_durations", :action => "update_notification_read", :wd_id => wd.id }, :method => :put %></div>
-							  
-							  <div class="clr"></div>
-							  </div>
-							  <% end %>
-						  <% end %>
-					  </div>
-				  </div>
-				  <% end %>
-			  </div>
-		  
-			  
-		  
-			  <div class="main col" style="<%= user_signed_in? ? '' : 'width:100%' %>">
-		  
-			  	<%= yield %>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+			<script src="https://maps.googleapis.com/maps/api/js?libraries=places&language=en&region=us&key=AIzaSyBmRPMbNehdkAPUxqhCViTnwZo5J7rS5l8"></script>
 			
-		  	  </div>
-		  </div>
-	  </div>
-	<%= render 'layouts/layout_footer' %>
+		<link rel="preconnect" href="https://fonts.gstatic.com">
+		<link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet">
+
+		<link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+		
+		<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+		
+		<link rel="icon" href="/Images/favicon.png">
+	</head>
+	
+	<body>
+		<%= render 'layouts/layout_header' %>
+		<%= render 'layouts/layout_topmenu' %>
+		
+		<div class="ap_container page-body flex_row" style="margin-top: 0px;">
+			<%# render 'layouts/layout_sidemenu' %>
+			
+			<div class="col" style="background:#FFF;border-radius: 10px;">
+				<div class="flex_col" style="margin-top:10px">
+					<div class="top_info flex_row" style="margin:0px">
+						<% if !notice.blank? || !alert.blank? %>
+							<div class="notification_container flex_col">
+							<div style="float:left">
+								<% if !notice.blank? %>
+									<p id="notice"><%= notice %></p>
+								<% end %>
+								
+								<% if !alert.blank? %>
+									<p id="alert"><b>ERROR:</b> <%= alert %></p>
+								<% end %>
+							</div>
+							
+							<div style="float:right">
+								<a href="">close</a>
+							</div>
+						</div>
+					<% end %>
+				<div class="date_container flex_col" style="padding-right: 55px;;text-align:right">
+					<b>Date:</b> <%= Date.today.strftime("%A %B %d, %Y") %>
+				</div>
+			</div>
+			
+			<% if !devise_controller? %>
+				<div class="top_info flex_row" style="margin:0px 10px 10px 10px;">
+					<div style="flex-grow:1;">
+						<% if user_signed_in? && current_user.is_employee? %>
+							<% wd_notifications = current_user.profile.employee.work_durations.where(:status_read => true) %>
+							<% wd_notifications.each do |wd| %>
+							<% if !(wd.is_rejected? || wd.is_approved?) %>
+								<% next %>
+							<% end %>
+							<div class="notification_container flex_col" style="margin-bottom:6px;box-shadow: 4px 4px 8px #CCC;">
+							<div style="float:left">
+								Timesheet for period <b>(<%= wd.work_day.strftime("%b %d, %Y") %> - <%= (wd.work_day + 4).strftime("%b %d, %Y") %>)</b> has been 
+								<b style="color: <%= wd.time_sheet_status.upcase == 'REJECTED' ? 'red' : 'green' %>"> <%= wd.time_sheet_status.upcase %> </b>
+								<% if wd.time_sheet_status.upcase == "REJECTED" %>
+								<br /><b>message:</b> <%= wd.rejection_message %>
+								<% end %>
+							</div>
+					
+							<div style="float:right"><%= link_to "ok", {:controller => "work_durations", :action => "update_notification_read", :wd_id => wd.id }, :method => :put %></div>
+							
+							<div class="clr"></div>
+							</div>
+							<% end %>
+						<% end %>
+					</div>
+				</div>
+				<% end %>
+			</div>
+
+			<div class="main col" style="<%= user_signed_in? ? '' : 'width:100%' %>">
+				<%= yield %>
+			</div>
+		</div>
+	</div>
+
+	  <%= render 'layouts/layout_footer' %>
+	
 	
   </body>
 </html>

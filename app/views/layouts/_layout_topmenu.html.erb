@@ -123,110 +123,91 @@
 
 </div>
 -->
-<% if user_signed_in? %>
-    <div class >
+	<% if user_signed_in? %>
+		<div class ="ap_container page-body">
+			<ul class="nav "style=" background-color: #ebebeb;">
+				<li class="nav-item">
+				<a class="nav-link active" aria-current="page" <%= link_to "Home", root_path %></a>
+				</li>
 
-<ul class="nav">
-    <li class="nav-item">
-        
-        <a class="nav-link active" aria-current="page" <%= link_to "Home", root_path %></a>
-    </li>
+				<%if current_user.is_admin? %>
+					<li class="nav-item">
+						<a class="nav-link" href="/account_managers"> Manage Account Managers </a>
+					</li>
+				<% end %>
+	
+	     		<%if current_user.is_employer? %>
+					<li class="nav-item">
+						<a class="nav-link <%= action_name=="time_sheet_approval" ? "menu_item_selected" : "" %>"
+						href="/employers/time_sheet_viewer"> Timesheet Management</a>
+					</li>
+				<% end %>
 
-  <%if current_user.is_admin? %>
-    <li class="nav-item">
-        <a class="nav-link" href="/account_managers"> Manage Account Managers </a>
-    </li>
-  <% end %>
+				<%if current_user.is_admin? || current_user.is_account_manager? %>
+					<div class="dropdown">
+						<button class="nav-link dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"
+		 					style="border: 0px; background-color: #ebebeb; color: #4d070a;">
+							Views
+						</button>
+							
+						<div class="dropdown-menu" aria-labelledby="dropdownMenu2">
+				
+	 		         		<%if current_user.is_account_manager? %>
 
-  <%if current_user.is_account_manager? %>
-    <li class="nav-item">
-        <a class="nav-link <%= (controller_name=="account_managers" && action_name=="time_sheet_approval") ? "menu_item_selected" : "" %>"
-	    href="/account_managers/time_sheet_approval?order=status"> Timesheet Management </a>
-    </li>
-  <% end %>
+								<a class="dropdown-item <%= (controller_name=="account_managers" && action_name=="time_sheet_approval") ? "menu_item_selected" : "" %>"
+									href="/account_managers/time_sheet_approval?order=status"> Timesheets 
+								</a>
 
-<%if current_user.is_employer? %>
-  <li class="nav-item">
-    <a class="nav-link <%= action_name=="time_sheet_approval" ? "menu_item_selected" : "" %>"
-    href="/employers/time_sheet_viewer"> Timesheet Management</a>
-  </li>
-<% end %>
+							<% end %>
+				
+								<a class="dropdown-item <%= controller_name=="vendors" ? "menu_item_selected" : "" %> " href="/vendors"> Vendors </a>
+				
+								<a class="dropdown-item <%= controller_name=="clients" ? "menu_item_selected" : "" %>" href="/clients"> Clients </a> 
 
-<%if current_user.is_admin? || current_user.is_account_manager? %>
-  <li class="nav-item">
-    <a class="nav-link <%= controller_name=="vendors" ? "jos" : "" %>" onclick="alert('In Progress!')">User Management</a>
-  </li>
-  <li class="nav-item">
-   <a class="nav-link <%= controller_name=="vendors" ? "menu_item_selected" : "" %>" href="/vendors"> Prime Vendors </a> 
-  </li>
-  <li class="nav-item">
-   <a class="nav-link <%= controller_name=="clients" ? "menu_item_selected" : "" %>" href="/clients"> Clients </a> 
-  </li>
-  <li class="nav-item">
-	<a class="nav-link <%= controller_name=="employees" ? "menu_item_selected" : "" %>" href="/employees"> Consultants </a> 
-  </li>
-  <li class="nav-item">
-	<a class="nav-link <%= controller_name=="employers" ? "menu_item_selected" : "" %>" href="/employers"> Employers </a> 
-  </li>
-
-  <li class="nav-item">
-    <a class="nav-link <%= controller_name=="jobs" ? "menu_item_selected" : "" %>" href="/jobs"> Jobs </a>
-  </li>
+								<a class="dropdown-item <%= controller_name=="employees" ? "menu_item_selected" : "" %>" href="/employees"> Consultants </a> 
+				
+								<a class="dropdown-item <%= controller_name=="employers" ? "menu_item_selected" : "" %>" href="/employers"> Employers </a> 
 			
-  <li class="nav-item">
-    <a class="nav-link <%= controller_name=="account_managers" && action_name=="reports" ? "menu_item_selected" : "" %>" href="/account_managers/reports"> Reports </a>
-  </li>
+								<a class="dropdown-item <%= controller_name=="jobs" ? "menu_item_selected" : "" %>" href="/jobs"> Jobs </a>
+				
+								<a class="dropdown-item <%= controller_name=="account_managers" && action_name=="reports" ? "menu_item_selected" : "" %>" href="/account_managers/reports"> Reports </a>
+				
+								<a class="dropdown-item color: red<%= controller_name=="invoices" ? "menu_item_selected" : "" %>" href="/invoices"> Invoices </a>
 
-  <li class="nav-item">
+						</div>
+					</div>
+	
+	          			<li class="nav-item">
+	
+							<%= link_to "Add Consultant", new_employee_url(), {class:"nav-link", color: "green"} if (controller_name == "employees" && action_name == "index") %>
+							<%= link_to "Add Job", new_job_url(), {class:"nav-link"} if (controller_name == "jobs" && action_name == "index") %>
+							<%= link_to "Add Employer", new_employer_url(), {class:"nav-link"} if (controller_name == "employers" && action_name == "index") %>
+							<%= link_to "Add Client", new_client_url(), {class:"nav-link"} if (controller_name == "clients" && action_name == "index") %>
+							<%= link_to "Add Vendors", new_vendor_url(), {class:"nav-link"} if (controller_name == "vendors" && action_name == "index") %>
+		
+	
+						</li>
 
-    <a class="nav-link color: red<%= controller_name=="invoices" ? "menu_item_selected" : "" %>" href="/invoices"> Invoices </a>
-    
-  </li>
+					<%elsif current_user.profile.role == "Consultant" %>
 
- <!-- Create New -->
-  
-  <li class="nav-item">
-<!--
-    <a class="nav-link <%= controller_name=="employees" ? "menu_item_selected" : "hide" %>" href="/employees/new"> Create </a>
-    -->
-    <%= link_to "Add Consultant", new_employee_url(), {class:"nav-link", color: "green"} if (controller_name == "employees" && action_name == "index") %>
-    <%= link_to "Add Job", new_job_url(), {class:"nav-link"} if (controller_name == "jobs" && action_name == "index") %>
-    <%= link_to "Add Employer", new_employer_url(), {class:"nav-link"} if (controller_name == "employers" && action_name == "index") %>
-    <%= link_to "Add Client", new_client_url(), {class:"nav-link"} if (controller_name == "clients" && action_name == "index") %>
-    <%= link_to "Add Vendors", new_vendor_url(), {class:"nav-link"} if (controller_name == "vendors" && action_name == "index") %>
-    
- 
- </li>
+						<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
 
+							<li class="nav-item">
+								<a class="nav-link" <%= (controller_name == "employees" && action_name=="show") ? "menu_item_selected" : "" %>
+								href="/employees/<%=@employee.id%>?order=status"> Timesheets </a>
+							</li>
+							<li class="nav-item">
+								<a class="nav-link" <%= (controller_name == "profiles" && action_name=="show") ? "menu_item_selected" : "" %>
+								<%= link_to 'Profile', current_user.profile %> </a>
+							</li>
 
-<%elsif current_user.profile.role == "Consultant" %>
+					<%elsif current_user.profile.role == "Assistant"%>
 
-	<%@employee = @employee.nil? ? current_user.profile.employee : @employee %>
-
-		<li class="nav-item">
-            <a class="nav-link" <%= (controller_name == "employees" && action_name=="show") ? "menu_item_selected" : "" %>
-			 href="/employees/<%=@employee.id%>?order=status"> Timesheets </a>
-		</li>
-		<li class="nav-item">
-            <a class="nav-link" <%= (controller_name == "profiles" && action_name=="show") ? "menu_item_selected" : "" %>
-			<%= link_to 'Profile', current_user.profile %> </a>
-		</li>
-
-<%elsif current_user.profile.role == "Assistant"%>
-
-    <ul>
-		<li class="option"> <a href="/account_managers/time_sheet_approval?order=status"> Time Sheet Approval </a> </li>
-		<li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
-	</ul>
-
-
-<% end %>
-
-
-
-
-
-
-</ul>
-</div>
-<% end %> 
+						<ul>
+							<li class="option"> <a href="/account_managers/time_sheet_approval?order=status"> Time Sheet Approval </a> </li>
+							<li class="option"> <a href="/vendors"> Vendor Wise Reports </a> </li>
+						</ul>
+					<% end %>
+				</ul>
+			</div>
+		<% end %> 
