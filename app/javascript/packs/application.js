@@ -27,8 +27,12 @@ document.addEventListener("turbolinks:load", function() {
 	bind_filters();
 	bind_date_selectors();
 	bind_phonenumber_formatter();
+	bind_autocomplete();
 })
-
+//**AutoComplete**//
+//function bind_autocomplete(){
+//	$('.autocomplete-select').select2();
+//}
 function bind_filters() {
 	$('.pagination_link').click(function () {
 		var new_page = $(this).attr("new_page");

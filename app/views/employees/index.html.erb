@@ -67,13 +67,24 @@
   <%# Row of Filters in Table %>
 
   <div class="filters row">
-  <div class="col col-1 " style="padding:0px"> </div> 
+  <div class="col col-1 text-center" style="padding:0px">
+  <% if !params.except(:controller, :action, :page).blank? %>
+		<a href="/employees" class="btn btn-info " role="button" style="
+		   border-color: #e4e2e2;
+		   background-color: #e4e2e2;
+		   color: #000 !important;
+		   padding: 0px 10px;
+		   ">Reset</a>
+		<%# <button type="button" class="btn btn-light" href="/employees">Reset Filters</button> %>
+    <% end %>
+   </div> 
   <div class="col col-2" style="padding:1px"> 
   <%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
 			class: 'form-select filter_field',
 			id: "filter_field",
 			filter_name: "emp",
 			prompt: "Consultant"%>
+
   </div>
   <div class="col col-1" style="padding:1px">
   <%= select_tag 'contract_filter',
@@ -127,6 +138,10 @@
 			%>
   
   </div> 
+
+  <div class="col col-1" style="padding:0px">
+  </div> 
+
   </div>
 
   <% total_hours = 0 %>

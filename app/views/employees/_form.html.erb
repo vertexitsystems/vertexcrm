@@ -43,14 +43,18 @@
 </div>
 <% end %>
 
-<% def show_file_field(form, field, title, file) %>
+<% def show_file_field(form, field, title, document) %>
 	<b><%= title %>:</b>
 	<span style="font-size:12px">
-	<% if !file.blank? %>
-	(<%= link_to "Show Previous", url_for(file) %>)
-	<% else %>
-	(Not Provided)
-	<% end %>
+		
+		<% if document.present? %>
+			<%if document.class.method_defined?(:url) %>
+				<%= link_to "Show", document.url, target:"_blank" %>
+			<% else %>
+				<%= link_to "Show", url_for(document), target:"_blank" %>
+			<% end %>
+		<% end %>
+	
 	</span>
 
 	<%= form.file_field field, accept: 'image/*,application/pdf', :class => "timesheet_field", :style=>"width:100%" %>
