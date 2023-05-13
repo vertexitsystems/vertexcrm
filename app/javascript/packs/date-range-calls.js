@@ -2,7 +2,6 @@ var prev_value = "";
 document.addEventListener("turbolinks:load", () => {
     var flag = true;
     $('[data-tooltip-display="true"]').tooltip(),
-
 	flatpickr("#close_consultant_field_date", {
 		mode: "single",
 		dateFormat: "Y-m-d",

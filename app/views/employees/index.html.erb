@@ -71,7 +71,7 @@
   <% if !params.except(:controller, :action, :page).blank? %>
 		<a href="/employees" class="btn btn-info " role="button" style="
 		   border-color: #e4e2e2;
-		   background-color: #e4e2e2;
+		   background-color: #ffffff;
 		   color: #000 !important;
 		   padding: 0px 10px;
 		   ">Reset</a>
@@ -79,27 +79,27 @@
     <% end %>
    </div> 
   <div class="col col-2" style="padding:1px"> 
-  <%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
+  <%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).where("disabled is NOT true").collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
 			class: 'form-select filter_field',
-			id: "filter_field",
+			id: "filter-field-emp",
 			filter_name: "emp",
-			prompt: "Consultant"%>
+			prompt: "All Consultants"%>
 
   </div>
   <div class="col col-1" style="padding:1px">
   <%= select_tag 'contract_filter',
 			options_from_collection_for_select(Job.all, :id, :title, params["proj"]), 
 			class: 'form-select filter_field',
-			id: "filter_field",
+			id: "filter-field-proj",
 			filter_name: "proj",
-			prompt: "Jobs" 
+			prompt: "All Jobs" 
 			%>
   </div> 
   <div class="col col-1" style="padding:1px"> 
   <%= select_tag 'contract_filter', 
 			options_for_select(contract_types, params["contract"]),
 			class: 'form-select filter_field', 
-			id: "filter_field",
+			id: "filter-field-contract",
 			filter_name: "contract",
 			prompt: "Contracts"
 			%>
@@ -108,7 +108,7 @@
   <div class="col col-1" style="padding:0px"> 
   <%= select_tag 'employers_filter', options_from_collection_for_select(Employer.all, :id, :company_name, params["emplyer"]),
 			class: 'form-select filter_field',
-			id: "filter_field",
+			id: "filter-field-emplyer",
 			filter_name: "emplyer",
 			prompt: "Employers"%>
   </div>
@@ -118,7 +118,7 @@
   <%= select_tag 'visa_filter', 
 			options_for_select(visa_statuses, params["visastat"]),
 			class: 'form-select filter_field', 
-			id: "filter_field",
+			id: "filter-field-visastat",
 			filter_name: "visastat",
 			prompt: "Visa Types"
 			%>
@@ -132,7 +132,7 @@
   <%= select_tag 'emp_filter', 
 			options_for_select(employee_statuses, params["disabled"]),
 			class: 'form-select filter_field', 
-			id: "filter_field",
+			id: "filter-field-disabled",
 			filter_name: "disabled",
 			prompt: "Active"
 			%>

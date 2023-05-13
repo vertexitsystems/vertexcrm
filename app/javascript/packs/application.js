@@ -13,6 +13,8 @@ require("packs/date-range-calls.js")
 import flatpickr from "flatpickr";
 import("styles/application.scss")
 import("styles/tabs.css")
+import 'select2'
+import 'select2/dist/css/select2.css'
 
 // Uncomment to copy all static images under ../images to the output folder and reference
 // them with the image_pack_tag helper in views (e.g <%= image_pack_tag 'rails.png' %>)
@@ -24,15 +26,38 @@ import("styles/tabs.css")
 //import "@rails/actiontext"
 
 document.addEventListener("turbolinks:load", function() {
+	Turbolinks.clearCache();
 	bind_filters();
 	bind_date_selectors();
 	bind_phonenumber_formatter();
-	bind_autocomplete();
+	emp_autocomplete("destroy");
+	proj_autocomplete();
+	contract_autocomplete();
+	emplyer_autocomplete();
+	visastat_autocomplete();
+	disabled_autocomplete();
+
 })
 //**AutoComplete**//
-//function bind_autocomplete(){
-//	$('.autocomplete-select').select2();
-//}
+function emp_autocomplete(){
+	$('#filter-field-emp').select2();
+	
+}
+function proj_autocomplete(){
+	$('#filter-field-proj').select2();
+}
+function contract_autocomplete(){
+	$('#filter-field-contract').select2();
+}
+function emplyer_autocomplete(){
+	$('#filter-field-emplyer').select2();
+}
+function visastat_autocomplete(){
+	$('#filter-field-visastat').select2();
+}
+function disabled_autocomplete(){
+	$('#filter-field-disabled').select2();
+}
 function bind_filters() {
 	$('.pagination_link').click(function () {
 		var new_page = $(this).attr("new_page");
