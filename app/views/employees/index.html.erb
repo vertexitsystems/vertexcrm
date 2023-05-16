@@ -1,3 +1,17 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+        <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+ <style>
+            .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
+                background:#4d070a;
+            }
+        </style>
+        <script>
+            $(document).ready(function() {
+                 $('.js-example-basic-single').select2();
+            });
+        </script>
+
 
 <div class="flex_row">
 
@@ -80,7 +94,7 @@
    </div> 
   <div class="col col-2" style="padding:1px"> 
   <%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).where("disabled is NOT true").collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
-			class: 'form-select filter_field',
+			class: 'form-select filter_field ',
 			id: "filter-field-emp",
 			filter_name: "emp",
 			prompt: "All Consultants"%>
@@ -107,7 +121,7 @@
   
   <div class="col col-1" style="padding:0px"> 
   <%= select_tag 'employers_filter', options_from_collection_for_select(Employer.all, :id, :company_name, params["emplyer"]),
-			class: 'form-select filter_field',
+			class: 'form-select filter_field ',
 			id: "filter-field-emplyer",
 			filter_name: "emplyer",
 			prompt: "Employers"%>

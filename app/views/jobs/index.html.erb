@@ -89,6 +89,63 @@
 	<% end %>
   </div>
 
+  <%# Row of Filters in Table %>
+
+  <div class="filters row">
+
+    <div class="col col8">
+      JobID
+    </div>
+    <div class="col col8">
+      Date Opened
+    </div>
+    
+	<div class="col col25">
+      Title
+    </div>
+	
+	<div class="col col8">
+      Location
+    </div>
+	<div class="col col8">
+      <%= select_tag 'vendor_filter',
+			options_from_collection_for_select(Vendor.all, "id", "name", params["vendor"]),
+			class: 'form-select filter_field',
+			id: "filter_field",
+			filter_name: "vendor",
+			prompt: "Vendor" %>
+    </div>
+	
+	<div class="col col8">
+      <%= select_tag 'client_filter',
+			options_from_collection_for_select(Client.all, "id", "company_name", params["client"]),
+			class: 'form-select filter_field',
+			id: "filter_field",
+			filter_name: "client",
+			prompt: "Client" %>
+    </div>
+	
+	<div class="col col8">
+      Job Type
+    </div>
+	<div class="col col8">
+      <%= select_tag 'status_filter',
+			options_for_select(["Open", "Close"], params["status"]),
+			class: 'form-select filter_field',
+			id: "filter_field",
+			filter_name: "status",
+			prompt: "Status" %>
+    </div>
+	
+	<div class="col col8">
+      Close Date
+    </div>
+	<% if current_user.is_account_manager? %>
+    <div class="col col25">Actions</div>
+	<% end %>
+
+  </div>
+
   <% total_hours = 0 %>
   <% @jobs.each_with_index do |job, index| %>
     <div class="row row_hover_highlight">
