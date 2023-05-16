@@ -30,7 +30,7 @@ document.addEventListener("turbolinks:load", function() {
 	bind_filters();
 	bind_date_selectors();
 	bind_phonenumber_formatter();
-	emp_autocomplete("destroy");
+	emp_autocomplete();
 	proj_autocomplete();
 	contract_autocomplete();
 	emplyer_autocomplete();
