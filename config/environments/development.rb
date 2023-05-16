@@ -28,6 +28,7 @@ Rails.application.configure do
     config.cache_store = :null_store
   end
 
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
     address:              'smtp.gmail.com',
@@ -72,4 +73,5 @@ Rails.application.configure do
   config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   
   config.webpacker.check_yarn_integrity = false
+
 end

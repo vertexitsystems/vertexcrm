@@ -30,34 +30,16 @@ document.addEventListener("turbolinks:load", function() {
 	bind_filters();
 	bind_date_selectors();
 	bind_phonenumber_formatter();
-	emp_autocomplete();
-	proj_autocomplete();
-	contract_autocomplete();
-	emplyer_autocomplete();
-	visastat_autocomplete();
-	disabled_autocomplete();
-
-})
-//**AutoComplete**//
-function emp_autocomplete(){
-	$('#filter-field-emp').select2();
 	
+	bind_intellisense();
+})
+function bind_intellisense(){
+	$('.intellisence_select2').select2();
+	// $(document).ready(function() {
+		
+	// });
 }
-function proj_autocomplete(){
-	$('#filter-field-proj').select2();
-}
-function contract_autocomplete(){
-	$('#filter-field-contract').select2();
-}
-function emplyer_autocomplete(){
-	$('#filter-field-emplyer').select2();
-}
-function visastat_autocomplete(){
-	$('#filter-field-visastat').select2();
-}
-function disabled_autocomplete(){
-	$('#filter-field-disabled').select2();
-}
+
 function bind_filters() {
 	$('.pagination_link').click(function () {
 		var new_page = $(this).attr("new_page");
