@@ -78,7 +78,9 @@
     <% end %>
    </div> 
   <div class="col col-2" style="padding:1px"> 
-  <%= select_tag 'employee_filter', options_for_select(Employee.includes(:profile).where("disabled is NOT true").collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
+  <%# select_tag 'employee_filter', options_for_select(Employee.includes(:profile).where("disabled is NOT true").collect {|e| [ e.profile.name, e.id ] }, params["emp"]), %>
+  <%# select_tag 'employee_filter', options_for_select(Employee.where("disabled is NOT true").includes(:profile).pluck('employees.id, profiles.first_name, profiles.middle_name').collect {|e| [ '#{e.profile.first_name} #{e.profile.last_name} ', e.id ] }, params["emp"]), %>
+  <%= select_tag 'employee_filter', options_for_select(Employee.where("disabled is NOT true").includes(:profile).pluck('employees.id, profiles.first_name, profiles.middle_name, profiles.last_name').map{|e|[e[1]+" "+e[2]+" "+e[3], e[0]]}, params["emp"]),
 			class: 'form-select filter_field intellisence_select2',
 			id: "filter-field-emp",
 			filter_name: "emp",
@@ -105,6 +107,7 @@
    </div>
   
   <div class="col col-1" style="padding:0px"> 
+  
   <%= select_tag 'employers_filter', options_from_collection_for_select(Employer.all, :id, :company_name, params["emplyer"]),
 			class: 'form-select filter_field intellisence_select2',
 			id: "filter-field-emplyer",

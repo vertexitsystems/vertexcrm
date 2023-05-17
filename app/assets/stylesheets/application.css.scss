@@ -28,12 +28,12 @@
 }
 
 .select2-container--default .select2-results__option--highlighted.select2-results__option--selectable{
-  background:#4d070a;
+  background:#4d070a !important;
 }
 .select2-search__field{
   outline: none !important;
-    border:1px solid gray;
-    box-shadow: 0 0 10px grey;
+    border:1px solid gray !important;
+    box-shadow: 0 0 10px grey !important;
 }
 
 body {
