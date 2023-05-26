@@ -51,14 +51,14 @@ Rails.application.configure do
   config.log_level = :debug
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:                'smtp.ipage.com',
-    port:                   465,
-    user_name:              'requirement@vertexitservice.com',
-    domain:                 'vertexitservice.com',
-    password:               'Vertex_123',
+    address:                'smtp.office365.com',
+    port:                   587,
+    user_name:              'contact@vertexspecial.com',
+    domain:                 'vertexspecial.com',
+    password:               'Vertex@123**',
     authentication:         'plain',
-    ssl:                    true,
-    tls:                    false 
+    ssl:                    false,
+    tls:                    true 
   }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = false

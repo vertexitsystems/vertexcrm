@@ -31,13 +31,15 @@ Rails.application.configure do
 
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-    address:              'smtp.gmail.com',
+    address:              'smtp.office365.com',
     port:                 587,
-    domain:               'gmail.com',
-    user_name:            'saadamin492@gmail.com',
-    password:             '',
+    domain:               'vertexspecial.com',
+    user_name:            'contact@vertexspecial.com',
+    password:             'Vertex@123**',
     authentication:       'plain',
-    enable_starttls_auto: true 
+    enable_starttls_auto: true,
+    ssl:                    false,
+    tls:                    true 
   }
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
   # Store uploaded files on the local file system (see config/storage.yml for options).

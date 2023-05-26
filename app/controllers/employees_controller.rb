@@ -79,14 +79,6 @@ class EmployeesController < ApplicationController
   # POST /employees.json
   def create
     
-    if employee_params[:visa_status] == "USC"
-      employee_params[:visa_expiry] = nil 
-    elsif employee_params[:visa_expiry] == nil
-      flash[:alert] = "Failed with error: expiry date must exist"
-      format.html { render :edit, status: :unprocessable_entity }
-      format.json { render json: '{message:"expiry date must exist"}', status: :unprocessable_entity }
-      return
-    end
     
     @employee = Employee.new(employee_params)
     @employee.profile.user_type = '445'
@@ -120,6 +112,15 @@ class EmployeesController < ApplicationController
   # PATCH/PUT /employees/1
   # PATCH/PUT /employees/1.json
   def update
+
+    if employee_params[:visa_status] == "USC"
+      employee_params[:visa_expiry] = nil 
+    elsif employee_params[:visa_expiry] == nil
+      flash[:alert] = "Failed with error: expiry date must exist"
+      format.html { render :edit, status: :unprocessable_entity }
+      format.json { render json: '{message:"expiry date must exist"}', status: :unprocessable_entity }
+      return
+    end
     
     @user = @employee.profile.user
     
@@ -280,7 +281,7 @@ class EmployeesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def employee_params
-    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, :employer_rate, :job_id, :job_start_date, :resume, :new_hire_package, :po, :w2_contract, :offer_letter, :w4, :direct_deposit_detail, :emergency_contact_form, {profile_attributes: [:photo, :first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
+    params.require(:employee).except("vendor").except("vendor_rate").except("employee_rate").except("email").except("password").permit(:password_save, :rate, :vendor_id, :name, :email, :password, :passport, :visa, :state_id, :i9, :e_verify, :w9, :psa, :voided_check_copy, :client_id, :employer_id, :contract_type,:visa_status,:visa_expiry,:disabled,:disable_reason,:disable_date,:disable_notes, :employer_rate, :job_id, :job_start_date, :resume, :new_hire_package, :po, :w2_contract, :offer_letter, :w4, :direct_deposit_detail, :emergency_contact_form, {profile_attributes: [:photo, :first_name, :middle_name, :last_name, :phone1, :phone2, :email, :password, :address, :country, :state, :city, :zip_code]})
   end
   
   

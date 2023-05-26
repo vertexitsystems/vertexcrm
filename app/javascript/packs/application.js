@@ -32,7 +32,39 @@ document.addEventListener("turbolinks:load", function() {
 	bind_phonenumber_formatter();
 	
 	bind_intellisense();
+	bind_validations();
 })
+
+
+function bind_validations(){
+	$(".validate_required").on("focusout", function(elem){
+		var req = ($(this).attr("required") == "required");
+		var show_error = $(this).val() == ""
+		
+		//console.log("req: " + req + ", err: " + show_error);
+		if (req && show_error){
+			$(this).css("border-color", '#dc3545')
+			var title_elem = $($(this).siblings(".field_title")[0]);
+			title_elem.css("color","red");
+			if (typeof $(this).siblings(".required_message")[0] === "undefined") {
+				$(this).after("<div class='required_message'>This Field is required</div>");
+			}
+			
+		} else {
+			
+			$(this).css("border-color", '#ced4da')
+
+			var title_elem = $($(this).siblings(".field_title")[0]);
+			title_elem.css("color","black");
+
+			//$($(this).siblings(".required_message")[0]).hide()
+			$($(this).siblings(".required_message")[0]).remove()
+		}
+	});
+	// $(".validate_required").focusout(function(elem){
+	// 	alert("check" + $(elem).attr("a"));
+	// });
+}
 function bind_intellisense(){
 	$('.intellisence_select2').select2();
 	// $(document).ready(function() {
@@ -58,6 +90,11 @@ function bind_filters() {
 
 		event.preventDefault();
 		return false;
+	});
+
+
+	  $('.flex_col input[type=text]').on('blur', function () {
+		$('#alert').text('Enter more than 3 characters!');
 	});
 
 	$('.filter_field').on('change', function () {

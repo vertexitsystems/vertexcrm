@@ -67,23 +67,25 @@
 </p>
 <%= render "profiles/embedable_form", profile:employee.profile, allow_submit:false, form:form %>
 
-<div class="page_title"> VISA Details </div>
-<div class="flex_row"> 
-	<div class="flex_col">
-		<b>Visa Status:</b>
-		<%= form.select :visa_status, 
-			options_for_select(["GC-EAD", "USC", "H4-EAD", "H1-B", "OPT-EAD", "CPT"], employee.visa_status),
-			class: 'form-control', 
-			filter_name: "contract"
-			%>
-	</div>
-	<div class="flex_col", id="visa_expiry_field">
-		<b>Visa Expiry:</b>
-		<%- visa_expiry = @employee.persisted? ? (@employee.visa_expiry.blank? ? @employee.created_at : @employee.visa_expiry) : Date.today %>
-		<%= form.text_field :visa_expiry, :required => true,  :class => 'date_select_field', value: visa_expiry %>
-	</div>
-</div>
+<% if !@employee.new_record?  %>
 
+	<div class="page_title"> VISA Details </div>
+	<div class="flex_row"> 
+		<div class="flex_col">
+			<b>Visa Status:</b>
+			<%= form.select :visa_status, 
+				options_for_select(["GC-EAD", "USC", "H4-EAD", "H1-B", "OPT-EAD", "CPT"], employee.visa_status),
+				class: 'form-control', 
+				filter_name: "contract"
+				%>
+		</div>
+		<div class="flex_col", id="visa_expiry_field">
+			<b>Visa Expiry:</b>
+			<%- visa_expiry = @employee.persisted? ? (@employee.visa_expiry.blank? ? @employee.created_at : @employee.visa_expiry) : Date.today %>
+			<%= form.text_field :visa_expiry, :required => true,  :class => 'date_select_field', value: visa_expiry %>
+		</div>
+	</div>
+<% end %>
 
 <div class="page_title"> Work Details </div>
 <div class="flex_col">
@@ -156,86 +158,91 @@
 		<% end %>
 	</div>
 </div>
-<div class="page_title"> Documents </div>
-<div class="flex_col">
-	
-	
-	<div class="mututal_documents">
-		<div class="flex_row">
-			<div class="flex_col">
-				<% show_file_field(form, :resume, "Resume", employee.resume) %>
-			</div>
-		</div>
-		<div class="flex_row">
-			<div class="flex_col">
-				<% show_file_field(form, :state_id, "State ID", employee.state_id) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :passport, "Passport", employee.passport) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :visa, "Work Auth/Visa", employee.visa) %>
-			</div>
-		</div>
-		
-		<div class="flex_row">
-			<div class="flex_col">
-				<% show_file_field(form, :i9, "i9", employee.i9) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :e_verify, "E-Verify", employee.e_verify) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :voided_check_copy, "Voided Check", employee.voided_check_copy) %>
-			</div>
-		</div>
-	</div>
-	
-	<div id="c2c_documents" style="display:<%= employee.contract_type == "w2" ? "none" : "block" %>">
-		<div class="flex_row">
-			<div class="flex_col">
-				<% show_file_field(form, :po, "PO", employee.po) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :new_hire_package, "New Hire Package", employee.new_hire_package) %>
-			</div>
-		</div>
-		<div class="flex_row">
-			<div class="flex_col">
-				<% show_file_field(form, :w9, "W9", employee.w9) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :psa, "PSA", employee.psa) %>
-			</div>
-		</div>
-	</div>
-	
-	<div id="w2_documents"  style="display:<%= employee.contract_type == "w2" ? "block" : "none" %>">
-		<div class="flex_row">
+
+	<% if !@employee.new_record?  %>
+
+		<div class="page_title"> Documents </div>
+		<div class="flex_col">
 			
-			<div class="flex_col">
-				<% show_file_field(form, :offer_letter, "Offer Letter", employee.offer_letter) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :w2_contract, "W2 Contract", employee.w2_contract) %>
-			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :w4, "W4", employee.w4) %>
+			
+			<div class="mututal_documents">
+				<div class="flex_row">
+					<div class="flex_col">
+						<% show_file_field(form, :resume, "Resume", employee.resume) %>
+					</div>
+				</div>
+				<div class="flex_row">
+					<div class="flex_col">
+						<% show_file_field(form, :state_id, "State ID", employee.state_id) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :passport, "Passport", employee.passport) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :visa, "Work Auth/Visa", employee.visa) %>
+					</div>
+				</div>
+				
+				<div class="flex_row">
+					<div class="flex_col">
+						<% show_file_field(form, :i9, "i9", employee.i9) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :e_verify, "E-Verify", employee.e_verify) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :voided_check_copy, "Voided Check", employee.voided_check_copy) %>
+					</div>
+				</div>
 			</div>
 			
-		</div>
-		
-		<div class="flex_row">
-			
-			<div class="flex_col">
-				<% show_file_field(form, :direct_deposit_detail, "Direct Deposit Details", employee.direct_deposit_detail) %>
+			<div id="c2c_documents" style="display:<%= employee.contract_type == "w2" ? "none" : "block" %>">
+				<div class="flex_row">
+					<div class="flex_col">
+						<% show_file_field(form, :po, "PO", employee.po) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :new_hire_package, "New Hire Package", employee.new_hire_package) %>
+					</div>
+				</div>
+				<div class="flex_row">
+					<div class="flex_col">
+						<% show_file_field(form, :w9, "W9", employee.w9) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :psa, "PSA", employee.psa) %>
+					</div>
+				</div>
 			</div>
-			<div class="flex_col">
-				<% show_file_field(form, :emergency_contact_form, "Emergency Contact Form", employee.emergency_contact_form) %>
-			</div>
 			
-		</div>
-	</div>
+			<div id="w2_documents"  style="display:<%= employee.contract_type == "w2" ? "block" : "none" %>">
+				<div class="flex_row">
+					
+					<div class="flex_col">
+						<% show_file_field(form, :offer_letter, "Offer Letter", employee.offer_letter) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :w2_contract, "W2 Contract", employee.w2_contract) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :w4, "W4", employee.w4) %>
+					</div>
+					
+				</div>
+				
+				<div class="flex_row">
+					
+					<div class="flex_col">
+						<% show_file_field(form, :direct_deposit_detail, "Direct Deposit Details", employee.direct_deposit_detail) %>
+					</div>
+					<div class="flex_col">
+						<% show_file_field(form, :emergency_contact_form, "Emergency Contact Form", employee.emergency_contact_form) %>
+					</div>
+					
+				</div>
+			</div>
+
+	<% end %>
 	
 	
 	<div class="flex_row">

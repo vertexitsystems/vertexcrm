@@ -32,14 +32,22 @@
 }
 .select2-search__field{
   outline: none !important;
-    border:1px solid gray !important;
-    box-shadow: 0 0 10px grey !important;
+  border:1px solid gray !important;
+  box-shadow: 0 0 10px grey !important;
 }
 
+.dropdown-item.active .dropdown-item:active {
+  color: #fff;
+  text-decoration: none;
+  background-color: #989898;
+}
+.required_message{
+	color:red;
+}
 body {
 	margin:0px;
 	padding:0px;
-    background: #E6EBEB !important;
+  background: #E6EBEB !important;
 	height: 100vh;
 }
 html,
@@ -73,7 +81,7 @@ input[type=number] {
 .page-footer {
 	height:60px;
 	background-color:var(--main-color);
-    flex-shrink: 0;
+  flex-shrink: 0;
 }
 .page-body {
    //flex-grow: 1;
@@ -86,7 +94,7 @@ a {
 a:hover {
 	background:transparent;
 	text-decoration:underline;
-    color: var(--main-color) !important;
+  color: var(--main-color) !important;
 }
 
 .page_title{

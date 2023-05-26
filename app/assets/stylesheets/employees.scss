@@ -87,6 +87,7 @@
 	transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
 	height:40px;
 	background-color: #FFF;
+	//text-transform: capitalize;
 }
 
 .filter_field{
@@ -115,4 +116,24 @@
 	margin: 0 auto;
 	
 	//position:absolute;
+}
+
+#full_name_display{
+margin-bottom: 26px;
+    display: block;
+    width: 100%;
+    padding: 0.375rem 0.75rem;
+    font-size: 1rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: #000000;
+    background-clip: padding-box;
+    border: 1px solid #ced4da;
+    -webkit-appearance: menulist-button;
+    -moz-appearance: button-arrow-down;
+    appearance: button;
+    border-radius: 0.25rem;
+    transition: border-color .15s ease-in-out, box-shadow .15s ease-in-out;
+    height: 40px;
+    background-color: #EEE;
 }

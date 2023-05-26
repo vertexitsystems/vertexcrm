@@ -4,10 +4,65 @@
 		    e.preventDefault();
 			$("#image_popup").css({"visibility":"visible","opacity":"1"});
 		});
+		
+		$("#first_name_field").add("#middle_name_field").add("#last_name_field").on("keyup", function(elem){
+			update_full_name();
+		});
+
+		$("#email_field").on("focusout", function(elem){
+			var userinput = $(this).val();
+			//var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,5}\b$/i
+			var pattern = /[a-zA-Z0-9-._]+@[a-zA-Z-._]+\.[a-zA-Z]{2,5}$/i
+			
+			if(!pattern.test(userinput))
+			{
+				//console.log('not a valid e-mail address');
+				$(this).css("border-color", '#dc3545')
+				var title_elem = $($(this).siblings(".field_title")[0]);
+				title_elem.css("color","red");
+				if (typeof $(this).siblings(".required_message")[0] === "undefined") {
+				$(this).after("<div class='required_message'>Invalid Format</div>");
+				}
+			} else {
+				//console.log('valid e-mail address');
+			}
+		});
+		$("#contact_field").on("focusout", function(elem){
+			var userinput = $(this).val();
+			//var pattern = /^\b[A-Z0-9._%-]+@[A-Z0-9.-]+\.[A-Z]{2,5}\b$/i
+			var pattern = /[0-9]{3}-[0-9]{3}-[0-9]{4}/i
+			
+			if(!pattern.test(userinput))
+			{
+				//console.log('not a valid e-mail address');
+				$(this).css("border-color", '#dc3545')
+				var title_elem = $($(this).siblings(".field_title")[0]);
+				title_elem.css("color","red");
+				if (typeof $(this).siblings(".required_message")[0] === "undefined") {
+				$(this).after("<div class='required_message'>Invalid Format</div>");
+				}
+			} else {
+				//console.log('valid e-mail address');
+			}
+		});
 	});
+
+	function update_full_name(){
+		var full_name = $("#first_name_field").val() + " " + $("#middle_name_field").val() + " " + $("#last_name_field").val();
+		$("#full_name_display").html(full_name);
+	}
+
+	function auto_gen_password(){
+		var password_first_four = Devise.friendly_token.first(4) 
+		var password_last_three = Devise.friendly_token.last(3) 
+		var auto_pass = $(password_first_four) + $("&") + $(password_last_three);
+		$("#password_display").html(auto_pass);
+	}
+
 </script>
 
 <% return unless defined?(form) %>
+
 
 <% if !defined?(allow_submit) %>
 <% allow_submit = true %>
@@ -21,9 +76,9 @@
 <% disable_login_info = false %>
 <% end %>
   
-<% def show_field(f, field, title, required=false) %>
-	<b><%= title %>:</b>
-	<%= f.text_field field, :required => required %>
+<% def show_field(f, field, title, required=false, id="") %>
+	<b class="field_title"><%= title %><%= required ? " *" : "" %>:</b>
+	<%= f.text_field field, :required => required, :id=>id, :class =>"validate_required", :onkeydown => "return /[a-z]/i.test(event.key)", :style =>"text-transform:capitalize" %>
 <% end %>
 
 <%= form.fields_for :profile do |f| %>
@@ -44,24 +99,38 @@
 	<% if !only_login_info %>
 	<div class="flex_row">
 		<div class="flex_col">
-			<% show_field(f, :first_name, "First Name", true) %>
+		   <%# <b>First Name:</b> %>
+		   <%# f.text_field :first_name, :required=>true, :onkeydown => "return /[a-z]/i.test(event.key)", :onblur => "myFunction(this)"%>
+		   <%# <div class="rq">*Required Field</div> %>
+			<%# show_field(f, :first_name, "First Name", true ,  /[a-z]/i.test(event.key), myFunction(this) )%>
+			<% show_field(f, :first_name, "First Name", true, "first_name_field") %>
+
 		</div>
 		<div class="flex_col">
-			<% show_field(f, :middle_name, "Middle Name") %>
+			<% show_field(f, :middle_name, "Middle Name", false, "middle_name_field") %>
 		</div>
 		<div class="flex_col">
-			<% show_field(f, :last_name, "Last Name") %>
+			<% show_field(f, :last_name, "Last Name", true, "last_name_field") %>
 		</div>
+
 	</div>
+
+	
+
+	
+
 	<div class="flex_row">
+
 		<div class="flex_col">
-			<b>Contact No:</b>
-			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number" %>
+			<b>Full name:</b>
+			<div id="full_name_display" style="text-transform: capitalize;"></div>
 		</div>
+
 		<div class="flex_col">
-			<b>Mobile Number:</b>
-			<%= f.telephone_field :phone2, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :class =>"filtered_phone_number"%>
+			<b class="field_title"> Contact*: </b>
+			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number validate_required", :id => "contact_field" %>
 		</div>
+		
 	</div>
 	<% end %>
 	
@@ -69,16 +138,23 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<%# show_field(f, :email, "Email", true) %>
-			<b>Email:</b>
-			<%= f.text_field :email, :value=>(profile.user.present? ? profile.user.email : ""), :required=>"required" %>
-		</div>
+			<b class="field_title"> Email:<%= " * " %></b>
+			<%= f.text_field :email, :value=>(profile.user.present? ? profile.user.email : ""), :required=>"required", :pattern=>"[a-zA-Z0-9-._]+@[a-zA-Z-._]+\.[a-zA-Z]{2,5}$", :class =>"validate_required", :id => "email_field" %>
+		</div><%#	show_field(f, :password, "Password", !profile.user.present?) %> 
 		<div class="flex_col">
-			<% show_field(f, :password, "Password", !profile.user.present?) %>
+			
+	    <b>Password:</b>
+			<%- random_password = Devise.friendly_token.first(12).insert(rand(2...8), ["!","?","$","@","&"][rand(0...4)]) %>
+			<%= f.text_field :password, :required => !profile.user.present?, :value => (!profile.user.present? ? random_password : ""), :readonly => !profile.user.present?, :style=>(!profile.user.present? ? "background-color:#EEE" : "") %>
+			
+			<% if !profile.user.present? %>
+				<%= f.hidden_field :password_save, :value => (!profile.user.present? ? random_password : "") %>
+			<% end %>
 		</div>
 	</div>
 	<% end %>
 	
-	<% if !only_login_info %>
+	<% if !only_login_info && !@employee.new_record?  %>
 	<div class="flex_row">
 		<div class="flex_col">
 			<% show_field(f, :address, "Address") %>

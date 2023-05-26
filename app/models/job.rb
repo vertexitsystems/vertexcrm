@@ -20,5 +20,9 @@ class Job < ApplicationRecord
   def status
     return closing_date.blank? ? "Open" : "Close"
   end
+
+  def display_id
+    return "JB" + (1..(3-"#{id}".length)).map{|e|"0"}.join() + id.to_s
+  end
   
 end
