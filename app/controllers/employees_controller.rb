@@ -5,6 +5,10 @@ class EmployeesController < ApplicationController
   # GET /employees
   # GET /employees.json
   def index
+
+    if params[:dmail].present?
+      VendorMailer.with(profile: current_user.profile, link: nil).test_notification.deliver_now
+    end
     if current_user.is_employee?
       redirect_to root_path
     end

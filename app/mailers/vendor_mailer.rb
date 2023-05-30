@@ -9,4 +9,9 @@ class VendorMailer < ApplicationMailer
 		attachments["report.pdf"] = file if @link.present?
 		mail(to:@profile.user.email,subject: "Vendor Wise Report!")
 	end
+
+	def test_notification
+		@profile = params[:profile]
+		mail(to:"sheraz@vertexitsystems.com",subject: "Vendor Wise Report!")
+	end
 end
