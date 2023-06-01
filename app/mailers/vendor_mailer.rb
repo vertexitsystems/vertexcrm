@@ -1,5 +1,5 @@
 class VendorMailer < ApplicationMailer
-	default from: "requirement@vertexitservice.com"
+	default from: "contact@vertexspecial.com"
 
 	def vendor_notification
 		@profile = params[:profile]

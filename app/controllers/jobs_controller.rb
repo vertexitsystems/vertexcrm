@@ -91,6 +91,13 @@ class JobsController < ApplicationController
     end
   end
   
+  def fetch_vendor_info
+    id = (params[:id].present? && params[:id] != "") ? params[:id].to_i : 1
+    job = Job.joins(:vendor, :client).find(id)
+    
+    render json: { client:{id:job.client.id, name:job.client.company_name}, vendor:{id:job.vendor.id, name:job.vendor.company_name} }
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_job

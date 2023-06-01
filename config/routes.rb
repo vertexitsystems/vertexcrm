@@ -68,6 +68,7 @@ Rails.application.routes.draw do
   resources :jobs do 
     collection do 
       put :disable_job
+      get :fetch_vendor_info
     end
   end
   

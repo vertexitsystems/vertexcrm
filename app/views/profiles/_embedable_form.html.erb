@@ -77,7 +77,7 @@
 <% end %>
   
 <% def show_field(f, field, title, required=false, id="") %>
-	<b class="field_title"><%= title %><%= required ? " *" : "" %>:</b>
+	<b class="field_title"><%= title %><%= required ? " *" : "" %></b>
 	<%= f.text_field field, :required => required, :id=>id, :class =>"validate_required", :onkeydown => "return /[a-z]/i.test(event.key)", :style =>"text-transform:capitalize" %>
 <% end %>
 
@@ -122,12 +122,12 @@
 	<div class="flex_row">
 
 		<div class="flex_col">
-			<b>Full name:</b>
-			<div id="full_name_display" style="text-transform: capitalize;"></div>
+			<b>Full name*</b>
+			<div id="full_name_display" class="immutable_text_display" style="text-transform: capitalize;"></div>
 		</div>
 
 		<div class="flex_col">
-			<b class="field_title"> Contact*: </b>
+			<b class="field_title"> Phone * </b>
 			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number validate_required", :id => "contact_field" %>
 		</div>
 		
@@ -138,7 +138,7 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<%# show_field(f, :email, "Email", true) %>
-			<b class="field_title"> Email:<%= " * " %></b>
+			<b class="field_title"> Email <%= " * " %></b>
 			<%= f.text_field :email, :value=>(profile.user.present? ? profile.user.email : ""), :required=>"required", :pattern=>"[a-zA-Z0-9-._]+@[a-zA-Z-._]+\.[a-zA-Z]{2,5}$", :class =>"validate_required", :id => "email_field" %>
 		</div><%#	show_field(f, :password, "Password", !profile.user.present?) %> 
 		<div class="flex_col">

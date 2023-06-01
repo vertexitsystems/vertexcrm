@@ -17,11 +17,11 @@ class EmployeesController < ApplicationController
 
     #@employees = Employee.joins(:profile).order("profiles.full_name").includes(:profile, :jobs, :vendors)
     #@employees = params.except(:controller, :action).blank? ? Employee.where('disabled IS NOT ?', true).includes(:profile).all : Employee.includes(:profile).order(disabled: :desc, created_at: :desc) 
-    @employees = (!params[:disabled].present? || (params[:disabled].present? && params[:disabled] != "all") ) ? Employee.where((params[:disabled] == "true") ? 'disabled IS true' : 'disabled IS NOT true').includes(:profile) : Employee.includes(:profile).order(disabled: :desc, created_at: :desc) 
+    @employees = (!params[:disabled].present? || (params[:disabled].present? && params[:disabled] != "all") ) ? Employee.where((params[:disabled] == "true") ? 'disabled IS true' : 'disabled IS NOT true').includes(:profile, :job, :employer) : Employee.includes(:profile, :job).order(disabled: :desc, created_at: :desc) 
     @employees = @employees.includes(:profile).order('profiles.first_name ' + (params[:order].present? ? params[:order] : "ASC") ) if params[:sort].present? && params[:sort] == "emp"
-    @employees = Employee.where(disabled: [false, nil]).order(job_start_date: (params[:order].present? ? params[:order].upcase : "ASC") ) if params[:sort].present? && params[:sort] == "strtdate"
+    @employees = Employee.where(disabled: [false, nil]).includes(:profile, :job, :employer) .order(job_start_date: (params[:order].present? ? params[:order].upcase : "ASC") ) if params[:sort].present? && params[:sort] == "strtdate"
     @employees = @employees.order(visa_expiry: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "expdate"
-    @employees = Employee.order(disabled: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "empstatus"
+    @employees = Employee.includes(:profile, :job, :employer).order(disabled: (params[:order].present? ? params[:order] : "asc") ) if params[:sort].present? && params[:sort] == "empstatus"
 
     @employees = @employees.where(id: params[:emp]) if params[:emp].present? && !params[:emp].blank?
     @employees = @employees.where('job_id = ?', params[:proj]) if params[:proj].present? && !params[:proj].blank?
@@ -39,7 +39,9 @@ class EmployeesController < ApplicationController
     @total_pages = (@employees.count.to_f / 10.0).floor.to_i + (((@employees.count.to_f / 10.0).modulo(1) > 0) ? 1 : 0)
     
     #@employees = @employees.limit(records_per_page).offset(@page * records_per_page)
-   @employees = @employees.page(params[:page]).per(20)
+    @employees = @employees.page(params[:page]).per(20)
+
+    
 
   end
 
@@ -70,10 +72,14 @@ class EmployeesController < ApplicationController
   def new
     @employee = Employee.new
     @employee.build_profile
+
+    @job = Job.order(:title).includes(:client, :vendor).first
   end
 
   # GET /employees/1/edit
   def edit
+    @job = @employee.job
+
     if !(current_user.is_admin? || current_user.is_account_manager?)
       redirect_to edit_profile_path(current_user.profile)
     end

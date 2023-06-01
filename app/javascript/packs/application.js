@@ -30,36 +30,114 @@ document.addEventListener("turbolinks:load", function() {
 	bind_filters();
 	bind_date_selectors();
 	bind_phonenumber_formatter();
-	
 	bind_intellisense();
 	bind_validations();
+	bind_submit_button_active();
 })
 
+function bind_submit_button_active(){
+	$('#first_name_field, #last_name_field ,#contact_field, #email_field, #employee_employer_rate, #rate_field, #employee_contract_type_c2c, #employee_contract_type_w2, #employee_contract_type_1099').on('keyup change', function() {
+		if(allFilled()) {
+			$('#submit_button_create_consultant').removeAttr('disabled');
+			$('#submit_button_create_consultant').removeClass('button_disabled');
+		} else {
+			$('#submit_button_create_consultant').attr('disabled', true);
+			$('#submit_button_create_consultant').addClass('button_disabled');
+		}
+	});
+}
+
+function matchPattern(elem, pattern) {
+	return !pattern.test(elem.val());
+}
+
+function allFilled() {
+    var filled = true;
+	var contact_pattern = /[0-9]{3}-[0-9]{3}-[0-9]{4}/i
+    $('#first_name_field, #last_name_field ,#contact_field, #email_field, #employee_employer_rate, #rate_field').each(function() {
+        var blank_validation    = $('#first_name_field').val() == '' || $('#last_name_field').val() == '' ||  $('#contact_field').val() == '' ||  $(' #email_field').val() == '';
+		var pattern_validation  = matchPattern($('#contact_field'), /[0-9]{3}-[0-9]{3}-[0-9]{4}/i);
+        var email_pattern_vall  = matchPattern($('#email_field'), /[a-zA-Z0-9-._]+@[a-zA-Z-._]+\.[a-zA-Z]{2,5}$/i);
+		var emp_rate_validation = $("#employee_contract_type_c2c").is(':checked') && $("#employee_employer_rate").val() == '';
+		var con_rate_validation = !$("#employee_contract_type_c2c").is(':checked') && $("#rate_field").val() == '';
+
+		if (blank_validation || pattern_validation || emp_rate_validation || con_rate_validation || email_pattern_vall) filled = false;
+		console.log("blank_validation: " + blank_validation + ", pattern_validation: " + pattern_validation + ", emp_rate_validation: " + emp_rate_validation + ", con_rate_validation: " + con_rate_validation);
+    });
+
+	
+	
+    return filled;
+}
+
+// submit_button.addEventListener("submit", (event) => {
+// 	event.preventDefault();
+//     alert("Submit alert");
+	
+//   });
+// $("#submit_button_create_consultant").click(function(elem){
+// 	var all_ok = true;
+// 	if ($("#first_name_field").val() == "" ||
+// 		$("#last_name_field").val() == "" ||
+// 		$("#contact_field").val() == "" ||
+// 		$("#email_field").val() == ""){
+// 		all_ok = false;
+
+// 		validate_required($("#first_name_field"), true);
+// 		validate_required($("#last_name_field"), true);
+// 		validate_required($("#contact_field"), true);
+// 		validate_required($("#email_field"), true);
+
+// 	}
+// 	if ( $("#employee_contract_type_c2c").is(':checked') && $("#employee_employer_rate").val() == ""){
+// 		all_ok = false;
+// 	}
+// 	if ( !$("#employee_contract_type_c2c").is(':checked') && $("#rate_field").val() == ""){
+// 		all_ok = false;
+// 	}
+	
+// 	return all_ok;
+	
+
+// });
+
+function validate_required(elem, req){
+	
+	var show_error = $(elem).val() == "";
+
+	if (req && show_error){
+		
+		$(elem).css("border-color", '#dc3545')
+		var title_elem = $($(elem).siblings(".field_title")[0]);
+		title_elem.css("color","red");
+		if (typeof $(elem).siblings(".required_message")[0] === "undefined") {
+			$(elem).after("<div class='required_message'>This Field is required</div>");
+		}
+		
+	} else {
+		
+		$(elem).css("border-color", '#ced4da')
+
+		var title_elem = $($(elem).siblings(".field_title")[0]);
+		title_elem.css("color","black");
+
+		//$($(this).siblings(".required_message")[0]).hide()
+		$($(elem).siblings(".required_message")[0]).remove()
+	}
+}
 
 function bind_validations(){
+	$(".force_validate_required").on("focusout", function(elem){
+		
+		validate_required(this, true);
+	});
 	$(".validate_required").on("focusout", function(elem){
+		
 		var req = ($(this).attr("required") == "required");
-		var show_error = $(this).val() == ""
+		
 		
 		//console.log("req: " + req + ", err: " + show_error);
-		if (req && show_error){
-			$(this).css("border-color", '#dc3545')
-			var title_elem = $($(this).siblings(".field_title")[0]);
-			title_elem.css("color","red");
-			if (typeof $(this).siblings(".required_message")[0] === "undefined") {
-				$(this).after("<div class='required_message'>This Field is required</div>");
-			}
-			
-		} else {
-			
-			$(this).css("border-color", '#ced4da')
-
-			var title_elem = $($(this).siblings(".field_title")[0]);
-			title_elem.css("color","black");
-
-			//$($(this).siblings(".required_message")[0]).hide()
-			$($(this).siblings(".required_message")[0]).remove()
-		}
+		validate_required(this, req);
 	});
 	// $(".validate_required").focusout(function(elem){
 	// 	alert("check" + $(elem).attr("a"));
@@ -103,6 +181,17 @@ function bind_filters() {
 		loadURL(constructParams(param_name, vend_id));
 	});
 	
+	$('.employee_job_dropdown').on('change', function () {
+		
+		$.get("/jobs/fetch_vendor_info.json?id="+$(this).val(), function(data, status){
+			//alert("Data: " + data["client"]["name"] + "\nStatus: " + status);
+
+			$('#vendor_name_display').html(data["vendor"]["name"]);
+			$('#client_name_display').html(data["client"]["name"]);
+			
+		  });
+	});
+
 	$(".parent-toggle").on("click",function(event){
 		if ($(event.target).is("div")){
 			
