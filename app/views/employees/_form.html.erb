@@ -129,7 +129,7 @@
 		</div>
 		<div class="flex_col" id="rate_field_parent" style="display:none">
 			<b class="field_title">Consultant Rate ($/Hr)*</b>
-			<%= form.number_field :rate, :required=>true, :id => "rate_field", class: "force_validate_required" %>
+			<%= form.number_field :rate, :id => "rate_field", class: "force_validate_required" %>
 		</div>
 		<div class="flex_col">
 			<b>Start Date</b>
@@ -141,7 +141,10 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Vendor</b>
-            <div id="vendor_name_display" class="immutable_text_display" style="text-transform: capitalize;"><%= @job.vendor.company_name %></div>
+            <div id="vendor_name_display" class="immutable_text_display" style="text-transform: capitalize;">
+				<%# @job.vendor.company_name.blank? ? "" : @job.vendor.company_name %>
+				<%= @job.vendor_safe.company_name %>
+			</div>
 			<%# <%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendors.blank? ? false : employee.vendors.first.id) %> 
 			<%# form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendor.blank? ? false : employee.vendor.id) %>
 		</div>

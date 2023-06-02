@@ -93,9 +93,9 @@ class JobsController < ApplicationController
   
   def fetch_vendor_info
     id = (params[:id].present? && params[:id] != "") ? params[:id].to_i : 1
-    job = Job.joins(:vendor, :client).find(id)
+    job = Job.joins(:client).find(id)
     
-    render json: { client:{id:job.client.id, name:job.client.company_name}, vendor:{id:job.vendor.id, name:job.vendor.company_name} }
+    render json: { client:{id:job.client.id, name:job.client.company_name}, vendor:{id:job.vendor_safe.id, name:job.vendor_safe.company_name} }
   end
 
   private

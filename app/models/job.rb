@@ -1,6 +1,6 @@
 class Job < ApplicationRecord
   belongs_to :client
-  belongs_to :vendor
+  belongs_to :vendor, optional: true
   
   #has_many :employees
   #has_many :postings
@@ -25,4 +25,7 @@ class Job < ApplicationRecord
     return "JB" + (1..(3-"#{id}".length)).map{|e|"0"}.join() + id.to_s
   end
   
+  def vendor_safe
+    vendor.blank? ? client : vendor
+  end
 end

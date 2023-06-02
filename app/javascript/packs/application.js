@@ -58,7 +58,7 @@ function allFilled() {
         var blank_validation    = $('#first_name_field').val() == '' || $('#last_name_field').val() == '' ||  $('#contact_field').val() == '' ||  $(' #email_field').val() == '';
 		var pattern_validation  = matchPattern($('#contact_field'), /[0-9]{3}-[0-9]{3}-[0-9]{4}/i);
         var email_pattern_vall  = matchPattern($('#email_field'), /[a-zA-Z0-9-._]+@[a-zA-Z-._]+\.[a-zA-Z]{2,5}$/i);
-		var emp_rate_validation = $("#employee_contract_type_c2c").is(':checked') && $("#employee_employer_rate").val() == '';
+		var emp_rate_validation = $("#rate_field").is(":hidden") && $("#employee_contract_type_c2c").is(':checked') && $("#employee_employer_rate").val() == '';
 		var con_rate_validation = !$("#employee_contract_type_c2c").is(':checked') && $("#rate_field").val() == '';
 
 		if (blank_validation || pattern_validation || emp_rate_validation || con_rate_validation || email_pattern_vall) filled = false;
