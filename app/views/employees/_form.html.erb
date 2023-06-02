@@ -128,7 +128,7 @@
 			<%= form.select :job_id, Job.order(:title).where(closing_date:nil).collect{|c| [c.title, c.id]}, {}, {class: 'genForm_dropBox intellisence_select2 employee_job_dropdown',:selected => (employee.job.blank? ? false : employee.job.id),} %>
 		</div>
 		<div class="flex_col" id="rate_field_parent" style="display:none">
-			<b class="field_title">Consultant Rate ($/Hr)*</b>
+			<b class="field_title">Consultant Rate ($/Hr) *</b>
 			<%= form.number_field :rate, :id => "rate_field", class: "force_validate_required" %>
 		</div>
 		<div class="flex_col">
@@ -173,7 +173,7 @@
 			<%# form.collection_select(:employer_id, Employer.all, :id, :company_name) %>
 		</div>
 		<div class="flex_col" style="display:<%= @employee.contract_type == "w2" ? "none" : "block" %>" id="employer_rate_field">
-			<b class="field_title"> Employer Rate ($/Hr)*</b>
+			<b class="field_title"> Employer Rate ($/Hr) *</b>
 			<%= form.number_field :employer_rate, class: "force_validate_required" %>
 		</div>
 		<%if false%>

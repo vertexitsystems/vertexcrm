@@ -122,12 +122,12 @@
 	<div class="flex_row">
 
 		<div class="flex_col">
-			<b>Full name*</b>
+			<b>Full name *</b>
 			<div id="full_name_display" class="immutable_text_display" style="text-transform: capitalize;"></div>
 		</div>
 
 		<div class="flex_col">
-			<b class="field_title"> Phone * </b>
+			<b class="field_title"> Phone No * </b>
 			<%= f.telephone_field :phone1, :placeholder=>"123-456-6789", :pattern=>"[0-9]{3}-[0-9]{3}-[0-9]{4}", :required=>true, :class =>"filtered_phone_number validate_required", :id => "contact_field" %>
 		</div>
 		
