@@ -56,7 +56,7 @@ Rails.application.configure do
     user_name:              'contact@vertexspecial.com',
     domain:                 'vertexspecial.com',
     password:               'Vertex@123**',
-    authentication:         'plain',
+    authentication:         ‘login’,
     ssl:                    false,
     tls:                    true,
     enable_starttls:        true 
