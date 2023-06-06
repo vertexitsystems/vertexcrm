@@ -54,10 +54,10 @@ Rails.application.configure do
     :address         => 'smtp.office365.com',
     :port            => 587,
     :user_name       => 'contact@vertexspecial.com',
-    :domain          => 'vertexspecial.com',
+    :domain          => 'smtp.office365.com',
     :password        => 'Vertex@123**',
     :authentication  => :login,
-    :tls             => true
+    :enable_starttls_auto => true
   }
   config.action_mailer.perform_deliveries = true
   config.action_mailer.raise_delivery_errors = true
