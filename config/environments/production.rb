@@ -56,7 +56,7 @@ Rails.application.configure do
     user_name:              'contact@vertexspecial.com',
     domain:                 'vertexspecial.com',
     password:               'Vertex@123**',
-    authentication:         ‘login’,
+    authentication:         'plain',
     enable_starttls:        true 
   }
   config.action_mailer.perform_deliveries = true
