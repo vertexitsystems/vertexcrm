@@ -1,5 +1,6 @@
 class EmployeeMailer < ApplicationMailer
-
+	default from: "contact@vertexspecial.com"
+	
 	def reminder
 		@employee = params[:employee]
 		 mail(
