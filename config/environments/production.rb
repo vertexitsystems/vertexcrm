@@ -56,7 +56,7 @@ Rails.application.configure do
     :user_name       => 'contact@vertexspecial.com',
     :domain          => 'smtp.office365.com',
     :password        => 'Vertex@123**',
-    :authentication  => :plain,
+    :authentication  => :login,
     :enable_starttls_auto => true
   }
   config.action_mailer.perform_deliveries = true
