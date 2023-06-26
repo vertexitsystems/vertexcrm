@@ -25,7 +25,7 @@
 					.col.img_col
 						= employee.job.blank? ? "(Not Available)" : employee.job.title
 					.col.img_col
-						= employee.job.blank? ? "(Not Available)" : employee.job.vendor.company_name
+						= employee.job.blank? ? "(Not Available)" : employee.job.vendor_safe.company_name
 					.col.img_col
 						= employee.job.blank? ? "(Not Available)" : employee.job.client.company_name
 					.col.img_col
