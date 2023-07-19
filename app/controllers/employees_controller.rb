@@ -109,7 +109,7 @@ class EmployeesController < ApplicationController
       if @employee.save
         
         #@employee.projects << Project.create(vendor_id:params["employee"]["vendor"], vendor_rate:params["employee"]["vendor_rate"], rate:params["employee"]["employee_rate"])
-        PasswordResetMailer.with(profile: current_user.profile, link: nil).reset_notification.deliver_now
+        #PasswordResetMailer.with(profile: current_user.profile, link: nil).reset_notification.deliver_now
 
         format.html { redirect_to @employee, notice: 'Employee was successfully created.' }
         format.json { render :show, status: :created, location: @employee }

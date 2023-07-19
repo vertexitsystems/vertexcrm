@@ -108,7 +108,7 @@
 	<div class="flex_row">
 		<div class="flex_col">
 			<b>Vendor:*</b>
-			<%= form.select :vendor_id, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => @job.persisted? ? @job.vendor.id : nil %>
+			<%= form.select :vendor_id, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => @job.persisted? ? @job.vendor_safe.id : nil %>
 		</div>
 		<div class="flex_col">
 			<b>Client:*</b>

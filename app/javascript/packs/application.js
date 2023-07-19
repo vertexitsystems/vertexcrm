@@ -181,7 +181,7 @@ function bind_filters() {
 		loadURL(constructParams(param_name, vend_id));
 	});
 	
-	$('.employee_job_dropdown').on('change', function () {
+	$('#employee_job_id').on('change', function () {
 		
 		$.get("/jobs/fetch_vendor_info.json?id="+$(this).val(), function(data, status){
 			//alert("Data: " + data["client"]["name"] + "\nStatus: " + status);

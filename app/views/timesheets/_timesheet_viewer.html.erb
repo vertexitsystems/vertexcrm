@@ -59,7 +59,7 @@
 			<%= timesheet.employee.blank? ? current_user.profile.name : timesheet.employee.profile.name %>
 		</div>
 		<div class="timesheet_col">
-			<%= timesheet.job.blank? ? "(Not Provided)" : timesheet.job.vendor.name %>
+			<%= timesheet.job.blank? ? "(Not Provided)" : timesheet.job.vendor_safe.name %>
 		</div>
 		<div class="timesheet_col">
 			<%= "#{timesheet.start_date.strftime("%d %b, %y")} - #{timesheet.last_work_day.strftime("%d %b, %y")}" %>
