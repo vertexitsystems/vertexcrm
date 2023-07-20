@@ -163,7 +163,12 @@
 		
 		<div class="flex_col">
 			<b>Client</b>
-			<div id="client_name_display" class="immutable_text_display" style="text-transform: capitalize;"><%= @job.client.company_name %></div>
+			<div id="client_name_display" class="immutable_text_display" style="text-transform: capitalize;">
+			<% if !@job.blank? %>
+			<%= @job.client.company_name %></div>
+			<% else %>
+
+			<% end %>
 			<%# form.collection_select(:client_id, Client.all, :id, :company_name) %>
 			<%# form.select :client, Client.all.collect{|c| [c.company_name, c.id]}, :class => 'genForm_dropBox', :selected => employee.client.blank? ? false : employee.client.id %>
 		</div>
