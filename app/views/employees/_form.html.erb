@@ -146,6 +146,8 @@
 				<% if !@job.blank? %>
 				<%= @job.vendor_safe.company_name.blank? ? "" : @job.vendor_safe.company_name %>
 				<% else %>
+
+				<% end %>
 			</div>
 			<%# <%= form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendors.blank? ? false : employee.vendors.first.id) %> 
 			<%# form.select :vendor, Vendor.all.collect{|c| [c.name, c.id]}, :class => 'genForm_dropBox', :selected => (employee.vendor.blank? ? false : employee.vendor.id) %>
