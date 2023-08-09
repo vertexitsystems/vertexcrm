@@ -127,6 +127,23 @@ function validate_required(elem, req){
 }
 
 function bind_validations(){
+	$(".validate_currency_format").on("change", function(elem){
+		var error_shown = false
+		if (parseInt($(this).val()) < 0){
+			$(this).val($(this).val().substr(1,$(this).val().length));
+			error_shown = true
+		}
+
+		if (parseInt($(this).val()) > 999){
+			$(this).val($(this).val().substr(0,3));
+			error_shown = true;
+		}
+
+		if (typeof $(this).siblings(".required_message")[0] === "undefined" && error_shown) {
+			$(this).after("<div class='required_message'>Rate must be above between 0 and 99999</div>");
+		}
+		
+	});
 	$(".force_validate_required").on("focusout", function(elem){
 		
 		validate_required(this, true);
