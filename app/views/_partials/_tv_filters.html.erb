@@ -20,8 +20,8 @@
 					filter_name: "emp",
 					prompt: "Consultant" 
 				%>
-				<%= select_tag 'employee_filter',
-					options_for_select(Employee.includes(:profile).all.collect {|e| [ e.profile.name, e.id ] }, params["emp"]),
+				
+					<%= select_tag 'employee_filter', options_for_select(Employee.where("disabled is NOT true").includes(:profile).pluck('employees.id, profiles.first_name, profiles.middle_name, profiles.last_name').map{|e|[e[1]+" "+e[2]+" "+e[3], e[0]]}, params["emp"]),
 					class: 'form-control filter_field',
 					id: "employee_filter",
 					filter_name: "emp",
